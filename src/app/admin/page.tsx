@@ -1,4 +1,4 @@
-import { sql, inArray, eq, isNull } from 'drizzle-orm'
+import { sql, inArray, isNull } from 'drizzle-orm'
 
 import {
 	Users,
@@ -8,6 +8,7 @@ import {
 	Settings,
 	Mail,
 	Activity,
+	BarChart2,
 } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
@@ -20,30 +21,12 @@ import {
 } from '@/components/ui/card'
 import {
 	db,
-	users,
 	fundApplications,
 	mentorApplications,
 	mentorshipMatches,
-	applicationTasks,
 } from '@/server/db'
 
 export default async function AdminPage() {
-	// DB-level counts for overview
-	const userCountRes = await db
-		.select({ value: sql<number>`count(*)`.mapWith(Number) })
-		.from(users)
-	const userCount = userCountRes[0]?.value ?? 0
-
-	const fundCountRes = await db
-		.select({ value: sql<number>`count(*)`.mapWith(Number) })
-		.from(fundApplications)
-	const fundCount = fundCountRes[0]?.value ?? 0
-
-	const mentorCountRes = await db
-		.select({ value: sql<number>`count(*)`.mapWith(Number) })
-		.from(mentorApplications)
-	const mentorCount = mentorCountRes[0]?.value ?? 0
-
 	const pendingFundAppsRes = await db
 		.select({ value: sql<number>`count(*)`.mapWith(Number) })
 		.from(fundApplications)
@@ -57,12 +40,6 @@ export default async function AdminPage() {
 			inArray(mentorApplications.workflowStage, ['SUBMITTED', 'IN_REVIEW']),
 		)
 	const pendingMentorApps = pendingMentorAppsRes[0]?.value ?? 0
-
-	const openTasksRes = await db
-		.select({ value: sql<number>`count(*)`.mapWith(Number) })
-		.from(applicationTasks)
-		.where(eq(applicationTasks.status, 'OPEN'))
-	const openTasks = openTasksRes[0]?.value ?? 0
 
 	const activeAthletesRes = await db
 		.select({ value: sql<number>`count(*)`.mapWith(Number) })
@@ -84,53 +61,6 @@ export default async function AdminPage() {
 
 	return (
 		<div className="space-y-8">
-			<div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-				<div>
-					<h1 className="text-3xl font-bold">Admin Dashboard</h1>
-					<p className="text-muted-foreground">
-						Run athlete and mentor operations
-					</p>
-				</div>
-				<Button variant="outline" asChild>
-					<Link href="/">Back to Site</Link>
-				</Button>
-			</div>
-
-			{/* Quick Stats */}
-			<div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-				<Card>
-					<CardHeader className="pb-2">
-						<CardTitle className="text-2xl font-bold">{userCount}</CardTitle>
-						<CardDescription>Users</CardDescription>
-					</CardHeader>
-				</Card>
-				<Card>
-					<CardHeader className="pb-2">
-						<CardTitle className="text-2xl font-bold">{fundCount}</CardTitle>
-						<CardDescription>Athlete Applications</CardDescription>
-					</CardHeader>
-				</Card>
-				<Card>
-					<CardHeader className="pb-2">
-						<CardTitle className="text-2xl font-bold">{mentorCount}</CardTitle>
-						<CardDescription>Mentor Applications</CardDescription>
-					</CardHeader>
-				</Card>
-				<Card>
-					<CardHeader className="pb-2">
-						<CardTitle className="text-2xl font-bold">
-							{pendingFundApps + pendingMentorApps}
-						</CardTitle>
-						<CardDescription>Needs Review</CardDescription>
-					</CardHeader>
-				</Card>
-				<Card>
-					<CardHeader className="pb-2">
-						<CardTitle className="text-2xl font-bold">{openTasks}</CardTitle>
-						<CardDescription>Open Tasks</CardDescription>
-					</CardHeader>
-				</Card>
-			</div>
 
 			{/* Admin Sections */}
 			<div className="grid grid-cols-1 gap-6 md:grid-cols-2 2xl:grid-cols-3">
@@ -143,7 +73,7 @@ export default async function AdminPage() {
 							</div>
 							<div>
 								<CardTitle>Users</CardTitle>
-								<CardDescription>{userCount} total users</CardDescription>
+								<CardDescription>Manage all registered users</CardDescription>
 							</div>
 						</div>
 					</CardHeader>
@@ -305,6 +235,30 @@ export default async function AdminPage() {
 						</p>
 						<Button asChild variant="outline" className="w-full">
 							<Link href="/admin/debug">Open Debug Tools</Link>
+						</Button>
+					</CardContent>
+				</Card>
+
+				{/* Metrics */}
+				<Card className="transition-shadow hover:shadow-md">
+					<CardHeader>
+						<div className="flex items-center gap-3">
+							<div className="bg-primary/15 text-primary rounded-lg p-2">
+								<BarChart2 className="h-6 w-6" />
+							</div>
+							<div>
+								<CardTitle>Metrics</CardTitle>
+								<CardDescription>Program health at a glance</CardDescription>
+							</div>
+						</div>
+					</CardHeader>
+					<CardContent>
+						<p className="text-muted-foreground mb-4 text-sm">
+							Pipeline breakdowns, stage-by-stage counts, and program-wide
+							totals across athletes, mentors, and pairings.
+						</p>
+						<Button asChild variant="outline" className="w-full">
+							<Link href="/admin/metrics">Open Metrics</Link>
 						</Button>
 					</CardContent>
 				</Card>
