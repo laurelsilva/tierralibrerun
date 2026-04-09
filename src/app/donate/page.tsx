@@ -35,7 +35,7 @@ export default function DonatePage() {
 
 						<div className="relative h-[500px] overflow-hidden rounded-3xl md:h-[600px]">
 							<Image
-								src="/running5.jpg"
+								src="https://cdn.sanity.io/images/qgy6qhm1/production/a3497998d2648c43d8b84bdb2d8c197bea3a3e63-6225x4150.jpg"
 								alt="Trail community"
 								fill
 								priority
@@ -87,7 +87,7 @@ export default function DonatePage() {
 							<h2 className="mt-2 mb-10 text-5xl font-bold">Our Commitment</h2>
 							<div className="relative aspect-square overflow-hidden rounded-3xl md:aspect-[4/3]">
 								<Image
-									src="/running4.jpg"
+									src="https://cdn.sanity.io/images/qgy6qhm1/production/8f204f7b8f37ee12ebb64459a82b1ce3f68ed25f-768x1024.jpg"
 									alt="Trail running community"
 									fill
 									priority

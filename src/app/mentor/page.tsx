@@ -82,7 +82,7 @@ export default async function MentorPage() {
 
 						<div className="relative h-[500px] overflow-hidden rounded-3xl md:h-[600px]">
 							<Image
-								src="/fund-photos/website-photo-14.jpg"
+								src="https://cdn.sanity.io/images/qgy6qhm1/production/65b8c2fab3e156b79ca5feb3e9ae9bb8cda0d57f-2880x1920.jpg"
 								alt="Trail runners on a group run"
 								fill
 								className="object-cover"

@@ -64,7 +64,7 @@ export default async function Home() {
 								{/* Main card - more tilt, animated */}
 								<div className="animate-hero-tilt absolute top-0 right-0 h-[72%] w-[82%] -rotate-6 overflow-hidden rounded-3xl shadow-2xl ring-1 ring-white/15 transition-transform duration-700 will-change-transform">
 									<Image
-										src="/hero-2.JPG"
+										src="https://cdn.sanity.io/images/qgy6qhm1/production/0808a2eff7e220e5a1388048eec744a34130b288-6000x4000.jpg"
 										alt="Trail runner on a ridge"
 										fill
 										priority
@@ -78,7 +78,7 @@ export default async function Home() {
 								{/* Accent card - more tilt, animated */}
 								<div className="animate-hero-tilt-reverse absolute bottom-0 left-0 h-[62%] w-[72%] rotate-12 overflow-hidden rounded-3xl shadow-2xl ring-1 ring-white/15 transition-transform duration-700 will-change-transform">
 									<Image
-										src="/running2.jpg"
+										src="https://cdn.sanity.io/images/qgy6qhm1/production/27d494a084b28c73270946755e0811592b67bd22-4160x6240.jpg"
 										alt="Trail Running Community trail running community"
 										fill
 										quality={80}
@@ -99,7 +99,7 @@ export default async function Home() {
 						{/* Large Image */}
 						<div className="relative h-[60vh] w-full overflow-hidden rounded-3xl shadow-2xl lg:h-[75vh]">
 							<Image
-								src="/running7.jpeg"
+								src="https://cdn.sanity.io/images/qgy6qhm1/production/7d98d83be1a19d08f8ecc41c0863e2da505827dd-1086x724.jpg"
 								alt="Footprints camp group photo"
 								fill
 								loading="lazy"
@@ -178,7 +178,7 @@ export default async function Home() {
 						<div className="relative overflow-hidden rounded-3xl">
 							<div className="relative h-[60vh] md:h-[70vh] lg:h-[80vh]">
 								<Image
-									src="/running8.jpg"
+									src="https://cdn.sanity.io/images/qgy6qhm1/production/9cad935ec22fa0b59b68eafa8cf3e916ad7b0618-7178x4788.jpg"
 									alt="Athlete Fund - race entry support for athletes"
 									fill
 									loading="lazy"
@@ -226,7 +226,7 @@ export default async function Home() {
 						<div className="group relative overflow-hidden rounded-3xl">
 							<div className="relative h-[50vh] lg:h-[65vh]">
 								<Image
-									src="/running4.jpg"
+									src="https://cdn.sanity.io/images/qgy6qhm1/production/8f204f7b8f37ee12ebb64459a82b1ce3f68ed25f-768x1024.jpg"
 									alt="Mentorship Platform"
 									fill
 									loading="lazy"
@@ -266,7 +266,7 @@ export default async function Home() {
 						<div className="group relative overflow-hidden rounded-3xl">
 							<div className="relative h-[50vh] lg:h-[65vh]">
 								<Image
-									src="/running1.jpg"
+									src="https://cdn.sanity.io/images/qgy6qhm1/production/0ea0350d4ab63be4a921202acb7cfc7b98ec1010-721x1092.jpg"
 									alt="Community Events"
 									fill
 									loading="lazy"

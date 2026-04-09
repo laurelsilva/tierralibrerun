@@ -18,7 +18,7 @@ const defaultConfig = {
 	siteName: siteConfig.name,
 	siteUrl: siteConfig.url,
 	description: siteConfig.description,
-	image: '/running2.jpg',
+	image: 'https://cdn.sanity.io/images/qgy6qhm1/production/27d494a084b28c73270946755e0811592b67bd22-4160x6240.jpg',
 	twitter: socialConfig.twitterHandle ? `@${socialConfig.twitterHandle}` : '',
 	locale: siteConfig.locale,
 }
@@ -283,7 +283,7 @@ export function generateRaceSeriesMetadata(series: {
 		descriptionText ||
 		`Join the ${series.name} trail race in ${series.location}. Organized by ${series.company?.name || 'professional race organizers'}. Apply for funding through our athlete fund.`
 
-	const image = series.image?.asset?.url || '/running2.jpg'
+	const image = series.image?.asset?.url || 'https://cdn.sanity.io/images/qgy6qhm1/production/27d494a084b28c73270946755e0811592b67bd22-4160x6240.jpg'
 
 	return generateMetadata({
 		title,
@@ -368,7 +368,7 @@ export function generateRaceDistanceMetadata(distance: {
 		descriptionText ||
 		`Race details for the ${distance.distance} (${distanceDetail}) at ${raceName}. Entry fee: $${distance.price}. Apply for funding support.`
 
-	const image = distance.raceSeries?.image?.asset?.url || '/running2.jpg'
+	const image = distance.raceSeries?.image?.asset?.url || 'https://cdn.sanity.io/images/qgy6qhm1/production/27d494a084b28c73270946755e0811592b67bd22-4160x6240.jpg'
 
 	return generateMetadata({
 		title,
@@ -434,7 +434,7 @@ export function generatePostMetadata(post: {
 	const image =
 		post.seo?.ogImage?.asset?.url ||
 		post.mainImage?.asset?.url ||
-		'/running2.jpg'
+		'https://cdn.sanity.io/images/qgy6qhm1/production/27d494a084b28c73270946755e0811592b67bd22-4160x6240.jpg'
 	return generateMetadata({
 		title: post.seo?.title || post.title,
 		description:

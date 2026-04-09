@@ -43,7 +43,7 @@ export default async function AthletesFund() {
 								{/* Main card - different rotation */}
 								<div className="absolute top-0 left-0 h-[72%] w-[82%] rotate-2 overflow-hidden rounded-3xl shadow-2xl ring-1 ring-white/15">
 									<Image
-										src="/fund-photos/website-photo-10.JPG"
+										src="https://cdn.sanity.io/images/qgy6qhm1/production/5181d98df9431951a47407e912c9c8fd0c75d746-6000x4000.jpg"
 										alt="Women athletes on the trails"
 										fill
 										priority
@@ -57,7 +57,7 @@ export default async function AthletesFund() {
 								{/* Accent card - different position and rotation */}
 								<div className="absolute right-0 bottom-0 h-[62%] w-[72%] -rotate-3 overflow-hidden rounded-3xl shadow-2xl ring-1 ring-white/15">
 									<Image
-										src="/fund-photos/website-photo-9.JPG"
+										src="https://cdn.sanity.io/images/qgy6qhm1/production/a45f825b787fb22c4301e874a402dc76009daf7d-6000x4000.jpg"
 										alt="Women of color in trail running community"
 										fill
 										quality={80}
@@ -146,7 +146,7 @@ export default async function AthletesFund() {
 						{/* Large Image */}
 						<div className="relative h-[60vh] w-full overflow-hidden rounded-3xl shadow-2xl lg:h-[75vh]">
 							<Image
-								src="/fund-photos/website-photo-15.JPG"
+								src="https://cdn.sanity.io/images/qgy6qhm1/production/d7e38d983bc3a21cf5201eb7a2e9afda6f02d40a-6000x4000.jpg"
 								alt="Athletes breaking barriers on the trails"
 								fill
 								loading="lazy"
@@ -216,7 +216,7 @@ export default async function AthletesFund() {
 						<div className="relative overflow-hidden rounded-3xl">
 							<div className="relative h-[60vh] md:h-[70vh] lg:h-[80vh]">
 								<Image
-									src="/fund-photos/website-photo-4.JPG"
+									src="https://cdn.sanity.io/images/qgy6qhm1/production/fa06fb91c43a5e32e2053cc820e1ba58e8e8de8d-6000x4000.jpg"
 									alt="Race entry support"
 									fill
 									loading="lazy"
@@ -253,7 +253,7 @@ export default async function AthletesFund() {
 						<div className="group relative overflow-hidden rounded-3xl">
 							<div className="relative h-[50vh] lg:h-[65vh]">
 								<Image
-									src="/fund-photos/website-photo-5.JPG"
+									src="https://cdn.sanity.io/images/qgy6qhm1/production/59a3ef86bb3ff23d94b09407e4205aa1f9f3a148-4000x6000.jpg"
 									alt="Community integration"
 									fill
 									loading="lazy"
@@ -284,7 +284,7 @@ export default async function AthletesFund() {
 						<div className="group relative overflow-hidden rounded-3xl">
 							<div className="relative h-[50vh] lg:h-[65vh]">
 								<Image
-									src="/fund-photos/website-photo-17.JPG"
+									src="https://cdn.sanity.io/images/qgy6qhm1/production/62bce742704dde09d7adabd7b64c4dce86044c8e-4000x6000.jpg"
 									alt="Mentorship and guidance"
 									fill
 									loading="lazy"
@@ -320,7 +320,7 @@ export default async function AthletesFund() {
 							<div className="lg:col-span-7">
 								<div className="relative h-[55vh] overflow-hidden rounded-3xl lg:h-[70vh]">
 									<Image
-										src="/fund-photos/website-photo-12.JPG"
+										src="https://cdn.sanity.io/images/qgy6qhm1/production/d359ed693a780036082bad3f0520b55c572152c6-4000x6000.jpg"
 										alt="In-person race support"
 										fill
 										loading="lazy"
@@ -377,7 +377,7 @@ export default async function AthletesFund() {
 					<div className="mx-auto max-w-5xl">
 						<div className="relative h-[420px] w-full overflow-hidden rounded-3xl shadow-2xl md:h-[520px]">
 							<Image
-								src="/fund-photos/website-photo-19.JPG"
+								src="https://cdn.sanity.io/images/qgy6qhm1/production/53ad5b8250ec74f9895cedc666d6aac23ed26b3e-6000x4000.jpg"
 								alt="Community support and connection"
 								fill
 								loading="lazy"
@@ -660,7 +660,7 @@ export default async function AthletesFund() {
 
 						<div className="relative h-[500px] w-full overflow-hidden rounded-3xl shadow-2xl lg:order-first lg:h-[700px]">
 							<Image
-								src="/running4.jpg"
+								src="https://cdn.sanity.io/images/qgy6qhm1/production/8f204f7b8f37ee12ebb64459a82b1ce3f68ed25f-768x1024.jpg"
 								alt="Athletes in community"
 								fill
 								loading="lazy"
@@ -708,7 +708,7 @@ export default async function AthletesFund() {
 						{/* Final image */}
 						<div className="relative mx-auto mt-12 h-[350px] w-full overflow-hidden rounded-3xl shadow-2xl md:h-[450px] lg:h-[500px]">
 							<Image
-								src="/fund-photos/website-photo-1.JPG"
+								src="https://cdn.sanity.io/images/qgy6qhm1/production/a73b0cd33703ef55da09ae681bd7df1487653a8e-6000x4000.jpg"
 								alt="Athletes finishing strong"
 								fill
 								loading="lazy"
