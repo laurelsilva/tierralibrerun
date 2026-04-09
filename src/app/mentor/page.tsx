@@ -72,8 +72,8 @@ export default async function MentorPage() {
 										</div>
 									)}
 									<Button asChild size="lg" variant="outline">
-										<Link href="/blog/mentorship-at-tierra-libre">
-											Read: Mentorship at Trail Running Community
+										<Link href="/blog">
+											Read: Our Mentorship Story
 										</Link>
 									</Button>
 								</div>

@@ -54,14 +54,16 @@ export const metadata: Metadata = {
 		siteName: siteConfig.name,
 		locale: siteConfig.locale,
 		type: 'website',
-		images: [
-			{
-				url: 'https://cdn.sanity.io/images/qgy6qhm1/production/27d494a084b28c73270946755e0811592b67bd22-4160x6240.jpg',
-				width: 1200,
-				height: 630,
-				alt: `${siteConfig.name} - Trail Running Community`,
-			},
-		],
+		...(siteConfig.defaultOgImage ? {
+			images: [
+				{
+					url: siteConfig.defaultOgImage,
+					width: 1200,
+					height: 630,
+					alt: `${siteConfig.name} - Trail Running Community`,
+				},
+			],
+		} : {}),
 	},
 
 	// Twitter
@@ -69,7 +71,7 @@ export const metadata: Metadata = {
 		card: 'summary_large_image',
 		title: `${siteConfig.name} - Trail Running Community`,
 		description: siteConfig.description,
-		images: ['https://cdn.sanity.io/images/qgy6qhm1/production/27d494a084b28c73270946755e0811592b67bd22-4160x6240.jpg'],
+		...(siteConfig.defaultOgImage ? { images: [siteConfig.defaultOgImage] } : {}),
 		creator: socialConfig.twitterHandle ? `@${socialConfig.twitterHandle}` : undefined,
 	},
 
@@ -136,7 +138,7 @@ export default function RootLayout({
 		name: siteConfig.name,
 		description: siteConfig.description,
 		url: baseUrl,
-		logo: 'https://cdn.sanity.io/images/qgy6qhm1/production/27d494a084b28c73270946755e0811592b67bd22-4160x6240.jpg',
+		...(siteConfig.defaultOgImage ? { logo: siteConfig.defaultOgImage } : {}),
 		...(socialLinks.length > 0 && { sameAs: socialLinks }),
 		foundingDate: siteConfig.foundingYear,
 		areaServed: 'United States',

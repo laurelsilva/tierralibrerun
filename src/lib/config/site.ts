@@ -39,6 +39,13 @@ export const siteConfig = {
 
 	/** Donation platform embed URL — leave empty to disable donations page */
 	donationUrl: process.env.NEXT_PUBLIC_DONATION_URL || '',
+
+	/**
+	 * Default Open Graph / social share image URL.
+	 * Set NEXT_PUBLIC_DEFAULT_OG_IMAGE to your own Sanity CDN image URL.
+	 * Falls back to empty string (no OG image) if not set.
+	 */
+	defaultOgImage: process.env.NEXT_PUBLIC_DEFAULT_OG_IMAGE || '',
 } as const
 
 export const socialConfig = {

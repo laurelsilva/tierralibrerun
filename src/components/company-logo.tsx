@@ -10,10 +10,10 @@ interface CompanyLogoProps {
 	height?: number
 	className?: string
 	variant?: 'default' | 'hero' | 'filter'
-	disableTierraLibreOverride?: boolean
+	disableSvgOverride?: boolean
 }
 
-const TierraLibreLogo = ({
+const CommunitySVGLogo = ({
 	width = 100,
 	height = 100,
 	className = ''
@@ -46,11 +46,11 @@ export default function CompanyLogo({
 	height = 100,
 	className = '',
 	variant = 'default',
-	disableTierraLibreOverride = false
+	disableSvgOverride = false
 }: CompanyLogoProps) {
 	// Always use the SVG logo for the site's own organization unless disabled
 	if (
-		!disableTierraLibreOverride &&
+		!disableSvgOverride &&
 		companyName.toLowerCase().includes(siteConfig.name.toLowerCase())
 	) {
 		return (
@@ -62,7 +62,7 @@ export default function CompanyLogo({
 							? 'bg-transparent'
 							: 'border-border bg-card border'
 				} ${className}`}>
-				<TierraLibreLogo
+				<CommunitySVGLogo
 					width={width}
 					height={height}
 					className={`${
