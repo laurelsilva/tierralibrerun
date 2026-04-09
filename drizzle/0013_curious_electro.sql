@@ -1,0 +1,1 @@
+ALTER TABLE `users` DROP COLUMN `trail_running_experience_years`;

@@ -1,0 +1,34 @@
+{
+	"extends": "@epic-web/config/typescript",
+	"compilerOptions": {
+		"moduleResolution": "bundler",
+		"allowJs": true,
+		"lib": ["dom", "dom.iterable", "esnext"],
+		"baseUrl": ".",
+		"paths": {
+			"@/*": ["./src/*"],
+			"@/components/*": ["./src/components/*"],
+			"@/lib/*": ["./src/lib/*"],
+			"@/server/*": ["./src/server/*"],
+			"@/types/*": ["./src/types/*"],
+			"@/styles/*": ["./src/styles/*"],
+			"@/ui": ["./src/components/ui"]
+		},
+		"plugins": [
+			{
+				"name": "next"
+			}
+		]
+	},
+	"include": [
+		"next-env.d.ts",
+		"reset.d.ts",
+		"**/*.ts",
+		"**/*.tsx",
+		"**/*.js",
+		"**/*.jsx",
+		".next/types/**/*.ts",
+		".next/dev/types/**/*.ts"
+	],
+	"exclude": ["node_modules"]
+}

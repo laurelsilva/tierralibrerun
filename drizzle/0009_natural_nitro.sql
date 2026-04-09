@@ -1,0 +1,1 @@
+ALTER TABLE `fund_applications` ADD `wants_mentor` boolean NOT NULL;

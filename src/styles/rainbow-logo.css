@@ -1,0 +1,34 @@
+@keyframes rainbow-cycle {
+  0% { fill: #e40303 !important; }
+  16.66% { fill: #ff8c00 !important; }
+  33.33% { fill: #ffed00 !important; }
+  50% { fill: #008018 !important; }
+  66.66% { fill: #004cff !important; }
+  83.33% { fill: #732982 !important; }
+  100% { fill: #e40303 !important; }
+}
+
+.rainbow-hover:hover svg path,
+.rainbow-hover:hover svg .rainbow-path,
+.rainbow-hover:hover path {
+  animation: rainbow-cycle 2s linear infinite !important;
+}
+
+.rainbow-hover {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.rainbow-hover:hover {
+  transform: scale(1.05);
+}
+
+/* Ensure the logo can be hovered */
+svg.rainbow-hover:hover path {
+  animation: rainbow-cycle 2s linear infinite !important;
+}
+
+/* Force styles for specific viewBox */
+svg[viewBox="0 0 944 944"]:hover path {
+  animation: rainbow-cycle 2s linear infinite !important;
+}

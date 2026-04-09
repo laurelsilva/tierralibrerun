@@ -1,0 +1,1 @@
+ALTER TABLE `fund_applications` MODIFY COLUMN `wants_mentor` boolean NOT NULL DEFAULT false;

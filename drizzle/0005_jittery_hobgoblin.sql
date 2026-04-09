@@ -1,0 +1,1 @@
+ALTER TABLE `users` ADD `newsletter_subscribed` boolean DEFAULT false NOT NULL;
