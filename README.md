@@ -4,17 +4,29 @@
 
 Built by [Tierra Libre Run](https://tierralibre.run) — a BIPOC-led community advancing access in trail running.
 
+<img src="https://cdn.sanity.io/images/ql7nlbjf/production/865b1e97b53de5882e5f358f31840a2256767fc1-4464x3058.png?w=1600&h=1096&q=76&fit=max&auto=format" alt="Tierra Libre Run community on the trails" width="100%" />
+
 ---
 
-## Why this exists
+## 🌎 Why this exists
 
 Trail running has a representation problem. Entry fees are expensive. The sport's culture can feel exclusionary. And for many athletes of color, the barrier isn't ability — it's access.
 
 This platform was built to change that. It powers race funding applications, mentor-athlete matching, event coordination, and the administrative workflows that keep a volunteer-run nonprofit operating at scale.
 
-We open-sourced it because every running community deserves tools this good, and because the problems we're solving aren't unique to us.
+## 🌱 Why we're open-sourcing this
 
-## What it does
+We didn't build this just for us.
+
+Tierra Libre started as a group text and a shared love for trails. The technology came later — out of necessity, because spreadsheets stop working when you're managing dozens of funded athletes, mentor pairings, and community events across a season.
+
+We're releasing this code because we believe other communities shouldn't have to rebuild the same infrastructure from scratch. Whether you're a trail running crew in another city, a climbing collective, a cycling co-op, or a paddling group — if your community funds participation, matches mentors, and organizes events, this platform is built for you.
+
+**Fork it. Make it yours. We'll help where we can.**
+
+The outdoor industry doesn't need more gatekeeping. It needs more communities like yours with the tools to operate at scale without losing the soul of what makes them special.
+
+## 🏔️ What it does
 
 ### For athletes
 - **Race Funding** — Apply for entry fee support through a guided application. Track your status from submission through registration and race day.
@@ -33,7 +45,7 @@ We open-sourced it because every running community deserves tools this good, and
 - **Sanity CMS** — Races, blog posts, events, and company profiles are managed in Sanity Studio.
 - **Production-ready** — Clerk auth, PlanetScale database, Resend email, Vercel deployment. All battle-tested in production.
 
-## Tech stack
+## ⚙️ Tech stack
 
 | Layer | Technology |
 |-------|-----------|
@@ -46,7 +58,7 @@ We open-sourced it because every running community deserves tools this good, and
 | UI | Tailwind CSS + shadcn/ui + Radix primitives |
 | Deployment | Vercel |
 
-## Project structure
+## 📂 Project structure
 
 ```
 ├── drizzle/               SQL migrations (Drizzle Kit)
@@ -69,7 +81,7 @@ We open-sourced it because every running community deserves tools this good, and
 └── .env.local.example     Every env var with descriptions
 ```
 
-## Getting started
+## 🚀 Getting started
 
 ### Prerequisites
 
@@ -110,7 +122,7 @@ ADMIN_EMAILS="you@example.com"
 
 See [.env.local.example](.env.local.example) for the full list.
 
-## Key workflows
+## 🔄 Key workflows
 
 ### Fund application lifecycle
 
@@ -130,7 +142,7 @@ SUBMITTED → IN_REVIEW → APPROVED_POOL → MATCH_PENDING → MATCHED → ACTI
 
 Admins pair mentors with athletes through the pairing studio. Introduction emails are sent automatically.
 
-## Scripts
+## 🛠 Scripts
 
 | Command | Purpose |
 |---------|---------|
@@ -144,12 +156,12 @@ Admins pair mentors with athletes through the pairing studio. Introduction email
 | `pnpm db:studio` | Open Drizzle Studio |
 | `pnpm db:generate` | Generate migration SQL |
 
-## Contributing
+## 🤝 Contributing
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md) for workflow guidance. Uphold the [Code of Conduct](CODE_OF_CONDUCT.md) in all interactions.
 
 Security issues should be reported privately — see [SECURITY.md](SECURITY.md).
 
-## License
+## 📄 License
 
 [MIT](LICENSE)
