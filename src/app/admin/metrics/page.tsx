@@ -153,7 +153,7 @@ export default async function MetricsPage() {
 							{fundTotal}
 						</span>
 						<span className="text-muted-foreground mt-3 block text-lg">
-							athlete applications — all time
+							athletes funded all time
 						</span>
 					</div>
 

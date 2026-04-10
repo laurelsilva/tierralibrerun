@@ -16,7 +16,6 @@ import { useMemo, useEffect, useState } from 'react'
 import {
 	AdminDataTable,
 	AdminPageHeader,
-	AdminStatsGrid,
 	UserDeleteAction,
 } from '@/components/admin'
 import { type ColumnHeader } from '@/components/admin/admin-data-table'
@@ -53,12 +52,7 @@ import { type PageResult, type UserRow } from '@/server/admin/service'
 // You can convert this into a server component if you prefer SSR-only.
 // API endpoints should use the same service layer and admin guard.
 
-type UsersCounts = {
-	total: number
-	onboardingCompleted: number
-	bipoc: number
-	ally: number
-}
+type UsersCounts = never
 
 const USER_COLUMNS: ColumnHeader[] = [
 	{ key: 'user', content: 'User', className: 'font-medium' },
@@ -109,12 +103,6 @@ function useUsersQuery() {
 	}
 }
 
-async function fetchUsersCounts(): Promise<UsersCounts> {
-	const res = await fetch('/api/admin/users/counts', { cache: 'no-store' })
-	if (!res.ok) throw new Error('Failed to load counts')
-	return res.json() as Promise<UsersCounts>
-}
-
 async function fetchUsersPage(input: {
 	page: number
 	pageSize: number
@@ -142,8 +130,6 @@ export default function UsersPage() {
 	const { page, pageSize, q, userType, onboarding } = useUsersQuery()
 
 	// Data loaders (client-side)
-	// For better UX, consider SWR/React Query. Here we use a tiny manual fetch-and-render pattern.
-	const countsPromise = useMemo(() => fetchUsersCounts(), [])
 	const pagePromise = useMemo(
 		() => fetchUsersPage({ page, pageSize, q, userType, onboarding }),
 		[page, pageSize, q, userType, onboarding],
@@ -196,8 +182,6 @@ export default function UsersPage() {
 				accent="blue"
 			/>
 
-			{/* Stats */}
-			<SuspenseCounts countsPromise={countsPromise} />
 
 			{/* Filters */}
 			<Card>
@@ -296,78 +280,6 @@ export default function UsersPage() {
 
 /* --------------------------- Suspense-like wrappers --------------------------- */
 
-function SuspenseCounts({
-	countsPromise,
-}: {
-	countsPromise: Promise<UsersCounts>
-}) {
-	const [counts, setCounts] = useState<UsersCounts | null>(null)
-	const [error, setError] = useState<string | null>(null)
-
-	useEffect(() => {
-		let mounted = true
-		countsPromise
-			.then((c) => {
-				if (mounted) setCounts(c)
-			})
-			.catch((e) => {
-				if (mounted) {
-					if (e instanceof Error) setError(e.message)
-					else if (
-						typeof e === 'object' &&
-						e !== null &&
-						'message' in e &&
-						typeof (e as any).message === 'string'
-					)
-						setError((e as any).message)
-					else setError('Failed to load counts')
-				}
-			})
-		return () => {
-			mounted = false
-		}
-	}, [countsPromise])
-
-	if (error) {
-		return (
-			<Card>
-				<CardHeader>
-					<CardTitle>Error</CardTitle>
-					<CardDescription>{error}</CardDescription>
-				</CardHeader>
-			</Card>
-		)
-	}
-
-	if (!counts) {
-		return (
-			<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-				<Skeleton className="h-28" />
-				<Skeleton className="h-28" />
-				<Skeleton className="h-28" />
-				<Skeleton className="h-28" />
-			</div>
-		)
-	}
-
-	return (
-		<AdminStatsGrid
-			items={[
-				{ label: 'Users', value: counts.total, variant: 'muted' },
-				{
-					label: 'Onboarding Complete',
-					value: counts.onboardingCompleted,
-					variant: 'green',
-				},
-				{ label: 'BIPOC Members', value: counts.bipoc, variant: 'amber' },
-				{ label: 'Ally Members', value: counts.ally, variant: 'blue' },
-			]}
-			columns={4}
-			compact
-		/>
-	)
-}
-
 function SuspenseUsers({
 	pagePromise,
 	onPageChange,
@@ -443,8 +355,6 @@ function SuspenseUsers({
 		<Card>
 			<CardContent>
 				<AdminDataTable
-					headerTitle={`All Users (${data.total})`}
-					headerDescription="Registered users"
 					rightActions={
 						<div className="flex items-center gap-2">
 							<Label htmlFor="pageSize" className="text-muted-foreground text-sm">

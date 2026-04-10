@@ -1,7 +1,7 @@
-import { sql, desc, inArray } from 'drizzle-orm'
+import { desc } from 'drizzle-orm'
 import { UserCheck } from 'lucide-react'
 import Link from 'next/link'
-import { WorkflowStageBadge, AdminStatsGrid } from '@/components/admin'
+import { WorkflowStageBadge } from '@/components/admin'
 import {
 	AdminDataTable,
 	type ColumnHeader,
@@ -114,34 +114,6 @@ export default async function MentorApplicationsPage() {
 		.from(mentorApplications)
 		.orderBy(desc(mentorApplications.createdAt))
 
-	const [{ value: totalApplicationsCount } = { value: 0 }] = await db
-		.select({ value: sql<number>`count(*)`.mapWith(Number) })
-		.from(mentorApplications)
-
-	const [{ value: pendingApplicationsCount } = { value: 0 }] = await db
-		.select({ value: sql<number>`count(*)`.mapWith(Number) })
-		.from(mentorApplications)
-		.where(
-			inArray(mentorApplications.workflowStage, ['SUBMITTED', 'IN_REVIEW']),
-		)
-
-	const [{ value: approvedApplicationsCount } = { value: 0 }] = await db
-		.select({ value: sql<number>`count(*)`.mapWith(Number) })
-		.from(mentorApplications)
-		.where(
-			inArray(mentorApplications.workflowStage, [
-				'APPROVED_POOL',
-				'MATCH_PENDING',
-				'MATCHED',
-				'ACTIVE',
-			]),
-		)
-
-	const [{ value: declinedApplicationsCount } = { value: 0 }] = await db
-		.select({ value: sql<number>`count(*)`.mapWith(Number) })
-		.from(mentorApplications)
-		.where(inArray(mentorApplications.workflowStage, ['DECLINED']))
-
 	const needsReview = allMentorApplications.filter((r) => {
 		const stage = toUpperStage(r.workflowStage)
 		return stage === 'SUBMITTED' || stage === 'IN_REVIEW'
@@ -198,33 +170,6 @@ export default async function MentorApplicationsPage() {
 						<Link href="/admin/mentor-pairings">Open Pairing Workspace</Link>
 					</Button>
 				}
-			/>
-
-			<AdminStatsGrid
-				items={[
-					{
-						label: 'Total',
-						value: totalApplicationsCount,
-						variant: 'muted',
-					},
-					{
-						label: 'Needs Review',
-						value: pendingApplicationsCount,
-						variant: 'amber',
-					},
-					{
-						label: 'In Program',
-						value: approvedApplicationsCount,
-						variant: 'green',
-					},
-					{
-						label: 'Declined',
-						value: declinedApplicationsCount,
-						variant: 'red',
-					},
-				]}
-				columns={4}
-				compact
 			/>
 
 			<section className="space-y-3">

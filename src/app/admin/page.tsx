@@ -1,5 +1,3 @@
-import { sql, inArray, isNull } from 'drizzle-orm'
-
 import {
 	Users,
 	CreditCard,
@@ -19,46 +17,8 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card'
-import {
-	db,
-	fundApplications,
-	mentorApplications,
-	mentorshipMatches,
-} from '@/server/db'
 
 export default async function AdminPage() {
-	const pendingFundAppsRes = await db
-		.select({ value: sql<number>`count(*)`.mapWith(Number) })
-		.from(fundApplications)
-		.where(inArray(fundApplications.workflowStage, ['SUBMITTED', 'IN_REVIEW']))
-	const pendingFundApps = pendingFundAppsRes[0]?.value ?? 0
-
-	const pendingMentorAppsRes = await db
-		.select({ value: sql<number>`count(*)`.mapWith(Number) })
-		.from(mentorApplications)
-		.where(
-			inArray(mentorApplications.workflowStage, ['SUBMITTED', 'IN_REVIEW']),
-		)
-	const pendingMentorApps = pendingMentorAppsRes[0]?.value ?? 0
-
-	const activeAthletesRes = await db
-		.select({ value: sql<number>`count(*)`.mapWith(Number) })
-		.from(fundApplications)
-		.where(
-			inArray(fundApplications.workflowStage, [
-				'REGISTERED',
-				'ONBOARDING_IN_PROGRESS',
-				'ACTIVE_IN_PROGRAM',
-			]),
-		)
-	const activeAthletes = activeAthletesRes[0]?.value ?? 0
-
-	const openMentorPairingsRes = await db
-		.select({ value: sql<number>`count(*)`.mapWith(Number) })
-		.from(mentorshipMatches)
-		.where(isNull(mentorshipMatches.endedAt))
-	const openMentorPairings = openMentorPairingsRes[0]?.value ?? 0
-
 	return (
 		<div className="space-y-8">
 			{/* Admin Sections */}
@@ -95,7 +55,7 @@ export default async function AdminPage() {
 							</div>
 							<div>
 								<CardTitle>Athlete Applications</CardTitle>
-								<CardDescription>{pendingFundApps} need review</CardDescription>
+							<CardDescription>Manage applications</CardDescription>
 							</div>
 						</div>
 					</CardHeader>
@@ -119,9 +79,7 @@ export default async function AdminPage() {
 							</div>
 							<div>
 								<CardTitle>Mentor Applications</CardTitle>
-								<CardDescription>
-									{pendingMentorApps} need review
-								</CardDescription>
+							<CardDescription>Manage applications</CardDescription>
 							</div>
 						</div>
 					</CardHeader>
@@ -144,9 +102,7 @@ export default async function AdminPage() {
 							</div>
 							<div>
 								<CardTitle>Mentor Pairings</CardTitle>
-								<CardDescription>
-									{openMentorPairings} active pairings
-								</CardDescription>
+							<CardDescription>Match athletes with mentors</CardDescription>
 							</div>
 						</div>
 					</CardHeader>
@@ -194,9 +150,7 @@ export default async function AdminPage() {
 							</div>
 							<div>
 								<CardTitle>Active Participants</CardTitle>
-								<CardDescription>
-									{activeAthletes} active participants
-								</CardDescription>
+							<CardDescription>View upcoming race participants</CardDescription>
 							</div>
 						</div>
 					</CardHeader>

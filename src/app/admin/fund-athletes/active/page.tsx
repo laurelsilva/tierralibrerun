@@ -1,14 +1,12 @@
-import { and, inArray, isNotNull, isNull, or, sql } from 'drizzle-orm'
+import { and, inArray, isNull, or, sql } from 'drizzle-orm'
 import { Activity } from 'lucide-react'
 import Link from 'next/link'
 import {
 	AdminDataTable,
 	AdminPageHeader,
-	AdminStatsGrid,
 	WorkflowStageBadge,
 } from '@/components/admin'
 import { type ColumnHeader } from '@/components/admin/admin-data-table'
-import { type AdminStatItem } from '@/components/admin/admin-stats'
 import { Button } from '@/components/ui/button'
 import { toMysqlDateTime } from '@/lib/dates'
 import { db, fundApplications } from '@/server/db'
@@ -82,23 +80,6 @@ export default async function ActiveFundAthletesPage() {
 			fundApplications.createdAt,
 		)
 
-	const needsOutcomeUpdate = await db
-		.select({
-			id: fundApplications.id,
-		})
-		.from(fundApplications)
-		.where(
-			and(
-				inArray(fundApplications.workflowStage, [
-					'REGISTERED',
-					'ONBOARDING_IN_PROGRESS',
-					'ACTIVE_IN_PROGRAM',
-				]),
-				isNotNull(fundApplications.raceDate),
-				sql`${fundApplications.raceDate} < ${todayMysql || '9999-12-31 00:00:00'}`,
-			),
-		)
-
 	const grouped = rows.reduce(
 		(acc, athlete) => {
 			const series = raceSeriesName(athlete.race)
@@ -110,23 +91,6 @@ export default async function ActiveFundAthletesPage() {
 	)
 
 	const groups = Object.entries(grouped).sort((a, b) => a[0].localeCompare(b[0]))
-	const stats: AdminStatItem[] = [
-		{
-			label: 'Active Participants',
-			value: rows.length,
-			variant: 'green',
-		},
-		{
-			label: 'Race Series',
-			value: groups.length,
-			variant: 'blue',
-		},
-		{
-			label: 'Past-Race Records Still Open',
-			value: needsOutcomeUpdate.length,
-			variant: needsOutcomeUpdate.length > 0 ? 'amber' : 'muted',
-		},
-	]
 
 	const columns: ColumnHeader[] = [
 		{ key: 'athlete', content: 'Participant', className: 'font-medium' },
@@ -155,7 +119,6 @@ export default async function ActiveFundAthletesPage() {
 			/>
 
 			<div className="space-y-6">
-				<AdminStatsGrid items={stats} columns={3} compact />
 
 				{groups.length === 0 ? (
 					<div className="text-muted-foreground rounded-xl border py-8 text-center text-sm">
