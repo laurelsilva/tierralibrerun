@@ -55,7 +55,7 @@ export default async function AdminPage() {
 							</div>
 							<div>
 								<CardTitle>Athlete Applications</CardTitle>
-							<CardDescription>Manage applications</CardDescription>
+								<CardDescription>Manage applications</CardDescription>
 							</div>
 						</div>
 					</CardHeader>
@@ -79,7 +79,7 @@ export default async function AdminPage() {
 							</div>
 							<div>
 								<CardTitle>Mentor Applications</CardTitle>
-							<CardDescription>Manage applications</CardDescription>
+								<CardDescription>Manage applications</CardDescription>
 							</div>
 						</div>
 					</CardHeader>
@@ -102,7 +102,7 @@ export default async function AdminPage() {
 							</div>
 							<div>
 								<CardTitle>Mentor Pairings</CardTitle>
-							<CardDescription>Match athletes with mentors</CardDescription>
+								<CardDescription>Match athletes with mentors</CardDescription>
 							</div>
 						</div>
 					</CardHeader>
@@ -150,7 +150,9 @@ export default async function AdminPage() {
 							</div>
 							<div>
 								<CardTitle>Active Participants</CardTitle>
-							<CardDescription>View upcoming race participants</CardDescription>
+								<CardDescription>
+									View upcoming race participants
+								</CardDescription>
 							</div>
 						</div>
 					</CardHeader>

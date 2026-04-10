@@ -90,7 +90,9 @@ export default async function ActiveFundAthletesPage() {
 		{} as Record<string, ActiveAthleteRow[]>,
 	)
 
-	const groups = Object.entries(grouped).sort((a, b) => a[0].localeCompare(b[0]))
+	const groups = Object.entries(grouped).sort((a, b) =>
+		a[0].localeCompare(b[0]),
+	)
 
 	const columns: ColumnHeader[] = [
 		{ key: 'athlete', content: 'Participant', className: 'font-medium' },
@@ -119,7 +121,6 @@ export default async function ActiveFundAthletesPage() {
 			/>
 
 			<div className="space-y-6">
-
 				{groups.length === 0 ? (
 					<div className="text-muted-foreground rounded-xl border py-8 text-center text-sm">
 						No active participants with upcoming races.
@@ -197,7 +198,9 @@ export default async function ActiveFundAthletesPage() {
 												align: 'right',
 												content: (
 													<Button asChild variant="ghost" size="sm">
-														<Link href={`/admin/applications/${athlete.id}`}>View</Link>
+														<Link href={`/admin/applications/${athlete.id}`}>
+															View
+														</Link>
 													</Button>
 												),
 											},

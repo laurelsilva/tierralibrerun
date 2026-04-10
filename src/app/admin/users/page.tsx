@@ -38,7 +38,11 @@ import {
 } from '@/components/ui/select'
 import Skeleton from '@/components/ui/skeleton'
 // Admin email check uses ADMIN_EMAILS env var
-const ADMIN_EMAIL_LIST = (process.env.NEXT_PUBLIC_ADMIN_EMAILS || process.env.ADMIN_EMAILS || '')
+const ADMIN_EMAIL_LIST = (
+	process.env.NEXT_PUBLIC_ADMIN_EMAILS ||
+	process.env.ADMIN_EMAILS ||
+	''
+)
 	.split(',')
 	.map((e: string) => e.trim().toLowerCase())
 	.filter(Boolean)
@@ -181,7 +185,6 @@ export default function UsersPage() {
 				icon={<Users className="h-6 w-6" />}
 				accent="blue"
 			/>
-
 
 			{/* Filters */}
 			<Card>
@@ -357,7 +360,10 @@ function SuspenseUsers({
 				<AdminDataTable
 					rightActions={
 						<div className="flex items-center gap-2">
-							<Label htmlFor="pageSize" className="text-muted-foreground text-sm">
+							<Label
+								htmlFor="pageSize"
+								className="text-muted-foreground text-sm"
+							>
 								Rows
 							</Label>
 							<Select
@@ -390,7 +396,9 @@ function SuspenseUsers({
 										>
 											{user.name || 'No name'}
 										</Link>
-										<span className="text-muted-foreground text-xs">{user.email}</span>
+										<span className="text-muted-foreground text-xs">
+											{user.email}
+										</span>
 										<span className="text-muted-foreground/80 font-mono text-[11px]">
 											{user.id.substring(0, 8)}...
 										</span>
@@ -399,26 +407,29 @@ function SuspenseUsers({
 							},
 							{
 								key: 'type',
-								content: user.userType === 'bipoc' ? (
-									<span className="bg-primary/15 text-primary inline-flex rounded-md px-2 py-1 text-xs font-medium">
-										BIPOC
-									</span>
-								) : user.userType === 'ally' ? (
-									<span className="bg-secondary text-secondary-foreground inline-flex rounded-md px-2 py-1 text-xs font-medium">
-										Ally
-									</span>
-								) : (
-									<span className="bg-muted text-muted-foreground inline-flex rounded-md px-2 py-1 text-xs font-medium">
-										Not set
-									</span>
-								),
+								content:
+									user.userType === 'bipoc' ? (
+										<span className="bg-primary/15 text-primary inline-flex rounded-md px-2 py-1 text-xs font-medium">
+											BIPOC
+										</span>
+									) : user.userType === 'ally' ? (
+										<span className="bg-secondary text-secondary-foreground inline-flex rounded-md px-2 py-1 text-xs font-medium">
+											Ally
+										</span>
+									) : (
+										<span className="bg-muted text-muted-foreground inline-flex rounded-md px-2 py-1 text-xs font-medium">
+											Not set
+										</span>
+									),
 							},
 							{
 								key: 'profile',
 								hideOnMobile: true,
 								content: (
 									<div className="text-muted-foreground text-sm">
-										<div>{user.age ? `Age ${user.age}` : 'Age not provided'}</div>
+										<div>
+											{user.age ? `Age ${user.age}` : 'Age not provided'}
+										</div>
 										<div>{user.genderIdentity || 'Gender not provided'}</div>
 										<div>{user.locationRegion || 'Region not provided'}</div>
 									</div>
@@ -429,7 +440,10 @@ function SuspenseUsers({
 								hideOnMobile: true,
 								content: (
 									<div className="flex flex-wrap gap-1.5">
-										<BooleanPill label="Onboarding" value={user.onboardingCompleted} />
+										<BooleanPill
+											label="Onboarding"
+											value={user.onboardingCompleted}
+										/>
 										<BooleanPill
 											label="Code"
 											value={user.acceptedCodeOfConduct}

@@ -1,13 +1,5 @@
 import { sql, eq, isNull, isNotNull, and, inArray } from 'drizzle-orm'
-import {
-	ArrowUpRight,
-	CheckCircle2,
-	ClipboardList,
-	Handshake,
-	TrendingUp,
-	UserCheck,
-	Users,
-} from 'lucide-react'
+import { ArrowUpRight } from 'lucide-react'
 import Image from 'next/image'
 import { getRaceCompanies, getSponsorCompanies } from '@/lib/sanity/queries'
 import {
@@ -76,10 +68,15 @@ export default async function MetricsPage() {
 		db
 			.select({ value: sql<number>`count(*)`.mapWith(Number) })
 			.from(fundApplications)
-			.where(and(
-				eq(fundApplications.bipocIdentity, true),
-				inArray(fundApplications.genderIdentity, ['Woman', 'Transgender woman']),
-			)),
+			.where(
+				and(
+					eq(fundApplications.bipocIdentity, true),
+					inArray(fundApplications.genderIdentity, [
+						'Woman',
+						'Transgender woman',
+					]),
+				),
+			),
 	])
 
 	const p20 = (n: number) => Math.round(n * 1.2)
@@ -120,263 +117,270 @@ export default async function MetricsPage() {
 		base > 0 ? `${Math.round((n / base) * 100)}%` : '—'
 
 	const FUND_REVIEW_STAGES = ['SUBMITTED', 'IN_REVIEW', 'WAITLISTED']
-	const FUND_ACTIVE_STAGES = ['AWAITING_CONFIRMATION', 'CONFIRMED', 'REGISTRATION_IN_PROGRESS', 'REGISTERED', 'ONBOARDING_IN_PROGRESS', 'ACTIVE_IN_PROGRAM']
-	const FUND_CLOSED_STAGES = ['DECLINED', 'CLOSED', 'NO_LONGER_ACTIVE', 'NO_SHOW_OR_DROPPED']
+	const FUND_ACTIVE_STAGES = [
+		'AWAITING_CONFIRMATION',
+		'CONFIRMED',
+		'REGISTRATION_IN_PROGRESS',
+		'REGISTERED',
+		'ONBOARDING_IN_PROGRESS',
+		'ACTIVE_IN_PROGRAM',
+	]
+	const FUND_CLOSED_STAGES = [
+		'DECLINED',
+		'CLOSED',
+		'NO_LONGER_ACTIVE',
+		'NO_SHOW_OR_DROPPED',
+	]
 	const MENTOR_REVIEW_STAGES = ['SUBMITTED', 'IN_REVIEW', 'WAITLISTED']
-	const MENTOR_ACTIVE_STAGES = ['APPROVED_POOL', 'MATCH_PENDING', 'MATCHED', 'ACTIVE']
+	const MENTOR_ACTIVE_STAGES = [
+		'APPROVED_POOL',
+		'MATCH_PENDING',
+		'MATCHED',
+		'ACTIVE',
+	]
 	const MENTOR_CLOSED_STAGES = ['DECLINED', 'CLOSED']
 
-	const fundInReview = p20(FUND_REVIEW_STAGES.reduce((s, st) => s + (fundStageCounts[st] ?? 0), 0))
-	const fundActive = p20(FUND_ACTIVE_STAGES.reduce((s, st) => s + (fundStageCounts[st] ?? 0), 0))
-	const fundClosed = p20(FUND_CLOSED_STAGES.reduce((s, st) => s + (fundStageCounts[st] ?? 0), 0))
+	const fundInReview = p20(
+		FUND_REVIEW_STAGES.reduce((s, st) => s + (fundStageCounts[st] ?? 0), 0),
+	)
+	const fundActive = p20(
+		FUND_ACTIVE_STAGES.reduce((s, st) => s + (fundStageCounts[st] ?? 0), 0),
+	)
+	const fundClosed = p20(
+		FUND_CLOSED_STAGES.reduce((s, st) => s + (fundStageCounts[st] ?? 0), 0),
+	)
 	const fundTotal = fundInReview + fundActive + fundClosed
 
-	const mentorInReview = p20(MENTOR_REVIEW_STAGES.reduce((s, st) => s + (mentorStageCounts[st] ?? 0), 0))
-	const mentorActive = p20(MENTOR_ACTIVE_STAGES.reduce((s, st) => s + (mentorStageCounts[st] ?? 0), 0))
-	const mentorClosed = p20(MENTOR_CLOSED_STAGES.reduce((s, st) => s + (mentorStageCounts[st] ?? 0), 0))
+	const mentorInReview = p20(
+		MENTOR_REVIEW_STAGES.reduce((s, st) => s + (mentorStageCounts[st] ?? 0), 0),
+	)
+	const mentorActive = p20(
+		MENTOR_ACTIVE_STAGES.reduce((s, st) => s + (mentorStageCounts[st] ?? 0), 0),
+	)
+	const mentorClosed = p20(
+		MENTOR_CLOSED_STAGES.reduce((s, st) => s + (mentorStageCounts[st] ?? 0), 0),
+	)
 	const mentorTotal = mentorInReview + mentorActive + mentorClosed
 	return (
-		<div className="pb-24">
+		<div>
 			{/* ── Cover ──────────────────────────────────────────────────── */}
-			<div className="animate-fade-in-up border-border border-b py-10 sm:py-14">
-				<p className="text-primary text-[10px] font-semibold tracking-[0.3em] uppercase">
-					Tierra Libre Run &nbsp;·&nbsp; Program Dashboard &nbsp;·&nbsp; 2026
-				</p>
+			<section className="animate-fade-in-up relative overflow-hidden py-16 text-center sm:py-28">
+				<div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_50%_at_50%_-10%,hsl(46_95%_55%/0.1),transparent)]" />
 
-				<div className="mt-10 flex flex-wrap items-end gap-x-16 gap-y-8">
-					{/* Headline stat */}
-					<div>
+				<div className="relative">
+					<p className="text-primary text-[10px] font-semibold tracking-[0.4em] uppercase">
+						Tierra Libre Run &middot; Impact Report &middot; 2026
+					</p>
+
+					<div className="mt-14 sm:mt-20">
 						<span
-							className="text-foreground block text-[2.75rem] leading-none font-bold tabular-nums sm:text-[5.5rem]"
+							className="text-foreground block text-[5rem] leading-[0.85] font-bold tabular-nums sm:text-[9rem]"
 							style={{ fontFamily: 'var(--font-elan)' }}
 						>
 							{fundTotal}
 						</span>
-						<span className="text-muted-foreground mt-3 block text-lg">
+						<p className="text-muted-foreground mt-4 text-lg tracking-wide sm:text-xl">
 							athletes funded all time
-						</span>
+						</p>
 					</div>
 
-					{/* Supporting KPIs */}
-					<div className="mb-2 flex flex-wrap gap-x-6 gap-y-5 sm:gap-x-10 sm:gap-y-6">
-						<div>
-							<span className="block text-3xl font-bold tabular-nums">
-								{userCount}
-							</span>
-							<span className="text-muted-foreground mt-1 block text-sm">
-								registered members
-							</span>
-						</div>
-						<div>
-							<span className="block text-3xl font-bold tabular-nums">
-								{mentorTotal}
-							</span>
-							<span className="text-muted-foreground mt-1 block text-sm">
-								mentor applications
-							</span>
-						</div>
-						<div>
-							<span className="block text-3xl font-bold tabular-nums">
-								{openPairings}
-							</span>
-							<span className="text-muted-foreground mt-1 block text-sm">
-								active pairings
-							</span>
-						</div>
-						<div>
-							<span className="block text-3xl font-bold tabular-nums">
-								{endedPairings}
-							</span>
-							<span className="text-muted-foreground mt-1 block text-sm">
-								completed pairings
-							</span>
-						</div>
-						<div>
-							<span className="block text-3xl font-bold tabular-nums">
-								{raceCompanies.length + sponsorCompanies.length}
-							</span>
-							<span className="text-muted-foreground mt-1 block text-sm">
-								partner organizations
-							</span>
-						</div>
+					<div className="mx-auto mt-14 grid max-w-3xl grid-cols-2 gap-3 sm:mt-20 sm:grid-cols-5 sm:gap-4">
+						{[
+							{ value: userCount, label: 'registered members' },
+							{ value: mentorTotal, label: 'mentor applications' },
+							{ value: openPairings, label: 'active pairings' },
+							{ value: endedPairings, label: 'completed pairings' },
+							{
+								value: raceCompanies.length + sponsorCompanies.length,
+								label: 'partner orgs',
+							},
+						].map((kpi) => (
+							<div
+								key={kpi.label}
+								className="border-border/60 bg-card/60 rounded-xl border p-4 backdrop-blur-sm"
+							>
+								<span className="text-foreground block text-2xl font-bold tabular-nums sm:text-[1.75rem]">
+									{kpi.value}
+								</span>
+								<span className="text-muted-foreground mt-1 block text-[11px] leading-tight">
+									{kpi.label}
+								</span>
+							</div>
+						))}
 					</div>
 				</div>
-			</div>
+			</section>
 
 			{/* ── 01 Who We Serve ────────────────────────────────────────── */}
-			<div className="border-border border-b py-10 sm:py-14">
-				<SectionHeader
-					index="01"
+			<section className="bg-primary/3 py-16 sm:py-24">
+				<SlideHeader
+					number="01"
 					eyebrow="Who We Serve"
 					title="The Athlete Community"
 				/>
-
-				<div className="divide-border mt-10 grid grid-cols-1 divide-y sm:grid-cols-4 sm:divide-x sm:divide-y-0">
-					<StatSlide
+				<div className="mt-10 grid grid-cols-2 gap-3 sm:mt-14 sm:grid-cols-4 sm:gap-4">
+					<MetricCard
 						value={pct(bipocFundCount, fundTotal)}
 						label="identify as BIPOC"
 						accent
 					/>
-					<StatSlide
+					<MetricCard
 						value={pct(wocFundCount, fundTotal)}
 						label="women of color"
 						accent
 					/>
-					<StatSlide
+					<MetricCard
 						value={pct(firstRaceCount, fundTotal)}
 						label="racing for the first time"
 					/>
-					<StatSlide
+					<MetricCard
 						value={pct(wantsMentorCount, fundTotal)}
 						label="requested a mentor"
 					/>
 				</div>
-			</div>
+			</section>
 
 			{/* ── 02 Athlete Pipeline ────────────────────────────────────── */}
-			<div className="border-border border-b py-10 sm:py-14">
-				<SectionHeader
-					index="02"
+			<section className="py-16 sm:py-24">
+				<SlideHeader
+					number="02"
 					eyebrow="Athletes"
 					title="Application Pipeline"
 				/>
-				<div className="divide-border mt-10 grid grid-cols-1 divide-y sm:grid-cols-3 sm:divide-x sm:divide-y-0">
-					<StatSlide value={String(fundInReview)} label="in review" accent />
-					<StatSlide value={String(fundActive)} label="active in program" />
-					<StatSlide value={String(fundClosed)} label="closed" />
+				<div className="mt-10 grid grid-cols-1 gap-3 sm:mt-14 sm:grid-cols-3 sm:gap-4">
+					<MetricCard value={String(fundInReview)} label="in review" accent />
+					<MetricCard value={String(fundActive)} label="active in program" />
+					<MetricCard value={String(fundClosed)} label="closed" />
 				</div>
-			</div>
+			</section>
 
 			{/* ── 03 Mentors ─────────────────────────────────────────────── */}
-			<div className="border-border border-b py-10 sm:py-14">
-				<SectionHeader
-					index="03"
+			<section className="bg-primary/3 py-16 sm:py-24">
+				<SlideHeader
+					number="03"
 					eyebrow="Mentors"
 					title="Our Volunteer Network"
 				/>
-
-				<div className="divide-border mt-10 grid grid-cols-1 divide-y sm:grid-cols-3 sm:divide-x sm:divide-y-0">
-					<StatSlide
+				<div className="mt-10 grid grid-cols-1 gap-3 sm:mt-14 sm:grid-cols-3 sm:gap-4">
+					<MetricCard
 						value={String(mentorTotal)}
 						label="mentor applications — all time"
 						accent
 					/>
-					<StatSlide
+					<MetricCard
 						value={pct(bipocMentorCount, mentorTotal)}
 						label="of mentors identify as BIPOC"
 					/>
-					<StatSlide
+					<MetricCard
 						value={String(openPairings + endedPairings)}
 						label="total athlete-mentor pairings"
 					/>
 				</div>
-			</div>
+			</section>
 
 			{/* ── 04 Mentor Pipeline ─────────────────────────────────────── */}
-			<div className="border-border border-b py-10 sm:py-14">
-				<SectionHeader
-					index="04"
+			<section className="py-16 sm:py-24">
+				<SlideHeader
+					number="04"
 					eyebrow="Mentors"
 					title="Application Pipeline"
 				/>
-				<div className="divide-border mt-10 grid grid-cols-1 divide-y sm:grid-cols-3 sm:divide-x sm:divide-y-0">
-					<StatSlide value={String(mentorInReview)} label="in review" accent />
-					<StatSlide value={String(mentorActive)} label="active in pool" />
-					<StatSlide value={String(mentorClosed)} label="closed" />
+				<div className="mt-10 grid grid-cols-1 gap-3 sm:mt-14 sm:grid-cols-3 sm:gap-4">
+					<MetricCard value={String(mentorInReview)} label="in review" accent />
+					<MetricCard value={String(mentorActive)} label="active in pool" />
+					<MetricCard value={String(mentorClosed)} label="closed" />
 				</div>
-			</div>
+			</section>
 
 			{/* ── 05 Race Partners ───────────────────────────────────────── */}
-			<div className="border-border border-b py-10 sm:py-14">
-				<SectionHeader
-					index="05"
+			<section className="bg-primary/3 py-16 sm:py-24">
+				<SlideHeader
+					number="05"
 					eyebrow="Race Partners"
 					title="The Organizations at the Start Line"
 				/>
-
-				<div className="divide-border mt-10 grid grid-cols-1 divide-y sm:grid-cols-2 sm:divide-x sm:divide-y-0">
-					<StatSlide
+				<div className="mt-10 sm:mt-14">
+					<MetricCard
 						value={String(raceCompanies.length)}
 						label="race organizations in our network"
 						accent
 					/>
-
 				</div>
-
 				{raceCompanies.length > 0 && (
 					<div className="mt-8">
 						<PartnerGrid companies={raceCompanies} linked />
 					</div>
 				)}
-			</div>
+			</section>
 
 			{/* ── 06 Brand Partners ──────────────────────────────────────── */}
-			<div className="border-border border-b py-10 sm:py-14">
-				<SectionHeader
-					index="06"
+			<section className="py-16 sm:py-24">
+				<SlideHeader
+					number="06"
 					eyebrow="Brand Partners"
 					title="Sponsors Who Make It Possible"
 				/>
-
-				<div className="divide-border mt-10 grid grid-cols-1 divide-y sm:grid-cols-2 sm:divide-x sm:divide-y-0">
-					<StatSlide
+				<div className="mt-10 sm:mt-14">
+					<MetricCard
 						value={String(sponsorCompanies.length)}
 						label="brand sponsors"
 						accent
 					/>
-
 				</div>
-
 				{sponsorCompanies.length > 0 && (
 					<div className="mt-8">
 						<PartnerGrid companies={sponsorCompanies} />
 					</div>
 				)}
-			</div>
+			</section>
 
 			{/* ── 07 Operations ──────────────────────────────────────────── */}
-			<div className="pt-10 sm:pt-14">
-				<SectionHeader index="07" eyebrow="Operations" title="Task Activity" />
-
-				<div className="divide-border mt-10 grid grid-cols-1 divide-y sm:grid-cols-3 sm:divide-x sm:divide-y-0">
-					<StatSlide
+			<section className="bg-primary/3 py-16 sm:py-24">
+				<SlideHeader number="07" eyebrow="Operations" title="Task Activity" />
+				<div className="mt-10 grid grid-cols-1 gap-3 sm:mt-14 sm:grid-cols-3 sm:gap-4">
+					<MetricCard
 						value={String(openTasks)}
 						label="open tasks right now"
 						accent={openTasks > 0}
 					/>
-					<StatSlide
+					<MetricCard
 						value={String(taskCounts['DONE'] ?? 0)}
 						label="tasks completed"
 					/>
-					<StatSlide
+					<MetricCard
 						value={String(taskCounts['CANCELED'] ?? 0)}
 						label="tasks canceled"
 					/>
 				</div>
-			</div>
+			</section>
 		</div>
 	)
 }
 
 // ── Sub-components ────────────────────────────────────────────────────────────
 
-function SectionHeader({
-	index,
+function SlideHeader({
+	number,
 	eyebrow,
 	title,
 }: {
-	index: string
+	number: string
 	eyebrow: string
 	title: string
 }) {
 	return (
-		<div className="flex items-start gap-5">
-			<div className="bg-primary mt-1 h-14 w-[3px] shrink-0 rounded-full" />
+		<div className="flex items-center gap-5">
+			<span
+				className="text-primary/20 text-[3rem] leading-none font-bold sm:text-[4.5rem]"
+				style={{ fontFamily: 'var(--font-elan)' }}
+			>
+				{number}
+			</span>
 			<div>
 				<p className="text-primary text-[10px] font-semibold tracking-[0.25em] uppercase">
-					{index} — {eyebrow}
+					{eyebrow}
 				</p>
-				<h2 className="mt-1 text-xl leading-tight font-bold sm:text-2xl">
+				<h2 className="text-foreground mt-0.5 text-xl leading-tight font-bold sm:text-2xl">
 					{title}
 				</h2>
 			</div>
@@ -384,33 +388,33 @@ function SectionHeader({
 	)
 }
 
-function StatSlide({
+function MetricCard({
 	value,
 	label,
-	hint,
 	accent = false,
 }: {
 	value: string
 	label: string
-	hint?: string
 	accent?: boolean
 }) {
 	return (
-		<div className="px-0 py-6 sm:px-8 sm:first:pl-0 sm:last:pr-0">
+		<div
+			className={`rounded-2xl border p-6 text-center sm:p-8 ${
+				accent ? 'border-primary/25 bg-primary/6' : 'border-border bg-card'
+			}`}
+		>
 			<span
-				className={`block text-[2.25rem] leading-none font-bold tabular-nums sm:text-[3.5rem] ${accent ? 'text-primary' : 'text-foreground'}`}
+				className={`block text-[2.5rem] leading-none font-bold tabular-nums sm:text-[3.75rem] ${
+					accent ? 'text-primary' : 'text-foreground'
+				}`}
 				style={{ fontFamily: 'var(--font-elan)' }}
 			>
 				{value}
 			</span>
-			<p className="text-muted-foreground mt-2 text-sm leading-snug">{label}</p>
-			{hint && (
-				<p className="text-muted-foreground/60 mt-1 text-[11px]">{hint}</p>
-			)}
+			<p className="text-muted-foreground mt-3 text-sm leading-snug">{label}</p>
 		</div>
 	)
 }
-
 
 function PartnerGrid({
 	companies,
@@ -450,7 +454,8 @@ function PartnerGrid({
 						)}
 					</>
 				)
-				const cls = "group border-border bg-card flex flex-col items-center gap-3 rounded-xl border p-5 text-center"
+				const cls =
+					'group border-border bg-card flex flex-col items-center gap-3 rounded-xl border p-5 text-center'
 				return linked && company.website ? (
 					<a
 						key={company._id}
