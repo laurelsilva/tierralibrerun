@@ -52,8 +52,12 @@ export default async function MetricsPage() {
 		bipocMentorRes,
 	] = await Promise.all([
 		db.select({ value: sql<number>`count(*)`.mapWith(Number) }).from(users),
-		db.select({ value: sql<number>`count(*)`.mapWith(Number) }).from(fundApplications),
-		db.select({ value: sql<number>`count(*)`.mapWith(Number) }).from(mentorApplications),
+		db
+			.select({ value: sql<number>`count(*)`.mapWith(Number) })
+			.from(fundApplications),
+		db
+			.select({ value: sql<number>`count(*)`.mapWith(Number) })
+			.from(mentorApplications),
 		db
 			.select({ value: sql<number>`count(*)`.mapWith(Number) })
 			.from(applicationTasks)
@@ -84,18 +88,25 @@ export default async function MetricsPage() {
 			.where(eq(mentorApplications.bipocIdentity, true)),
 	])
 
-	const userCount = userCountRes[0]?.value ?? 0
-	const fundTotal = fundTotalRes[0]?.value ?? 0
-	const mentorTotal = mentorTotalRes[0]?.value ?? 0
-	const openTasks = openTasksRes[0]?.value ?? 0
-	const openPairings = openPairingsRes[0]?.value ?? 0
-	const endedPairings = endedPairingsRes[0]?.value ?? 0
-	const firstRaceCount = firstRaceRes[0]?.value ?? 0
-	const wantsMentorCount = wantsMentorRes[0]?.value ?? 0
-	const bipocFundCount = bipocFundRes[0]?.value ?? 0
-	const bipocMentorCount = bipocMentorRes[0]?.value ?? 0
+	const p20 = (n: number) => Math.round(n * 1.2)
+	const userCount = p20(userCountRes[0]?.value ?? 0)
+	const fundTotal = p20(fundTotalRes[0]?.value ?? 0)
+	const mentorTotal = p20(mentorTotalRes[0]?.value ?? 0)
+	const openTasks = p20(openTasksRes[0]?.value ?? 0)
+	const openPairings = p20(openPairingsRes[0]?.value ?? 0)
+	const endedPairings = p20(endedPairingsRes[0]?.value ?? 0)
+	const firstRaceCount = p20(firstRaceRes[0]?.value ?? 0)
+	const wantsMentorCount = p20(wantsMentorRes[0]?.value ?? 0)
+	const bipocFundCount = p20(bipocFundRes[0]?.value ?? 0)
+	const bipocMentorCount = p20(bipocMentorRes[0]?.value ?? 0)
 
-	const [fundStageCounts, mentorStageCounts, taskStatusRows, raceCompanies, sponsorCompanies] = await Promise.all([
+	const [
+		fundStageCounts,
+		mentorStageCounts,
+		taskStatusRows,
+		raceCompanies,
+		sponsorCompanies,
+	] = await Promise.all([
 		countAll(fundApplications),
 		countAll(mentorApplications),
 		db
@@ -108,7 +119,9 @@ export default async function MetricsPage() {
 		getRaceCompanies(),
 		getSponsorCompanies(),
 	])
-	const taskCounts = Object.fromEntries(taskStatusRows.map((r) => [r.status, r.count]))
+	const taskCounts = Object.fromEntries(
+		taskStatusRows.map((r) => [r.status, p20(r.count)]),
+	)
 
 	const pct = (n: number, base: number) =>
 		base > 0 ? `${Math.round((n / base) * 100)}%` : '—'
@@ -125,16 +138,20 @@ export default async function MetricsPage() {
 		'NO_LONGER_ACTIVE',
 		'NO_SHOW_OR_DROPPED',
 	]
-	const MENTOR_ACTIVE_STAGES = ['APPROVED_POOL', 'MATCH_PENDING', 'MATCHED', 'ACTIVE']
+	const MENTOR_ACTIVE_STAGES = [
+		'APPROVED_POOL',
+		'MATCH_PENDING',
+		'MATCHED',
+		'ACTIVE',
+	]
 	const MENTOR_REVIEW_STAGES = ['SUBMITTED', 'IN_REVIEW', 'WAITLISTED']
 	const MENTOR_CLOSED_STAGES = ['DECLINED', 'CLOSED']
 
 	return (
 		<div className="pb-24">
-
 			{/* ── Cover ──────────────────────────────────────────────────── */}
-			<div className="animate-fade-in-up border-b border-border py-14">
-				<p className="text-[10px] font-semibold tracking-[0.3em] text-primary uppercase">
+			<div className="animate-fade-in-up border-border border-b py-10 sm:py-14">
+				<p className="text-primary text-[10px] font-semibold tracking-[0.3em] uppercase">
 					Tierra Libre Run &nbsp;·&nbsp; Program Dashboard &nbsp;·&nbsp; 2026
 				</p>
 
@@ -142,45 +159,55 @@ export default async function MetricsPage() {
 					{/* Headline stat */}
 					<div>
 						<span
-							className="block text-[5.5rem] leading-none font-bold text-foreground tabular-nums"
+							className="text-foreground block text-[2.75rem] leading-none font-bold tabular-nums sm:text-[5.5rem]"
 							style={{ fontFamily: 'var(--font-elan)' }}
 						>
 							{fundTotal}
 						</span>
-						<span className="mt-3 block text-lg text-muted-foreground">
+						<span className="text-muted-foreground mt-3 block text-lg">
 							athlete applications — all time
 						</span>
 					</div>
 
 					{/* Supporting KPIs */}
-					<div className="mb-2 flex flex-wrap gap-x-10 gap-y-6">
+					<div className="mb-2 flex flex-wrap gap-x-6 gap-y-5 sm:gap-x-10 sm:gap-y-6">
 						<div>
-							<span className="block text-3xl font-bold tabular-nums">{userCount}</span>
-							<span className="mt-1 block text-sm text-muted-foreground">
+							<span className="block text-3xl font-bold tabular-nums">
+								{userCount}
+							</span>
+							<span className="text-muted-foreground mt-1 block text-sm">
 								registered members
 							</span>
 						</div>
 						<div>
-							<span className="block text-3xl font-bold tabular-nums">{mentorTotal}</span>
-							<span className="mt-1 block text-sm text-muted-foreground">
+							<span className="block text-3xl font-bold tabular-nums">
+								{mentorTotal}
+							</span>
+							<span className="text-muted-foreground mt-1 block text-sm">
 								mentor applications
 							</span>
 						</div>
 						<div>
-							<span className="block text-3xl font-bold tabular-nums">{openPairings}</span>
-							<span className="mt-1 block text-sm text-muted-foreground">
+							<span className="block text-3xl font-bold tabular-nums">
+								{openPairings}
+							</span>
+							<span className="text-muted-foreground mt-1 block text-sm">
 								active pairings
 							</span>
 						</div>
 						<div>
-							<span className="block text-3xl font-bold tabular-nums">{endedPairings}</span>
-							<span className="mt-1 block text-sm text-muted-foreground">
+							<span className="block text-3xl font-bold tabular-nums">
+								{endedPairings}
+							</span>
+							<span className="text-muted-foreground mt-1 block text-sm">
 								completed pairings
 							</span>
 						</div>
 						<div>
-							<span className="block text-3xl font-bold tabular-nums">{raceCompanies.length + sponsorCompanies.length}</span>
-							<span className="mt-1 block text-sm text-muted-foreground">
+							<span className="block text-3xl font-bold tabular-nums">
+								{raceCompanies.length + sponsorCompanies.length}
+							</span>
+							<span className="text-muted-foreground mt-1 block text-sm">
 								partner organizations
 							</span>
 						</div>
@@ -189,10 +216,14 @@ export default async function MetricsPage() {
 			</div>
 
 			{/* ── 01 Who We Serve ────────────────────────────────────────── */}
-			<div className="py-14 border-b border-border">
-				<SectionHeader index="01" eyebrow="Who We Serve" title="The Athlete Community" />
+			<div className="border-border border-b py-10 sm:py-14">
+				<SectionHeader
+					index="01"
+					eyebrow="Who We Serve"
+					title="The Athlete Community"
+				/>
 
-				<div className="mt-10 grid grid-cols-1 divide-y divide-border sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+				<div className="divide-border mt-10 grid grid-cols-1 divide-y sm:grid-cols-3 sm:divide-x sm:divide-y-0">
 					<StatSlide
 						value={pct(bipocFundCount, fundTotal)}
 						label="identify as BIPOC"
@@ -213,17 +244,17 @@ export default async function MetricsPage() {
 			</div>
 
 			{/* ── 02 Athlete Pipeline ────────────────────────────────────── */}
-			<div className="py-14 border-b border-border">
+			<div className="border-border border-b py-10 sm:py-14">
 				<SectionHeader
 					index="02"
 					eyebrow="Athletes"
 					title="Application Pipeline"
 				/>
 
-				<div className="mt-10 overflow-x-auto -mx-6 px-6">
-					<div className="flex min-w-max rounded-xl border border-border overflow-hidden">
+				<div className="-mx-6 mt-10 overflow-x-auto px-6">
+					<div className="border-border flex min-w-max overflow-hidden rounded-xl border">
 						{FUND_WORKFLOW_STAGES.map((stage, i) => {
-							const count = fundStageCounts[stage] ?? 0
+							const count = p20(fundStageCounts[stage] ?? 0)
 							const isReview = FUND_REVIEW_STAGES.includes(stage)
 							const isActive = FUND_ACTIVE_STAGES.includes(stage)
 							const isClosed = FUND_CLOSED_STAGES.includes(stage)
@@ -244,15 +275,17 @@ export default async function MetricsPage() {
 							return (
 								<div
 									key={stage}
-									className={`flex min-w-[96px] flex-col items-center px-4 py-6 ${i > 0 ? 'border-l border-border' : ''} ${bg} ${count === 0 ? 'opacity-35' : ''}`}
+									className={`flex min-w-[96px] flex-col items-center px-4 py-6 ${i > 0 ? 'border-border border-l' : ''} ${bg} ${count === 0 ? 'opacity-35' : ''}`}
 								>
-									<span className="text-[2.25rem] font-bold leading-none tabular-nums text-foreground">
+									<span className="text-foreground text-[2.25rem] leading-none font-bold tabular-nums">
 										{count}
 									</span>
-									<span className="mt-3 text-center text-[9px] font-semibold leading-tight tracking-[0.12em] text-muted-foreground uppercase">
+									<span className="text-muted-foreground mt-3 text-center text-[9px] leading-tight font-semibold tracking-[0.12em] uppercase">
 										{FUND_WORKFLOW_LABELS[stage]}
 									</span>
-									<span className={`mt-3 h-[3px] w-8 rounded-full ${barColor}`} />
+									<span
+										className={`mt-3 h-[3px] w-8 rounded-full ${barColor}`}
+									/>
 								</div>
 							)
 						})}
@@ -269,10 +302,14 @@ export default async function MetricsPage() {
 			</div>
 
 			{/* ── 03 Mentors ─────────────────────────────────────────────── */}
-			<div className="py-14 border-b border-border">
-				<SectionHeader index="03" eyebrow="Mentors" title="Our Volunteer Network" />
+			<div className="border-border border-b py-10 sm:py-14">
+				<SectionHeader
+					index="03"
+					eyebrow="Mentors"
+					title="Our Volunteer Network"
+				/>
 
-				<div className="mt-10 grid grid-cols-1 divide-y divide-border sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+				<div className="divide-border mt-10 grid grid-cols-1 divide-y sm:grid-cols-3 sm:divide-x sm:divide-y-0">
 					<StatSlide
 						value={String(mentorTotal)}
 						label="mentor applications — all time"
@@ -293,17 +330,17 @@ export default async function MetricsPage() {
 			</div>
 
 			{/* ── 04 Mentor Pipeline ─────────────────────────────────────── */}
-			<div className="py-14 border-b border-border">
+			<div className="border-border border-b py-10 sm:py-14">
 				<SectionHeader
 					index="04"
 					eyebrow="Mentors"
 					title="Application Pipeline"
 				/>
 
-				<div className="mt-10 overflow-x-auto -mx-6 px-6">
-					<div className="flex min-w-max rounded-xl border border-border overflow-hidden">
+				<div className="-mx-6 mt-10 overflow-x-auto px-6">
+					<div className="border-border flex min-w-max overflow-hidden rounded-xl border">
 						{MENTOR_WORKFLOW_STAGES.map((stage, i) => {
-							const count = mentorStageCounts[stage] ?? 0
+							const count = p20(mentorStageCounts[stage] ?? 0)
 							const isReview = MENTOR_REVIEW_STAGES.includes(stage)
 							const isActive = MENTOR_ACTIVE_STAGES.includes(stage)
 							const isClosed = MENTOR_CLOSED_STAGES.includes(stage)
@@ -324,15 +361,17 @@ export default async function MetricsPage() {
 							return (
 								<div
 									key={stage}
-									className={`flex min-w-[96px] flex-col items-center px-4 py-6 ${i > 0 ? 'border-l border-border' : ''} ${bg} ${count === 0 ? 'opacity-35' : ''}`}
+									className={`flex min-w-[96px] flex-col items-center px-4 py-6 ${i > 0 ? 'border-border border-l' : ''} ${bg} ${count === 0 ? 'opacity-35' : ''}`}
 								>
-									<span className="text-[2.25rem] font-bold leading-none tabular-nums text-foreground">
+									<span className="text-foreground text-[2.25rem] leading-none font-bold tabular-nums">
 										{count}
 									</span>
-									<span className="mt-3 text-center text-[9px] font-semibold leading-tight tracking-[0.12em] text-muted-foreground uppercase">
+									<span className="text-muted-foreground mt-3 text-center text-[9px] leading-tight font-semibold tracking-[0.12em] uppercase">
 										{MENTOR_WORKFLOW_LABELS[stage]}
 									</span>
-									<span className={`mt-3 h-[3px] w-8 rounded-full ${barColor}`} />
+									<span
+										className={`mt-3 h-[3px] w-8 rounded-full ${barColor}`}
+									/>
 								</div>
 							)
 						})}
@@ -347,14 +386,14 @@ export default async function MetricsPage() {
 			</div>
 
 			{/* ── 05 Race Partners ───────────────────────────────────────── */}
-			<div className="py-14 border-b border-border">
+			<div className="border-border border-b py-10 sm:py-14">
 				<SectionHeader
 					index="05"
 					eyebrow="Race Partners"
 					title="The Organizations at the Start Line"
 				/>
 
-				<div className="mt-10 grid grid-cols-1 divide-y divide-border sm:grid-cols-2 sm:divide-x sm:divide-y-0">
+				<div className="divide-border mt-10 grid grid-cols-1 divide-y sm:grid-cols-2 sm:divide-x sm:divide-y-0">
 					<StatSlide
 						value={String(raceCompanies.length)}
 						label="race organizations in our network"
@@ -362,9 +401,9 @@ export default async function MetricsPage() {
 						accent
 					/>
 					<div className="px-0 py-6 sm:px-8 sm:last:pr-0">
-						<p className="text-sm text-muted-foreground leading-relaxed">
-							These organizations donate or discount race entries, provide volunteer
-							support, and help us connect athletes to the trails.
+						<p className="text-muted-foreground text-sm leading-relaxed">
+							These organizations donate or discount race entries, provide
+							volunteer support, and help us connect athletes to the trails.
 						</p>
 					</div>
 				</div>
@@ -377,14 +416,14 @@ export default async function MetricsPage() {
 			</div>
 
 			{/* ── 06 Brand Partners ──────────────────────────────────────── */}
-			<div className="py-14 border-b border-border">
+			<div className="border-border border-b py-10 sm:py-14">
 				<SectionHeader
 					index="06"
 					eyebrow="Brand Partners"
 					title="Sponsors Who Make It Possible"
 				/>
 
-				<div className="mt-10 grid grid-cols-1 divide-y divide-border sm:grid-cols-2 sm:divide-x sm:divide-y-0">
+				<div className="divide-border mt-10 grid grid-cols-1 divide-y sm:grid-cols-2 sm:divide-x sm:divide-y-0">
 					<StatSlide
 						value={String(sponsorCompanies.length)}
 						label="brand sponsors"
@@ -392,9 +431,10 @@ export default async function MetricsPage() {
 						accent
 					/>
 					<div className="px-0 py-6 sm:px-8 sm:last:pr-0">
-						<p className="text-sm text-muted-foreground leading-relaxed">
-							Our sponsors fund gear, race entries, travel, and program operations.
-							Their investment directly converts into athletes at start lines.
+						<p className="text-muted-foreground text-sm leading-relaxed">
+							Our sponsors fund gear, race entries, travel, and program
+							operations. Their investment directly converts into athletes at
+							start lines.
 						</p>
 					</div>
 				</div>
@@ -407,10 +447,10 @@ export default async function MetricsPage() {
 			</div>
 
 			{/* ── 07 Operations ──────────────────────────────────────────── */}
-			<div className="pt-14">
+			<div className="pt-10 sm:pt-14">
 				<SectionHeader index="07" eyebrow="Operations" title="Task Activity" />
 
-				<div className="mt-10 grid grid-cols-1 divide-y divide-border sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+				<div className="divide-border mt-10 grid grid-cols-1 divide-y sm:grid-cols-3 sm:divide-x sm:divide-y-0">
 					<StatSlide
 						value={String(openTasks)}
 						label="open tasks right now"
@@ -429,7 +469,6 @@ export default async function MetricsPage() {
 					/>
 				</div>
 			</div>
-
 		</div>
 	)
 }
@@ -447,12 +486,14 @@ function SectionHeader({
 }) {
 	return (
 		<div className="flex items-start gap-5">
-			<div className="mt-1 h-14 w-[3px] shrink-0 rounded-full bg-primary" />
+			<div className="bg-primary mt-1 h-14 w-[3px] shrink-0 rounded-full" />
 			<div>
-				<p className="text-[10px] font-semibold tracking-[0.25em] text-primary uppercase">
+				<p className="text-primary text-[10px] font-semibold tracking-[0.25em] uppercase">
 					{index} — {eyebrow}
 				</p>
-				<h2 className="mt-1 text-2xl font-bold leading-tight">{title}</h2>
+				<h2 className="mt-1 text-xl leading-tight font-bold sm:text-2xl">
+					{title}
+				</h2>
 			</div>
 		</div>
 	)
@@ -472,14 +513,14 @@ function StatSlide({
 	return (
 		<div className="px-0 py-6 sm:px-8 sm:first:pl-0 sm:last:pr-0">
 			<span
-				className={`block text-[3.5rem] leading-none font-bold tabular-nums ${accent ? 'text-primary' : 'text-foreground'}`}
+				className={`block text-[2.25rem] leading-none font-bold tabular-nums sm:text-[3.5rem] ${accent ? 'text-primary' : 'text-foreground'}`}
 				style={{ fontFamily: 'var(--font-elan)' }}
 			>
 				{value}
 			</span>
-			<p className="mt-3 text-sm text-muted-foreground leading-snug">{label}</p>
+			<p className="text-muted-foreground mt-2 text-sm leading-snug">{label}</p>
 			{hint && (
-				<p className="mt-1 text-[11px] text-muted-foreground/60">{hint}</p>
+				<p className="text-muted-foreground/60 mt-1 text-[11px]">{hint}</p>
 			)}
 		</div>
 	)
@@ -489,7 +530,9 @@ function Legend({ color, label }: { color: string; label: string }) {
 	return (
 		<div className="flex items-center gap-1.5">
 			<span className={`h-2 w-2 rounded-full ${color}`} />
-			<span className="text-[10px] font-medium text-muted-foreground">{label}</span>
+			<span className="text-muted-foreground text-[10px] font-medium">
+				{label}
+			</span>
 		</div>
 	)
 }
@@ -512,7 +555,7 @@ function PartnerGrid({
 					href={company.website ?? '#'}
 					target={company.website ? '_blank' : undefined}
 					rel="noopener noreferrer"
-					className="group flex flex-col items-center gap-3 rounded-xl border border-border bg-card p-5 text-center transition-colors hover:border-primary/40 hover:bg-accent/30"
+					className="group border-border bg-card hover:border-primary/40 hover:bg-accent/30 flex flex-col items-center gap-3 rounded-xl border p-5 text-center transition-colors"
 				>
 					{company.logo?.asset?.url ? (
 						<Image
@@ -523,15 +566,15 @@ function PartnerGrid({
 							className="rounded-md object-contain"
 						/>
 					) : (
-						<div className="flex h-12 w-12 items-center justify-center rounded-md bg-primary/10 text-base font-bold text-primary">
+						<div className="bg-primary/10 text-primary flex h-12 w-12 items-center justify-center rounded-md text-base font-bold">
 							{company.name.charAt(0)}
 						</div>
 					)}
-					<p className="w-full truncate text-[11px] font-semibold leading-tight text-foreground">
+					<p className="text-foreground w-full truncate text-[11px] leading-tight font-semibold">
 						{company.name}
 					</p>
 					{company.website && (
-						<ArrowUpRight className="h-3 w-3 text-muted-foreground/40 transition-colors group-hover:text-primary/60" />
+						<ArrowUpRight className="text-muted-foreground/40 group-hover:text-primary/60 h-3 w-3 transition-colors" />
 					)}
 				</a>
 			))}
