@@ -1,5 +1,6 @@
 import { sql, eq, isNull, isNotNull } from 'drizzle-orm'
 import {
+	ArrowUpRight,
 	CheckCircle2,
 	ClipboardList,
 	Handshake,
@@ -7,12 +8,14 @@ import {
 	UserCheck,
 	Users,
 } from 'lucide-react'
+import Image from 'next/image'
 import {
 	FUND_WORKFLOW_LABELS,
 	FUND_WORKFLOW_STAGES,
 	MENTOR_WORKFLOW_LABELS,
 	MENTOR_WORKFLOW_STAGES,
 } from '@/lib/types/workflow'
+import { getRaceCompanies, getSponsorCompanies } from '@/lib/sanity/queries'
 import {
 	applicationTasks,
 	db,
@@ -92,18 +95,19 @@ export default async function MetricsPage() {
 	const bipocFundCount = bipocFundRes[0]?.value ?? 0
 	const bipocMentorCount = bipocMentorRes[0]?.value ?? 0
 
-	const [fundStageCounts, mentorStageCounts] = await Promise.all([
+	const [fundStageCounts, mentorStageCounts, taskStatusRows, raceCompanies, sponsorCompanies] = await Promise.all([
 		countAll(fundApplications),
 		countAll(mentorApplications),
+		db
+			.select({
+				status: applicationTasks.status,
+				count: sql<number>`count(*)`.mapWith(Number),
+			})
+			.from(applicationTasks)
+			.groupBy(applicationTasks.status),
+		getRaceCompanies(),
+		getSponsorCompanies(),
 	])
-
-	const taskStatusRows = await db
-		.select({
-			status: applicationTasks.status,
-			count: sql<number>`count(*)`.mapWith(Number),
-		})
-		.from(applicationTasks)
-		.groupBy(applicationTasks.status)
 	const taskCounts = Object.fromEntries(taskStatusRows.map((r) => [r.status, r.count]))
 
 	const pct = (n: number, base: number) =>
@@ -172,6 +176,12 @@ export default async function MetricsPage() {
 							<span className="block text-3xl font-bold tabular-nums">{endedPairings}</span>
 							<span className="mt-1 block text-sm text-muted-foreground">
 								completed pairings
+							</span>
+						</div>
+						<div>
+							<span className="block text-3xl font-bold tabular-nums">{raceCompanies.length + sponsorCompanies.length}</span>
+							<span className="mt-1 block text-sm text-muted-foreground">
+								partner organizations
 							</span>
 						</div>
 					</div>
@@ -336,9 +346,69 @@ export default async function MetricsPage() {
 				</div>
 			</div>
 
-			{/* ── 05 Operations ──────────────────────────────────────────── */}
+			{/* ── 05 Race Partners ───────────────────────────────────────── */}
+			<div className="py-14 border-b border-border">
+				<SectionHeader
+					index="05"
+					eyebrow="Race Partners"
+					title="The Organizations at the Start Line"
+				/>
+
+				<div className="mt-10 grid grid-cols-1 divide-y divide-border sm:grid-cols-2 sm:divide-x sm:divide-y-0">
+					<StatSlide
+						value={String(raceCompanies.length)}
+						label="race organizations in our network"
+						hint="Companies that open their events to our athletes"
+						accent
+					/>
+					<div className="px-0 py-6 sm:px-8 sm:last:pr-0">
+						<p className="text-sm text-muted-foreground leading-relaxed">
+							These organizations donate or discount race entries, provide volunteer
+							support, and help us connect athletes to the trails.
+						</p>
+					</div>
+				</div>
+
+				{raceCompanies.length > 0 && (
+					<div className="mt-8">
+						<PartnerGrid companies={raceCompanies} />
+					</div>
+				)}
+			</div>
+
+			{/* ── 06 Brand Partners ──────────────────────────────────────── */}
+			<div className="py-14 border-b border-border">
+				<SectionHeader
+					index="06"
+					eyebrow="Brand Partners"
+					title="Sponsors Who Make It Possible"
+				/>
+
+				<div className="mt-10 grid grid-cols-1 divide-y divide-border sm:grid-cols-2 sm:divide-x sm:divide-y-0">
+					<StatSlide
+						value={String(sponsorCompanies.length)}
+						label="brand sponsors"
+						hint="Companies investing in access and equity in trail running"
+						accent
+					/>
+					<div className="px-0 py-6 sm:px-8 sm:last:pr-0">
+						<p className="text-sm text-muted-foreground leading-relaxed">
+							Our sponsors fund gear, race entries, travel, and program operations.
+							Their investment directly converts into athletes at start lines.
+						</p>
+					</div>
+				</div>
+
+				{sponsorCompanies.length > 0 && (
+					<div className="mt-8">
+						<PartnerGrid companies={sponsorCompanies} />
+					</div>
+				)}
+			</div>
+
+			{/* ── 07 Operations ──────────────────────────────────────────── */}
 			<div className="pt-14">
-				<SectionHeader index="05" eyebrow="Operations" title="Task Activity" />
+				<SectionHeader index="07" eyebrow="Operations" title="Task Activity" />
 
 				<div className="mt-10 grid grid-cols-1 divide-y divide-border sm:grid-cols-3 sm:divide-x sm:divide-y-0">
 					<StatSlide
@@ -420,6 +490,51 @@ function Legend({ color, label }: { color: string; label: string }) {
 		<div className="flex items-center gap-1.5">
 			<span className={`h-2 w-2 rounded-full ${color}`} />
 			<span className="text-[10px] font-medium text-muted-foreground">{label}</span>
+		</div>
+	)
+}
+
+function PartnerGrid({
+	companies,
+}: {
+	companies: Array<{
+		_id: string
+		name: string
+		website?: string
+		logo?: { asset: { url: string } }
+	}>
+}) {
+	return (
+		<div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+			{companies.map((company) => (
+				<a
+					key={company._id}
+					href={company.website ?? '#'}
+					target={company.website ? '_blank' : undefined}
+					rel="noopener noreferrer"
+					className="group flex flex-col items-center gap-3 rounded-xl border border-border bg-card p-5 text-center transition-colors hover:border-primary/40 hover:bg-accent/30"
+				>
+					{company.logo?.asset?.url ? (
+						<Image
+							src={`${company.logo.asset.url}?w=120&h=120&fit=fill&auto=format`}
+							alt={`${company.name} logo`}
+							width={48}
+							height={48}
+							className="rounded-md object-contain"
+						/>
+					) : (
+						<div className="flex h-12 w-12 items-center justify-center rounded-md bg-primary/10 text-base font-bold text-primary">
+							{company.name.charAt(0)}
+						</div>
+					)}
+					<p className="w-full truncate text-[11px] font-semibold leading-tight text-foreground">
+						{company.name}
+					</p>
+					{company.website && (
+						<ArrowUpRight className="h-3 w-3 text-muted-foreground/40 transition-colors group-hover:text-primary/60" />
+					)}
+				</a>
+			))}
 		</div>
 	)
 }
