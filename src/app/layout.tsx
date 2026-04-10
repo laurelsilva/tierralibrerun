@@ -54,16 +54,18 @@ export const metadata: Metadata = {
 		siteName: siteConfig.name,
 		locale: siteConfig.locale,
 		type: 'website',
-		...(siteConfig.defaultOgImage ? {
-			images: [
-				{
-					url: siteConfig.defaultOgImage,
-					width: 1200,
-					height: 630,
-					alt: `${siteConfig.name} - Trail Running Community`,
-				},
-			],
-		} : {}),
+		...(siteConfig.defaultOgImage
+			? {
+					images: [
+						{
+							url: siteConfig.defaultOgImage,
+							width: 1200,
+							height: 630,
+							alt: `${siteConfig.name} - Trail Running Community`,
+						},
+					],
+				}
+			: {}),
 	},
 
 	// Twitter
@@ -71,8 +73,12 @@ export const metadata: Metadata = {
 		card: 'summary_large_image',
 		title: `${siteConfig.name} - Trail Running Community`,
 		description: siteConfig.description,
-		...(siteConfig.defaultOgImage ? { images: [siteConfig.defaultOgImage] } : {}),
-		creator: socialConfig.twitterHandle ? `@${socialConfig.twitterHandle}` : undefined,
+		...(siteConfig.defaultOgImage
+			? { images: [siteConfig.defaultOgImage] }
+			: {}),
+		creator: socialConfig.twitterHandle
+			? `@${socialConfig.twitterHandle}`
+			: undefined,
 	},
 
 	// Additional metadata
@@ -127,10 +133,9 @@ export default function RootLayout({
 		env.NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL ??
 		env.NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL
 
-	const socialLinks = [
-		socialConfig.instagram,
-		socialConfig.twitter,
-	].filter(Boolean)
+	const socialLinks = [socialConfig.instagram, socialConfig.twitter].filter(
+		Boolean,
+	)
 
 	const organizationJsonLd = {
 		'@context': 'https://schema.org',

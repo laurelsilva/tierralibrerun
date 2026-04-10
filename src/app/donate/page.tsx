@@ -19,17 +19,16 @@ export default function DonatePage() {
 					<div className="grid grid-cols-1 items-center gap-12 md:grid-cols-2 md:gap-24">
 						<div className="text-primary-foreground space-y-8">
 							<span className="mb-2 inline-block text-sm font-medium tracking-widest">
-							{siteName.toUpperCase()}
+								{siteName.toUpperCase()}
 							</span>
 							<h1 className="mb-6 text-5xl leading-[1.1] font-bold tracking-[-0.03em] md:text-6xl">
 								Donate to Our Mission
 							</h1>
 							<div className="bg-primary-foreground/50 h-0.5 w-20 rounded-full"></div>
 							<p className="text-primary-foreground/90 text-xl leading-relaxed md:text-2xl">
-								Help us create pathways for athletes to access,
-								enjoy, and lead in the sport. Your contribution directly
-								supports programs that increase representation, access, and
-								community in trail running.
+								Help us create pathways for athletes to access, enjoy, and lead
+								in the sport. Your contribution directly supports programs that
+								increase representation, access, and community in trail running.
 							</p>
 						</div>
 
@@ -178,18 +177,21 @@ export default function DonatePage() {
 
 							{/* Right column - Donation form */}
 							<div id="donate-form" className="bg-primary md:col-span-8">
-							{donationUrl ? (
-								<iframe
-									src={donationUrl}
-									name="donateFrame"
-									className="h-[600px] w-full md:h-[900px]"
-									allowFullScreen
-								/>
-							) : (
-								<div className="flex h-[400px] items-center justify-center">
-									<p className="text-muted-foreground">Donation form not configured. Set NEXT_PUBLIC_DONATION_URL.</p>
-								</div>
-							)}
+								{donationUrl ? (
+									<iframe
+										src={donationUrl}
+										name="donateFrame"
+										className="h-[600px] w-full md:h-[900px]"
+										allowFullScreen
+									/>
+								) : (
+									<div className="flex h-[400px] items-center justify-center">
+										<p className="text-muted-foreground">
+											Donation form not configured. Set
+											NEXT_PUBLIC_DONATION_URL.
+										</p>
+									</div>
+								)}
 							</div>
 						</div>
 					</div>

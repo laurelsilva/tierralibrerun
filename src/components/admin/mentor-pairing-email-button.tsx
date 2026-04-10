@@ -173,8 +173,8 @@ export function MentorPairingEmailButton({
 									/>
 								</div>
 								<p className="text-muted-foreground text-xs">
-									Both the athlete and mentor receive the email directly.
-									Admin team gets a blind copy.
+									Both the athlete and mentor receive the email directly. Admin
+									team gets a blind copy.
 								</p>
 							</div>
 						</div>
@@ -236,13 +236,17 @@ export function MentorPairingEmailButton({
 							<div className="grid gap-1 text-sm">
 								<div>
 									<strong>To:</strong>{' '}
-									{preview ? preview.to.map((r) => `${r.name} <${r.email}>`).join(', ') : `${athleteName} <${athleteEmail}>, ${mentorName} <${mentorEmail}>`}
-								</div>
-							<div>
-									<strong>BCC:</strong> {process.env.NEXT_PUBLIC_ADMIN_EMAILS || 'Admin team'}
+									{preview
+										? preview.to.map((r) => `${r.name} <${r.email}>`).join(', ')
+										: `${athleteName} <${athleteEmail}>, ${mentorName} <${mentorEmail}>`}
 								</div>
 								<div>
-									<strong>Subject:</strong> {preview?.subject || 'Building preview...'}
+									<strong>BCC:</strong>{' '}
+									{process.env.NEXT_PUBLIC_ADMIN_EMAILS || 'Admin team'}
+								</div>
+								<div>
+									<strong>Subject:</strong>{' '}
+									{preview?.subject || 'Building preview...'}
 								</div>
 							</div>
 						</div>

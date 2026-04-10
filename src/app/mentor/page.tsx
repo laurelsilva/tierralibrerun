@@ -35,9 +35,9 @@ export default async function MentorPage() {
 							</h1>
 
 							<p className="text-primary-foreground/90 text-xl leading-relaxed md:text-2xl">
-								Community powered mentorship led by athletes. Share what
-								you have learned, show up with someone new to the trails, and
-								help build the spaces where we can all thrive.
+								Community powered mentorship led by athletes. Share what you
+								have learned, show up with someone new to the trails, and help
+								build the spaces where we can all thrive.
 							</p>
 
 							<div className="pt-4">
@@ -72,9 +72,7 @@ export default async function MentorPage() {
 										</div>
 									)}
 									<Button asChild size="lg" variant="outline">
-										<Link href="/blog">
-											Read: Our Mentorship Story
-										</Link>
+										<Link href="/blog">Read: Our Mentorship Story</Link>
 									</Button>
 								</div>
 							</div>
@@ -101,11 +99,11 @@ export default async function MentorPage() {
 							Mentorship That Feels Like Belonging
 						</h2>
 						<p className="text-muted-foreground text-lg leading-relaxed">
-							Our mentor program connects athletes who have been on the
-							trails for a while with funded athletes preparing for their first
-							trail race. This is not about coaching or perfect plans. It is
-							about a steady relationship, practical guidance, and having
-							someone in your corner as you learn the rhythms of trail running.
+							Our mentor program connects athletes who have been on the trails
+							for a while with funded athletes preparing for their first trail
+							race. This is not about coaching or perfect plans. It is about a
+							steady relationship, practical guidance, and having someone in
+							your corner as you learn the rhythms of trail running.
 						</p>
 					</div>
 				</div>

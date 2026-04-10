@@ -1,76 +1,60 @@
-import { sql, eq, isNull, isNotNull, inArray } from 'drizzle-orm'
+import { sql, eq, isNull, isNotNull } from 'drizzle-orm'
 import {
-	Users,
+	CheckCircle2,
 	ClipboardList,
 	Handshake,
 	TrendingUp,
-	Heart,
-	MapPin,
-	Route,
-	CheckCircle2,
 	UserCheck,
-	Trophy,
-	Star,
-	ArrowUpRight,
+	Users,
 } from 'lucide-react'
-import Image from 'next/image'
-import { AdminStatsGrid } from '@/components/admin'
 import {
+	FUND_WORKFLOW_LABELS,
+	FUND_WORKFLOW_STAGES,
+	MENTOR_WORKFLOW_LABELS,
+	MENTOR_WORKFLOW_STAGES,
+} from '@/lib/types/workflow'
+import {
+	applicationTasks,
 	db,
 	fundApplications,
 	mentorApplications,
 	mentorshipMatches,
+	users,
 } from '@/server/db'
-import { getRaceCompanies } from '@/lib/sanity/queries'
-import { client } from '@/lib/sanity/client'
 
-const ACCEPTED_STAGES = [
-	'AWAITING_CONFIRMATION',
-	'CONFIRMED',
-	'REGISTRATION_IN_PROGRESS',
-	'REGISTERED',
-	'ONBOARDING_IN_PROGRESS',
-	'ACTIVE_IN_PROGRAM',
-	'NO_LONGER_ACTIVE',
-	'NO_SHOW_OR_DROPPED',
-	'CLOSED',
-]
-
-const ACTIVE_MENTOR_STAGES = ['APPROVED_POOL', 'MATCH_PENDING', 'MATCHED', 'ACTIVE']
+async function countAll(
+	table: typeof fundApplications | typeof mentorApplications,
+): Promise<Record<string, number>> {
+	const rows = await db
+		.select({
+			stage: (table as typeof fundApplications).workflowStage,
+			count: sql<number>`count(*)`.mapWith(Number),
+		})
+		.from(table as typeof fundApplications)
+		.groupBy((table as typeof fundApplications).workflowStage)
+	return Object.fromEntries(rows.map((r) => [r.stage, r.count]))
+}
 
 export default async function MetricsPage() {
 	const [
-		totalApplicationsRes,
-		acceptedRes,
-		declinedRes,
-		pendingReviewRes,
-		activeAthletesRes,
-		activeMentorshipsRes,
-		completedMentorshipsRes,
-		bipocAthletesRes,
+		userCountRes,
+		fundTotalRes,
+		mentorTotalRes,
+		openTasksRes,
+		openPairingsRes,
+		endedPairingsRes,
 		firstRaceRes,
 		wantsMentorRes,
-		totalMentorAppsRes,
-		activeMentorsRes,
-		bipocMentorsRes,
+		bipocFundRes,
+		bipocMentorRes,
 	] = await Promise.all([
+		db.select({ value: sql<number>`count(*)`.mapWith(Number) }).from(users),
 		db.select({ value: sql<number>`count(*)`.mapWith(Number) }).from(fundApplications),
+		db.select({ value: sql<number>`count(*)`.mapWith(Number) }).from(mentorApplications),
 		db
 			.select({ value: sql<number>`count(*)`.mapWith(Number) })
-			.from(fundApplications)
-			.where(inArray(fundApplications.workflowStage, ACCEPTED_STAGES)),
-		db
-			.select({ value: sql<number>`count(*)`.mapWith(Number) })
-			.from(fundApplications)
-			.where(eq(fundApplications.workflowStage, 'DECLINED')),
-		db
-			.select({ value: sql<number>`count(*)`.mapWith(Number) })
-			.from(fundApplications)
-			.where(inArray(fundApplications.workflowStage, ['SUBMITTED', 'IN_REVIEW', 'WAITLISTED'])),
-		db
-			.select({ value: sql<number>`count(*)`.mapWith(Number) })
-			.from(fundApplications)
-			.where(eq(fundApplications.workflowStage, 'ACTIVE_IN_PROGRAM')),
+			.from(applicationTasks)
+			.where(eq(applicationTasks.status, 'OPEN')),
 		db
 			.select({ value: sql<number>`count(*)`.mapWith(Number) })
 			.from(mentorshipMatches)
@@ -82,373 +66,360 @@ export default async function MetricsPage() {
 		db
 			.select({ value: sql<number>`count(*)`.mapWith(Number) })
 			.from(fundApplications)
-			.where(eq(fundApplications.bipocIdentity, true)),
-		db
-			.select({ value: sql<number>`count(*)`.mapWith(Number) })
-			.from(fundApplications)
 			.where(eq(fundApplications.firstRace, true)),
 		db
 			.select({ value: sql<number>`count(*)`.mapWith(Number) })
 			.from(fundApplications)
 			.where(eq(fundApplications.wantsMentor, true)),
-		db.select({ value: sql<number>`count(*)`.mapWith(Number) }).from(mentorApplications),
 		db
 			.select({ value: sql<number>`count(*)`.mapWith(Number) })
-			.from(mentorApplications)
-			.where(inArray(mentorApplications.workflowStage, ACTIVE_MENTOR_STAGES)),
+			.from(fundApplications)
+			.where(eq(fundApplications.bipocIdentity, true)),
 		db
 			.select({ value: sql<number>`count(*)`.mapWith(Number) })
 			.from(mentorApplications)
 			.where(eq(mentorApplications.bipocIdentity, true)),
 	])
 
-	const totalApplications = totalApplicationsRes[0]?.value ?? 0
-	const accepted = acceptedRes[0]?.value ?? 0
-	const declined = declinedRes[0]?.value ?? 0
-	const pendingReview = pendingReviewRes[0]?.value ?? 0
-	const activeAthletes = activeAthletesRes[0]?.value ?? 0
-	const activeMentorships = activeMentorshipsRes[0]?.value ?? 0
-	const completedMentorships = completedMentorshipsRes[0]?.value ?? 0
-	const bipocAthletes = bipocAthletesRes[0]?.value ?? 0
-	const firstRace = firstRaceRes[0]?.value ?? 0
-	const wantsMentor = wantsMentorRes[0]?.value ?? 0
-	const totalMentorApps = totalMentorAppsRes[0]?.value ?? 0
-	const activeMentors = activeMentorsRes[0]?.value ?? 0
-	const bipocMentors = bipocMentorsRes[0]?.value ?? 0
+	const userCount = userCountRes[0]?.value ?? 0
+	const fundTotal = fundTotalRes[0]?.value ?? 0
+	const mentorTotal = mentorTotalRes[0]?.value ?? 0
+	const openTasks = openTasksRes[0]?.value ?? 0
+	const openPairings = openPairingsRes[0]?.value ?? 0
+	const endedPairings = endedPairingsRes[0]?.value ?? 0
+	const firstRaceCount = firstRaceRes[0]?.value ?? 0
+	const wantsMentorCount = wantsMentorRes[0]?.value ?? 0
+	const bipocFundCount = bipocFundRes[0]?.value ?? 0
+	const bipocMentorCount = bipocMentorRes[0]?.value ?? 0
 
-	const reviewed = accepted + declined
-	const acceptanceRate = reviewed > 0 ? Math.round((accepted / reviewed) * 100) : 0
-	const pct = (n: number, base = totalApplications) =>
-		base > 0 ? `${Math.round((n / base) * 100)}%` : '—'
-
-	const [raceCompanies, distanceDataRaw] = await Promise.all([
-		getRaceCompanies(),
-		client.fetch<{ total: number }>(`{
-			"total": count(*[_type == "raceDistance" && raceSeries->date >= "2026-01-01" && raceSeries->date < "2027-01-01"])
-		}`),
+	const [fundStageCounts, mentorStageCounts] = await Promise.all([
+		countAll(fundApplications),
+		countAll(mentorApplications),
 	])
 
-	const distances2026 = distanceDataRaw?.total ?? 0
+	const taskStatusRows = await db
+		.select({
+			status: applicationTasks.status,
+			count: sql<number>`count(*)`.mapWith(Number),
+		})
+		.from(applicationTasks)
+		.groupBy(applicationTasks.status)
+	const taskCounts = Object.fromEntries(taskStatusRows.map((r) => [r.status, r.count]))
+
+	const pct = (n: number, base: number) =>
+		base > 0 ? `${Math.round((n / base) * 100)}%` : '—'
+
+	const FUND_REVIEW_STAGES = ['SUBMITTED', 'IN_REVIEW', 'WAITLISTED']
+	const FUND_ACTIVE_STAGES = [
+		'REGISTERED',
+		'ONBOARDING_IN_PROGRESS',
+		'ACTIVE_IN_PROGRAM',
+	]
+	const FUND_CLOSED_STAGES = [
+		'DECLINED',
+		'CLOSED',
+		'NO_LONGER_ACTIVE',
+		'NO_SHOW_OR_DROPPED',
+	]
+	const MENTOR_ACTIVE_STAGES = ['APPROVED_POOL', 'MATCH_PENDING', 'MATCHED', 'ACTIVE']
+	const MENTOR_REVIEW_STAGES = ['SUBMITTED', 'IN_REVIEW', 'WAITLISTED']
+	const MENTOR_CLOSED_STAGES = ['DECLINED', 'CLOSED']
 
 	return (
-		<div className="space-y-12 pb-12">
+		<div className="pb-24">
 
-			{/* ── Page header ───────────────────────────────────────── */}
-			<div className="animate-fade-in-up border-b border-border pb-8">
-				<div className="mb-2 flex items-center gap-2">
-					<span className="text-[10px] font-semibold tracking-[0.2em] text-primary uppercase">
-						Impact Report
-					</span>
-					<span className="h-px w-6 bg-primary/40" />
-					<span className="text-[10px] font-semibold tracking-[0.2em] text-muted-foreground uppercase">
-						2025 – 2026
-					</span>
-				</div>
-				<h1 className="text-4xl font-bold tracking-tight">
-					Measuring Our Mission
-				</h1>
-				<p className="mt-2 max-w-2xl text-base text-muted-foreground">
-					We fund race entries, connect athletes with mentors, and work alongside
-					race organizations to build belonging at the start line. Here is the work.
+			{/* ── Cover ──────────────────────────────────────────────────── */}
+			<div className="animate-fade-in-up border-b border-border py-14">
+				<p className="text-[10px] font-semibold tracking-[0.3em] text-primary uppercase">
+					Tierra Libre Run &nbsp;·&nbsp; Program Dashboard &nbsp;·&nbsp; 2026
 				</p>
-			</div>
 
-			{/* ══════════════════════════════════════════════════════
-			 01 — ATHLETES
-			 ══════════════════════════════════════════════════════ */}
-			<section>
-				{/* Section label */}
-				<div className="mb-6 flex items-center gap-4">
-					<span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
-						01
-					</span>
+				<div className="mt-10 flex flex-wrap items-end gap-x-16 gap-y-8">
+					{/* Headline stat */}
 					<div>
-						<h2 className="text-xl font-bold leading-none">Athletes</h2>
-						<p className="mt-0.5 text-sm text-muted-foreground">
-							Funded entries · gear & resources · mentorship · community
-						</p>
+						<span
+							className="block text-[5.5rem] leading-none font-bold text-foreground tabular-nums"
+							style={{ fontFamily: 'var(--font-elan)' }}
+						>
+							{fundTotal}
+						</span>
+						<span className="mt-3 block text-lg text-muted-foreground">
+							athlete applications — all time
+						</span>
 					</div>
-				</div>
 
-				<div className="space-y-8">
-					{/* 2025 proof */}
-					<div className="rounded-xl border border-border bg-accent/30 p-5">
-						<div className="mb-4 flex items-center justify-between">
-							<p className="text-[10px] font-semibold tracking-[0.18em] text-muted-foreground uppercase">
-								2025 Season
-							</p>
-							<span className="rounded-full bg-secondary px-2.5 py-0.5 text-[10px] font-semibold text-secondary-foreground">
-								Historical
+					{/* Supporting KPIs */}
+					<div className="mb-2 flex flex-wrap gap-x-10 gap-y-6">
+						<div>
+							<span className="block text-3xl font-bold tabular-nums">{userCount}</span>
+							<span className="mt-1 block text-sm text-muted-foreground">
+								registered members
 							</span>
 						</div>
-						<AdminStatsGrid
-							columns={4}
-							items={[
-								{
-									label: 'Runners Funded',
-									value: 80,
-									icon: <Trophy className="h-5 w-5" />,
-									variant: 'amber',
-									hint: 'Reached the start line',
-								},
-								{
-									label: 'Women of Color',
-									value: 82,
-									icon: <Users className="h-5 w-5" />,
-									variant: 'purple',
-									hint: 'Of funded race entries',
-								},
-								{
-									label: 'First-Time Finishers',
-									value: '60%',
-									icon: <TrendingUp className="h-5 w-5" />,
-									variant: 'green',
-									hint: 'Had never raced before',
-								},
-								{
-									label: 'Gear & Resources',
-									value: 48,
-									icon: <Heart className="h-5 w-5" />,
-									variant: 'default',
-									hint: 'Athletes supported with gear',
-								},
-							]}
-						/>
-					</div>
-
-					{/* 2026 live pipeline */}
-					<div>
-						<div className="mb-3 flex items-center justify-between">
-							<p className="text-[10px] font-semibold tracking-[0.18em] text-muted-foreground uppercase">
-								2026 Program
-							</p>
-							<span className="flex items-center gap-1.5 text-[10px] font-semibold text-primary uppercase tracking-wider">
-								<span className="inline-block h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-								Live
+						<div>
+							<span className="block text-3xl font-bold tabular-nums">{mentorTotal}</span>
+							<span className="mt-1 block text-sm text-muted-foreground">
+								mentor applications
 							</span>
 						</div>
-						<AdminStatsGrid
-							columns={4}
-							items={[
-								{
-									label: 'Total Applications',
-									value: totalApplications,
-									icon: <ClipboardList className="h-5 w-5" />,
-									variant: 'default',
-									hint: 'All-time',
-								},
-								{
-									label: 'Acceptance Rate',
-									value: `${acceptanceRate}%`,
-									icon: <CheckCircle2 className="h-5 w-5" />,
-									variant: 'amber',
-									hint: `${accepted} accepted · ${declined} declined`,
-								},
-								{
-									label: 'In Review',
-									value: pendingReview,
-									icon: <ClipboardList className="h-5 w-5" />,
-									variant: pendingReview > 0 ? 'amber' : 'default',
-									hint: 'Awaiting decision',
-								},
-								{
-									label: 'Active Athletes',
-									value: activeAthletes,
-									icon: <UserCheck className="h-5 w-5" />,
-									variant: 'green',
-									hint: 'Currently in program',
-								},
-							]}
-						/>
-					</div>
-
-					{/* Cohort breakdown */}
-					<div>
-						<p className="mb-3 text-[10px] font-semibold tracking-[0.18em] text-muted-foreground uppercase">
-							Who We Serve
-							{totalApplications > 0 && (
-								<span className="ml-1.5 font-normal normal-case tracking-normal text-muted-foreground/60">
-									— {totalApplications} total applicants
-								</span>
-							)}
-						</p>
-						<AdminStatsGrid
-							columns={3}
-							items={[
-								{
-									label: 'BIPOC Athletes',
-									value: bipocAthletes,
-									icon: <Users className="h-5 w-5" />,
-									variant: 'amber',
-									hint: `${pct(bipocAthletes)} of applicants`,
-								},
-								{
-									label: 'First-Time Racers',
-									value: firstRace,
-									icon: <TrendingUp className="h-5 w-5" />,
-									variant: 'green',
-									hint: `${pct(firstRace)} of applicants`,
-								},
-								{
-									label: 'Requested Mentorship',
-									value: wantsMentor,
-									icon: <Heart className="h-5 w-5" />,
-									variant: 'purple',
-									hint: `${pct(wantsMentor)} of applicants`,
-								},
-							]}
-						/>
+						<div>
+							<span className="block text-3xl font-bold tabular-nums">{openPairings}</span>
+							<span className="mt-1 block text-sm text-muted-foreground">
+								active pairings
+							</span>
+						</div>
+						<div>
+							<span className="block text-3xl font-bold tabular-nums">{endedPairings}</span>
+							<span className="mt-1 block text-sm text-muted-foreground">
+								completed pairings
+							</span>
+						</div>
 					</div>
 				</div>
-			</section>
-
-			{/* ── Divider ────────────────────────────────────────── */}
-			<div className="flex items-center gap-4">
-				<div className="h-px flex-1 bg-border" />
 			</div>
 
-			{/* ══════════════════════════════════════════════════════
-			 02 — RACE PARTNERS
-			 ══════════════════════════════════════════════════════ */}
-			<section>
-				<div className="mb-6 flex items-center gap-4">
-					<span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
-						02
-					</span>
-					<div>
-						<h2 className="text-xl font-bold leading-none">Race Partners</h2>
-						<p className="mt-0.5 text-sm text-muted-foreground">
-							Organizations building access alongside us at their events
-						</p>
-					</div>
-				</div>
+			{/* ── 01 Who We Serve ────────────────────────────────────────── */}
+			<div className="py-14 border-b border-border">
+				<SectionHeader index="01" eyebrow="Who We Serve" title="The Athlete Community" />
 
-				<div className="space-y-6">
-					<AdminStatsGrid
-						columns={3}
-						items={[
-							{
-								label: 'Partner Organizations',
-								value: raceCompanies.length,
-								icon: <MapPin className="h-5 w-5" />,
-								variant: 'amber',
-								hint: 'Race companies in our network',
-							},
-							{
-								label: '2026 Distances',
-								value: distances2026,
-								icon: <Route className="h-5 w-5" />,
-								variant: 'default',
-								hint: 'Race distances available this year',
-							},
-							{
-								label: 'Active Mentorships',
-								value: activeMentorships,
-								icon: <Handshake className="h-5 w-5" />,
-								variant: 'green',
-								hint: 'Athletes paired with mentors',
-							},
-						]}
+				<div className="mt-10 grid grid-cols-1 divide-y divide-border sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+					<StatSlide
+						value={pct(bipocFundCount, fundTotal)}
+						label="identify as BIPOC"
+						hint={`${bipocFundCount} of ${fundTotal} applicants`}
+						accent
 					/>
-
-					{/* Partner logo wall */}
-					{raceCompanies.length > 0 && (
-						<div className="rounded-xl border border-border bg-card p-5">
-							<p className="mb-4 text-[10px] font-semibold tracking-[0.18em] text-muted-foreground uppercase">
-								Our Partners
-							</p>
-							<div className="flex flex-wrap gap-3">
-								{raceCompanies.map((company) => (
-									<a
-										key={company._id}
-										href={company.website ?? '#'}
-										target="_blank"
-										rel="noopener noreferrer"
-										className="group flex items-center gap-2.5 rounded-lg border border-border bg-background px-3.5 py-2.5 transition-colors hover:border-primary/40 hover:bg-accent/40"
-									>
-										{company.logo?.asset?.url ? (
-											<Image
-												src={`${company.logo.asset.url}?w=80&h=80&fit=fill&auto=format`}
-												alt={`${company.name} logo`}
-												width={32}
-												height={32}
-												className="rounded object-contain"
-											/>
-										) : (
-											<div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-primary/10 text-xs font-bold text-primary">
-												{company.name.charAt(0)}
-											</div>
-										)}
-										<div className="min-w-0">
-											<p className="truncate text-sm font-medium leading-tight">{company.name}</p>
-										</div>
-										<ArrowUpRight className="ml-auto h-3 w-3 shrink-0 opacity-0 transition-opacity group-hover:opacity-50" />
-									</a>
-								))}
-							</div>
-						</div>
-					)}
+					<StatSlide
+						value={pct(firstRaceCount, fundTotal)}
+						label="racing for the first time"
+						hint={`${firstRaceCount} of ${fundTotal} applicants`}
+					/>
+					<StatSlide
+						value={pct(wantsMentorCount, fundTotal)}
+						label="requested a mentor"
+						hint={`${wantsMentorCount} of ${fundTotal} applicants`}
+					/>
 				</div>
-			</section>
-
-			{/* ── Divider ────────────────────────────────────────── */}
-			<div className="flex items-center gap-4">
-				<div className="h-px flex-1 bg-border" />
 			</div>
 
-			{/* ══════════════════════════════════════════════════════
-			 03 — MENTORS
-			 ══════════════════════════════════════════════════════ */}
-			<section>
-				<div className="mb-6 flex items-center gap-4">
-					<span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
-						03
-					</span>
-					<div>
-						<h2 className="text-xl font-bold leading-none">Mentors</h2>
-						<p className="mt-0.5 text-sm text-muted-foreground">
-							Experienced runners who volunteer their time, knowledge, and care
-						</p>
+			{/* ── 02 Athlete Pipeline ────────────────────────────────────── */}
+			<div className="py-14 border-b border-border">
+				<SectionHeader
+					index="02"
+					eyebrow="Athletes"
+					title="Application Pipeline"
+				/>
+
+				<div className="mt-10 overflow-x-auto -mx-6 px-6">
+					<div className="flex min-w-max rounded-xl border border-border overflow-hidden">
+						{FUND_WORKFLOW_STAGES.map((stage, i) => {
+							const count = fundStageCounts[stage] ?? 0
+							const isReview = FUND_REVIEW_STAGES.includes(stage)
+							const isActive = FUND_ACTIVE_STAGES.includes(stage)
+							const isClosed = FUND_CLOSED_STAGES.includes(stage)
+							const bg = isReview
+								? 'bg-primary/8'
+								: isActive
+									? 'bg-secondary/30'
+									: isClosed
+										? 'bg-muted/40'
+										: 'bg-accent/25'
+							const barColor = isReview
+								? 'bg-primary'
+								: isActive
+									? 'bg-secondary'
+									: isClosed
+										? 'bg-muted-foreground/25'
+										: 'bg-border'
+							return (
+								<div
+									key={stage}
+									className={`flex min-w-[96px] flex-col items-center px-4 py-6 ${i > 0 ? 'border-l border-border' : ''} ${bg} ${count === 0 ? 'opacity-35' : ''}`}
+								>
+									<span className="text-[2.25rem] font-bold leading-none tabular-nums text-foreground">
+										{count}
+									</span>
+									<span className="mt-3 text-center text-[9px] font-semibold leading-tight tracking-[0.12em] text-muted-foreground uppercase">
+										{FUND_WORKFLOW_LABELS[stage]}
+									</span>
+									<span className={`mt-3 h-[3px] w-8 rounded-full ${barColor}`} />
+								</div>
+							)
+						})}
 					</div>
 				</div>
 
-				<AdminStatsGrid
-					columns={4}
-					items={[
-						{
-							label: 'Mentor Applications',
-							value: totalMentorApps,
-							icon: <ClipboardList className="h-5 w-5" />,
-							variant: 'default',
-							hint: 'All-time',
-						},
-						{
-							label: 'Active Mentors',
-							value: activeMentors,
-							icon: <Star className="h-5 w-5" />,
-							variant: 'amber',
-							hint: 'Approved, matched, or active',
-						},
-						{
-							label: 'Completed Pairings',
-							value: completedMentorships,
-							icon: <CheckCircle2 className="h-5 w-5" />,
-							variant: 'green',
-							hint: 'Mentorships finished',
-						},
-						{
-							label: 'BIPOC Mentors',
-							value: bipocMentors,
-							icon: <Users className="h-5 w-5" />,
-							variant: 'purple',
-							hint: totalMentorApps > 0
-								? `${Math.round((bipocMentors / totalMentorApps) * 100)}% of mentors`
-								: '—',
-						},
-					]}
-				/>
-			</section>
+				{/* Legend */}
+				<div className="mt-4 flex flex-wrap gap-4">
+					<Legend color="bg-primary" label="Under review" />
+					<Legend color="bg-secondary" label="Active in program" />
+					<Legend color="bg-muted-foreground/25" label="Closed / exited" />
+					<Legend color="bg-border" label="Pipeline" />
+				</div>
+			</div>
 
+			{/* ── 03 Mentors ─────────────────────────────────────────────── */}
+			<div className="py-14 border-b border-border">
+				<SectionHeader index="03" eyebrow="Mentors" title="Our Volunteer Network" />
+
+				<div className="mt-10 grid grid-cols-1 divide-y divide-border sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+					<StatSlide
+						value={String(mentorTotal)}
+						label="mentor applications — all time"
+						hint="Everyone who has raised their hand"
+						accent
+					/>
+					<StatSlide
+						value={pct(bipocMentorCount, mentorTotal)}
+						label="of mentors identify as BIPOC"
+						hint={`${bipocMentorCount} of ${mentorTotal} mentors`}
+					/>
+					<StatSlide
+						value={String(openPairings + endedPairings)}
+						label="total athlete-mentor pairings"
+						hint={`${openPairings} ongoing · ${endedPairings} completed`}
+					/>
+				</div>
+			</div>
+
+			{/* ── 04 Mentor Pipeline ─────────────────────────────────────── */}
+			<div className="py-14 border-b border-border">
+				<SectionHeader
+					index="04"
+					eyebrow="Mentors"
+					title="Application Pipeline"
+				/>
+
+				<div className="mt-10 overflow-x-auto -mx-6 px-6">
+					<div className="flex min-w-max rounded-xl border border-border overflow-hidden">
+						{MENTOR_WORKFLOW_STAGES.map((stage, i) => {
+							const count = mentorStageCounts[stage] ?? 0
+							const isReview = MENTOR_REVIEW_STAGES.includes(stage)
+							const isActive = MENTOR_ACTIVE_STAGES.includes(stage)
+							const isClosed = MENTOR_CLOSED_STAGES.includes(stage)
+							const bg = isReview
+								? 'bg-primary/8'
+								: isActive
+									? 'bg-secondary/30'
+									: isClosed
+										? 'bg-muted/40'
+										: 'bg-accent/25'
+							const barColor = isReview
+								? 'bg-primary'
+								: isActive
+									? 'bg-secondary'
+									: isClosed
+										? 'bg-muted-foreground/25'
+										: 'bg-border'
+							return (
+								<div
+									key={stage}
+									className={`flex min-w-[96px] flex-col items-center px-4 py-6 ${i > 0 ? 'border-l border-border' : ''} ${bg} ${count === 0 ? 'opacity-35' : ''}`}
+								>
+									<span className="text-[2.25rem] font-bold leading-none tabular-nums text-foreground">
+										{count}
+									</span>
+									<span className="mt-3 text-center text-[9px] font-semibold leading-tight tracking-[0.12em] text-muted-foreground uppercase">
+										{MENTOR_WORKFLOW_LABELS[stage]}
+									</span>
+									<span className={`mt-3 h-[3px] w-8 rounded-full ${barColor}`} />
+								</div>
+							)
+						})}
+					</div>
+				</div>
+
+				<div className="mt-4 flex flex-wrap gap-4">
+					<Legend color="bg-primary" label="Under review" />
+					<Legend color="bg-secondary" label="Active in pool" />
+					<Legend color="bg-muted-foreground/25" label="Closed / exited" />
+				</div>
+			</div>
+
+			{/* ── 05 Operations ──────────────────────────────────────────── */}
+			<div className="pt-14">
+				<SectionHeader index="05" eyebrow="Operations" title="Task Activity" />
+
+				<div className="mt-10 grid grid-cols-1 divide-y divide-border sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+					<StatSlide
+						value={String(openTasks)}
+						label="open tasks right now"
+						hint="Require attention"
+						accent={openTasks > 0}
+					/>
+					<StatSlide
+						value={String(taskCounts['DONE'] ?? 0)}
+						label="tasks completed"
+						hint="All time"
+					/>
+					<StatSlide
+						value={String(taskCounts['CANCELED'] ?? 0)}
+						label="tasks canceled"
+						hint="All time"
+					/>
+				</div>
+			</div>
+
+		</div>
+	)
+}
+
+// ── Sub-components ────────────────────────────────────────────────────────────
+
+function SectionHeader({
+	index,
+	eyebrow,
+	title,
+}: {
+	index: string
+	eyebrow: string
+	title: string
+}) {
+	return (
+		<div className="flex items-start gap-5">
+			<div className="mt-1 h-14 w-[3px] shrink-0 rounded-full bg-primary" />
+			<div>
+				<p className="text-[10px] font-semibold tracking-[0.25em] text-primary uppercase">
+					{index} — {eyebrow}
+				</p>
+				<h2 className="mt-1 text-2xl font-bold leading-tight">{title}</h2>
+			</div>
+		</div>
+	)
+}
+
+function StatSlide({
+	value,
+	label,
+	hint,
+	accent = false,
+}: {
+	value: string
+	label: string
+	hint?: string
+	accent?: boolean
+}) {
+	return (
+		<div className="px-0 py-6 sm:px-8 sm:first:pl-0 sm:last:pr-0">
+			<span
+				className={`block text-[3.5rem] leading-none font-bold tabular-nums ${accent ? 'text-primary' : 'text-foreground'}`}
+				style={{ fontFamily: 'var(--font-elan)' }}
+			>
+				{value}
+			</span>
+			<p className="mt-3 text-sm text-muted-foreground leading-snug">{label}</p>
+			{hint && (
+				<p className="mt-1 text-[11px] text-muted-foreground/60">{hint}</p>
+			)}
+		</div>
+	)
+}
+
+function Legend({ color, label }: { color: string; label: string }) {
+	return (
+		<div className="flex items-center gap-1.5">
+			<span className={`h-2 w-2 rounded-full ${color}`} />
+			<span className="text-[10px] font-medium text-muted-foreground">{label}</span>
 		</div>
 	)
 }

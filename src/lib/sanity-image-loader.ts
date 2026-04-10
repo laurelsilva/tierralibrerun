@@ -10,7 +10,11 @@ import { type ImageLoaderProps } from 'next/image'
  * Result: ~5-10x faster first load for large images (6000px JPEGs → properly
  * sized WebP served from Sanity's global CDN).
  */
-export default function sanityImageLoader({ src, width, quality }: ImageLoaderProps): string {
+export default function sanityImageLoader({
+	src,
+	width,
+	quality,
+}: ImageLoaderProps): string {
 	if (!src.startsWith('https://cdn.sanity.io/')) {
 		return src
 	}

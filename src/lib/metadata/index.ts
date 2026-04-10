@@ -188,8 +188,7 @@ export const fundApplyMetadata = generateMetadata({
 
 export const dashboardMetadata = generateMetadata({
 	title: 'Account Dashboard - Manage Your Profile',
-	description:
-		`Manage your ${siteConfig.name} account, view your funding applications, and track your community involvement.`,
+	description: `Manage your ${siteConfig.name} account, view your funding applications, and track your community involvement.`,
 	keywords: ['dashboard', 'account', 'profile', 'applications', 'user account'],
 	url: '/dashboard',
 })
@@ -224,8 +223,7 @@ export function generateRacesMetadata(
 
 export const companiesMetadata = generateMetadata({
 	title: 'Race Companies and Partners',
-	description:
-		`Explore the race companies partnering with ${siteConfig.name} and see the races they support through the Athlete Fund.`,
+	description: `Explore the race companies partnering with ${siteConfig.name} and see the races they support through the Athlete Fund.`,
 	keywords: ['race companies', 'race organizers', 'trail running partners'],
 	url: '/companies',
 })
@@ -283,7 +281,7 @@ export function generateRaceSeriesMetadata(series: {
 		descriptionText ||
 		`Join the ${series.name} trail race in ${series.location}. Organized by ${series.company?.name || 'professional race organizers'}. Apply for funding through our athlete fund.`
 
-const image = series.image?.asset?.url || siteConfig.defaultOgImage
+	const image = series.image?.asset?.url || siteConfig.defaultOgImage
 
 	return generateMetadata({
 		title,
@@ -368,7 +366,8 @@ export function generateRaceDistanceMetadata(distance: {
 		descriptionText ||
 		`Race details for the ${distance.distance} (${distanceDetail}) at ${raceName}. Entry fee: $${distance.price}. Apply for funding support.`
 
-const image = distance.raceSeries?.image?.asset?.url || siteConfig.defaultOgImage
+	const image =
+		distance.raceSeries?.image?.asset?.url || siteConfig.defaultOgImage
 
 	return generateMetadata({
 		title,
@@ -393,8 +392,7 @@ const image = distance.raceSeries?.image?.asset?.url || siteConfig.defaultOgImag
 //
 export const blogMetadata = generateMetadata({
 	title: 'Blog',
-	description:
-		`Stories, updates, and community highlights from ${siteConfig.name}`,
+	description: `Stories, updates, and community highlights from ${siteConfig.name}`,
 	url: '/blog',
 })
 
@@ -410,7 +408,7 @@ export function generateBlogListMetadata(opts?: {
 	const description =
 		typeof count === 'number' && count > 0
 			? `Read ${count} posts from our community.${tagsSnippet}`
-				: `Stories, updates, and community highlights from ${siteConfig.name}.`
+			: `Stories, updates, and community highlights from ${siteConfig.name}.`
 	return generateMetadata({
 		title: 'Blog',
 		description,
@@ -438,7 +436,9 @@ export function generatePostMetadata(post: {
 	return generateMetadata({
 		title: post.seo?.title || post.title,
 		description:
-			post.seo?.description || post.excerpt || `${siteConfig.name} blog article`,
+			post.seo?.description ||
+			post.excerpt ||
+			`${siteConfig.name} blog article`,
 		image,
 		url: `/blog/${post.slug}`,
 		type: 'article',

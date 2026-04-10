@@ -111,7 +111,9 @@ export async function sendApplicationEmail<
 				applicationId: req.applicationId,
 				applicationType: req.applicationType,
 				emailType: mapEmailTypeTag(req),
-				recipientEmail: Array.isArray(req.to) ? req.to.join(', ') : req.to || 'unknown',
+				recipientEmail: Array.isArray(req.to)
+					? req.to.join(', ')
+					: req.to || 'unknown',
 				status: 'FAILED',
 				subject: req.subject,
 				error: msg,

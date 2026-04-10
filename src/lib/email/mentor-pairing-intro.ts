@@ -51,7 +51,7 @@ export function buildMentorshipPairingIntroEmail(
 		`<p>Hi ${escapeHtml(athleteFirstName)} and ${escapeHtml(mentorFirstName)},</p>`,
 	)
 	parts.push(
-	`<p>I'm making this introduction for the ${siteConfig.name} mentorship program. You've been matched as athlete and mentor as <strong>${escapeHtml(athleteFirstName)}</strong> prepares for <strong>${escapeHtml(input.raceName || 'their race')}</strong>${input.raceDate ? ` on <strong>${escapeHtml(input.raceDate)}</strong>` : ''}${input.raceLocation ? ` in <strong>${escapeHtml(input.raceLocation)}</strong>` : ''}. I'm excited for you both to connect.</p>`,
+		`<p>I'm making this introduction for the ${siteConfig.name} mentorship program. You've been matched as athlete and mentor as <strong>${escapeHtml(athleteFirstName)}</strong> prepares for <strong>${escapeHtml(input.raceName || 'their race')}</strong>${input.raceDate ? ` on <strong>${escapeHtml(input.raceDate)}</strong>` : ''}${input.raceLocation ? ` in <strong>${escapeHtml(input.raceLocation)}</strong>` : ''}. I'm excited for you both to connect.</p>`,
 	)
 	parts.push(
 		`<p>Please reply all to this email to make the initial connection and set up a first call or check-in. From there, choose the communication style that makes the most sense for both of you, whether that’s text, email, phone, or a simple recurring check-in cadence.</p>`,

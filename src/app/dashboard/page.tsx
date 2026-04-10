@@ -692,7 +692,7 @@ async function AccountOverview() {
 										{permissions.canAccessInstagram && (
 											<div className="flex flex-col items-center space-y-4 p-4 text-center">
 												<a
-													href={process.env.NEXT_PUBLIC_INSTAGRAM_URL || "#"}
+													href={process.env.NEXT_PUBLIC_INSTAGRAM_URL || '#'}
 													target="_blank"
 													rel="noopener noreferrer"
 													className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-pink-500 to-pink-500 px-5 py-3 font-medium text-white"
@@ -776,7 +776,7 @@ async function AccountOverview() {
 
 									<div className="bg-primary overflow-hidden rounded-lg">
 										<iframe
-											src={process.env.NEXT_PUBLIC_DONATION_URL || ""}
+											src={process.env.NEXT_PUBLIC_DONATION_URL || ''}
 											name="donateFrame"
 											className="h-[600px] w-full"
 											allowFullScreen
@@ -787,7 +787,10 @@ async function AccountOverview() {
 										<p className="text-muted-foreground text-sm">
 											The BIPOC Athlete Fund is a 501(c)(3) nonprofit initiative
 											with fiscal sponsorship through our nonprofit partner.
-											Donations are tax-deductible.{process.env.NEXT_PUBLIC_TAX_ID ? ` Tax ID: ${process.env.NEXT_PUBLIC_TAX_ID}` : ''}
+											Donations are tax-deductible.
+											{process.env.NEXT_PUBLIC_TAX_ID
+												? ` Tax ID: ${process.env.NEXT_PUBLIC_TAX_ID}`
+												: ''}
 										</p>
 									</div>
 								</div>
