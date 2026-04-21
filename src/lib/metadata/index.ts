@@ -119,13 +119,12 @@ export function generateMetadata(config: SEOConfig): Metadata {
 export const homeMetadata = generateMetadata({
 	title: `${siteConfig.name} - Trail Running Community`,
 	description:
-		'Join our trail running community led by people of color, building authentic connections through nature. Apply for race funding, find events, and connect with fellow athletes.',
+		'Join our trail running community led by people of color, building authentic connections through nature. Apply for race funding and connect with fellow athletes.',
 	keywords: [
 		'trail running',
 		'athletes',
 		'community',
 		'nature',
-		'running events',
 		'race funding',
 	],
 	url: '/',
@@ -143,19 +142,6 @@ export const fundMetadata = generateMetadata({
 		'entry fees',
 	],
 	url: '/fund',
-})
-
-export const eventsMetadata = generateMetadata({
-	title: 'Community Events - Group Runs & Meetups',
-	description:
-		'Join our community events, group runs, and trail running meetups. Build connections with fellow athletes.',
-	keywords: [
-		'group runs',
-		'trail running events',
-		'community meetups',
-		'athletes',
-	],
-	url: '/events',
 })
 
 export const donateMetadata = generateMetadata({
@@ -213,7 +199,6 @@ export function generateRacesMetadata(
 		keywords: [
 			'trail races',
 			'ultramarathon',
-			'running events',
 			'race registration',
 			'trail running',
 		],
@@ -286,13 +271,7 @@ export function generateRaceSeriesMetadata(series: {
 	return generateMetadata({
 		title,
 		description,
-		keywords: [
-			'trail race',
-			series.name,
-			series.location,
-			'running event',
-			'race registration',
-		],
+		keywords: ['trail race', series.name, series.location, 'race registration'],
 		image,
 		url: `/races/${series.slug}`,
 		type: 'article',

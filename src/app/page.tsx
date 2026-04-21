@@ -1,4 +1,4 @@
-import { ArrowRight, Heart, Mountain, Users } from 'lucide-react'
+import { ArrowRight, Heart, Users } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
@@ -37,9 +37,9 @@ export default async function Home() {
 									className="text-primary-foreground/90 animate-fade-in-up text-xl leading-relaxed md:text-2xl"
 									style={{ animationDelay: '0.3s', animationFillMode: 'both' }}
 								>
-								A nonprofit created and led by people of color. We fund race
-								entries, provide mentorship, and build community so athletes
-								can show up, prepare, and feel belonging.
+									A nonprofit created and led by people of color. We fund race
+									entries, provide mentorship, and build community so athletes
+									can show up, prepare, and feel belonging.
 								</p>
 								<div
 									className="animate-fade-in-up flex flex-col gap-4 pt-2 sm:flex-row sm:gap-4"
@@ -146,8 +146,8 @@ export default async function Home() {
 								<blockquote className="border-primary bg-primary/10 rounded-r-2xl border-l-4 py-4 pl-6">
 									<p className="text-foreground text-lg italic md:text-xl">
 										"We're not just opening doors. We're building the support
-										and community that keeps athletes on the trails—and
-										in leadership."
+										and community that keeps athletes on the trails—and in
+										leadership."
 									</p>
 								</blockquote>
 							</div>
@@ -164,12 +164,11 @@ export default async function Home() {
 							HOW WE WORK
 						</span>
 						<h2 className="mb-8 text-4xl font-bold md:text-5xl lg:text-6xl">
-							Three Pillars of Support
+							Two Pillars of Support
 						</h2>
 						<p className="text-primary-foreground/90 max-w-3xl text-lg leading-relaxed md:text-xl">
-							We remove barriers through race funding, mentorship connections,
-							and community events—so you can show up, prepare, and feel
-							belonging.
+							We remove barriers through race funding and mentorship
+							connections, so you can show up, prepare, and feel belonging.
 						</p>
 					</div>
 
@@ -220,22 +219,21 @@ export default async function Home() {
 						</div>
 					</div>
 
-					{/* Programs 2 & 3 - Side by side */}
-					<div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
-						{/* Mentorship */}
-						<div className="group relative overflow-hidden rounded-3xl">
-							<div className="relative h-[50vh] lg:h-[65vh]">
-								<Image
-									src="https://cdn.sanity.io/images/qgy6qhm1/production/8f204f7b8f37ee12ebb64459a82b1ce3f68ed25f-768x1024.jpg"
-									alt="Mentorship Platform"
-									fill
-									loading="lazy"
-									quality={85}
-									sizes="(max-width: 1024px) 100vw, 50vw"
-									className="object-cover transition-transform duration-500 group-hover:scale-105"
-								/>
-								<div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/30 to-transparent" />
-								<div className="absolute right-0 bottom-0 left-0 p-8 lg:p-10">
+					{/* Mentorship - full-width hero to match Athlete Fund */}
+					<div className="group relative overflow-hidden rounded-3xl">
+						<div className="relative h-[50vh] lg:h-[65vh]">
+							<Image
+								src="https://cdn.sanity.io/images/qgy6qhm1/production/8f204f7b8f37ee12ebb64459a82b1ce3f68ed25f-768x1024.jpg"
+								alt="Mentorship Platform"
+								fill
+								loading="lazy"
+								quality={85}
+								sizes="100vw"
+								className="object-cover transition-transform duration-500 group-hover:scale-105"
+							/>
+							<div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/30 to-transparent" />
+							<div className="absolute right-0 bottom-0 left-0 p-8 lg:p-10">
+								<div className="mx-auto max-w-4xl">
 									<div className="mb-4 inline-flex items-center gap-3 rounded-full bg-white/20 px-4 py-2 backdrop-blur-sm">
 										<Users className="h-4 w-4 text-white" />
 										<span className="text-xs font-bold tracking-wider text-white uppercase">
@@ -245,10 +243,10 @@ export default async function Home() {
 									<h3 className="mb-3 text-xl leading-tight font-bold text-white md:text-2xl">
 										Guidance That's Real
 									</h3>
-									<p className="mb-4 text-sm leading-relaxed text-white/90 md:text-base">
-									We match funded athletes with experienced mentors
-									for practical planning, regular check-ins, and culturally
-									grounded support.
+									<p className="mb-4 max-w-2xl text-sm leading-relaxed text-white/90 md:text-base">
+										We match funded athletes with experienced mentors for
+										practical planning, regular check-ins, and culturally
+										grounded support.
 									</p>
 									<Button
 										variant="outline"
@@ -257,46 +255,6 @@ export default async function Home() {
 										asChild
 									>
 										<Link href="/mentor">Meet Mentors</Link>
-									</Button>
-								</div>
-							</div>
-						</div>
-
-						{/* Community Events */}
-						<div className="group relative overflow-hidden rounded-3xl">
-							<div className="relative h-[50vh] lg:h-[65vh]">
-								<Image
-									src="https://cdn.sanity.io/images/qgy6qhm1/production/0ea0350d4ab63be4a921202acb7cfc7b98ec1010-721x1092.jpg"
-									alt="Community Events"
-									fill
-									loading="lazy"
-									quality={85}
-									sizes="(max-width: 1024px) 100vw, 50vw"
-									className="object-cover transition-transform duration-500 group-hover:scale-105"
-								/>
-								<div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/30 to-transparent" />
-								<div className="absolute right-0 bottom-0 left-0 p-8 lg:p-10">
-									<div className="mb-4 inline-flex items-center gap-3 rounded-full bg-white/20 px-4 py-2 backdrop-blur-sm">
-										<Mountain className="h-4 w-4 text-white" />
-										<span className="text-xs font-bold tracking-wider text-white uppercase">
-											Community
-										</span>
-									</div>
-									<h3 className="mb-3 text-xl leading-tight font-bold text-white md:text-2xl">
-										Find Your People
-									</h3>
-									<p className="mb-4 text-sm leading-relaxed text-white/90 md:text-base">
-										Shakeouts, group runs, and learning spaces across the PNW
-										that build belonging and keep people in the sport. All paces
-										welcome.
-									</p>
-									<Button
-										variant="outline"
-										size="sm"
-										className="border-white/30 bg-transparent text-white hover:bg-white hover:text-black"
-										asChild
-									>
-										<Link href="/events">Join an Event</Link>
 									</Button>
 								</div>
 							</div>
@@ -355,9 +313,8 @@ export default async function Home() {
 									Ready to move from intent to action?
 								</h3>
 								<p className="text-primary-foreground/80 text-lg leading-relaxed md:text-xl">
-									Co-fund entries, host inclusive events, and share accountable
-									impact. Let's work together to build a more equitable
-									outdoors.
+									Co-fund entries and share accountable impact. Let's work
+									together to build a more equitable outdoors.
 								</p>
 							</div>
 							<div className="flex justify-start lg:justify-end">

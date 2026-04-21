@@ -125,9 +125,11 @@ export default async function CompanyPage({
 								)}
 							</div>
 							{company.description && (
-								<p className="text-muted-foreground max-w-3xl text-lg leading-relaxed">
-									{company.description}
-								</p>
+								<div className="text-muted-foreground max-w-3xl space-y-4 text-lg leading-relaxed">
+									{company.description.split(/\n{2,}/).map((para, i) => (
+										<p key={i}>{para.trim()}</p>
+									))}
+								</div>
 							)}
 						</div>
 

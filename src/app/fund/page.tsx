@@ -182,9 +182,9 @@ export default async function AthletesFund() {
 									lasting part of the sport.
 								</p>
 								<p className="text-muted-foreground text-lg leading-[1.7] md:text-xl md:leading-[1.7]">
-									You’ll find mentorship, events, course previews, and in person
-									support at select races. The goal is simple: show up, prepare,
-									and feel belonging.
+									You’ll find mentorship, course previews, and in person support
+									at select races. The goal is simple: show up, prepare, and
+									feel belonging.
 								</p>
 							</div>
 						</div>
@@ -274,7 +274,7 @@ export default async function AthletesFund() {
 									</h3>
 									<p className="text-sm leading-relaxed text-white/90 md:text-base">
 										Join our Slack and connect with other athletes through
-										events, community runs, and meetups around select races.
+										community runs and meetups around select races.
 									</p>
 								</div>
 							</div>
@@ -437,8 +437,8 @@ export default async function AthletesFund() {
 									<CheckCircle2 className="text-primary h-5 w-5" />
 								</div>
 								<p className="text-foreground pt-1 text-lg leading-[1.7]">
-									Engage with the community when possible through Slack, events,
-									and race connections
+									Engage with the community when possible through Slack and race
+									connections
 								</p>
 							</div>
 						</div>
@@ -526,8 +526,8 @@ export default async function AthletesFund() {
 												</p>
 											) : (
 												<p className="text-muted-foreground text-base leading-[1.7]">
-													Partnering with Trail Running Community to expand access to
-													trail running for athletes.
+													Partnering with Trail Running Community to expand
+													access to trail running for athletes.
 												</p>
 											)}
 										</div>
@@ -641,8 +641,8 @@ export default async function AthletesFund() {
 							</div>
 							<div className="space-y-7">
 								<p className="text-primary-foreground/90 text-lg leading-[1.7] md:text-xl md:leading-[1.7]">
-									Trail Running Community is created and led by people of color. We
-									believe our community deserves more than access. We deserve
+									Trail Running Community is created and led by people of color.
+									We believe our community deserves more than access. We deserve
 									power, joy, and a real home in trail running.
 								</p>
 								<p className="text-primary-foreground/90 text-lg leading-[1.7] md:text-xl md:leading-[1.7]">
@@ -687,7 +687,8 @@ export default async function AthletesFund() {
 							helps keep this work going, including entries, mentorship, and
 							community care. The Athlete Fund is a 501(c)(3) nonprofit
 							initiative with fiscal sponsorship through our nonprofit partner.
-							Donations are tax deductible. {process.env.NEXT_PUBLIC_TAX_ID || ""}.
+							Donations are tax deductible.{' '}
+							{process.env.NEXT_PUBLIC_TAX_ID || ''}.
 						</p>
 						<div className="mb-20 flex flex-col justify-center gap-4 sm:flex-row md:mb-24">
 							{userType === 'bipoc' && (

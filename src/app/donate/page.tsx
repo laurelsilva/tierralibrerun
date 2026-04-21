@@ -230,11 +230,6 @@ const impactAreas = [
 		description:
 			'Support our first annual multi-day immersive trail running experience focused on community building, skill development, and storytelling.',
 	},
-	{
-		title: 'Community Events',
-		description:
-			'Fund pre-race meetups, trail maintenance days, and educational workshops throughout the year.',
-	},
 ]
 
 const commitments = [

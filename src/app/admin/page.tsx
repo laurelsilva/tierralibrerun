@@ -159,7 +159,7 @@ export default async function AdminPage() {
 					<CardContent>
 						<p className="text-muted-foreground mb-4 text-sm">
 							View active participants grouped by race series for upcoming
-							events.
+							races.
 						</p>
 						<Button asChild className="w-full" variant="outline">
 							<Link href="/admin/fund-athletes/active">
