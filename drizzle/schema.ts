@@ -62,52 +62,6 @@ export const emailPresets = mysqlTable(
 	],
 )
 
-export const eventRsvpAnswers = mysqlTable(
-	'event_rsvp_answers',
-	{
-		id: varchar({ length: 36 }).notNull(),
-		eventId: varchar('event_id', { length: 64 }).notNull(),
-		userId: varchar('user_id', { length: 36 }).notNull(),
-		questionKey: varchar('question_key', { length: 64 }).notNull(),
-		answer: text().notNull(),
-		createdAt: timestamp('created_at', { mode: 'string' })
-			.default(sql`(now())`)
-			.notNull(),
-		updatedAt: timestamp('updated_at', { mode: 'string' })
-			.default(sql`(now())`)
-			.notNull(),
-	},
-	(table) => [
-		index('uniq_event_user_question').on(
-			table.eventId,
-			table.userId,
-			table.questionKey,
-		),
-		index('event_rsvp_answers_event_idx').on(table.eventId),
-		index('event_rsvp_answers_user_idx').on(table.userId),
-		index('event_rsvp_answers_question_idx').on(table.questionKey),
-		primaryKey({ columns: [table.id], name: 'event_rsvp_answers_id' }),
-	],
-)
-
-export const eventRsvps = mysqlTable(
-	'event_rsvps',
-	{
-		id: varchar({ length: 36 }).notNull(),
-		eventId: varchar('event_id', { length: 64 }).notNull(),
-		userId: varchar('user_id', { length: 36 }).notNull(),
-		createdAt: timestamp('created_at', { mode: 'string' })
-			.default(sql`(now())`)
-			.notNull(),
-	},
-	(table) => [
-		index('uniq_event_user').on(table.eventId, table.userId),
-		index('event_rsvps_event_idx').on(table.eventId),
-		index('event_rsvps_user_idx').on(table.userId),
-		primaryKey({ columns: [table.id], name: 'event_rsvps_id' }),
-	],
-)
-
 export const fundApplications = mysqlTable(
 	'fund_applications',
 	{

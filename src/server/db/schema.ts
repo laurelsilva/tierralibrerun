@@ -95,6 +95,7 @@ export const fundApplications = mysqlTable(
 		confirmationDeadlineAt: timestamp('confirmation_deadline_at'),
 		confirmedAt: timestamp('confirmed_at'),
 		registrationStartedAt: timestamp('registration_started_at'),
+		registrationConfirmationPhotos: text('registration_confirmation_photos'),
 		registeredAt: timestamp('registered_at'),
 		onboardingStartedAt: timestamp('onboarding_started_at'),
 		activatedAt: timestamp('activated_at'),
@@ -218,7 +219,9 @@ export const applicationEvents = mysqlTable(
 		fromStage: varchar('from_stage', { length: 64 }),
 		toStage: varchar('to_stage', { length: 64 }),
 		actorUserId: varchar('actor_user_id', { length: 36 }),
-		actorRole: varchar('actor_role', { length: 32 }).notNull().default('SYSTEM'), // 'ADMIN' | 'ATHLETE' | 'SYSTEM'
+		actorRole: varchar('actor_role', { length: 32 })
+			.notNull()
+			.default('SYSTEM'), // 'ADMIN' | 'ATHLETE' | 'SYSTEM'
 		payload: text('payload'),
 		createdAt: timestamp('created_at').defaultNow().notNull(),
 	},
@@ -227,8 +230,12 @@ export const applicationEvents = mysqlTable(
 			table.applicationType,
 			table.applicationId,
 		),
-		eventTypeIdx: index('application_events_event_type_idx').on(table.eventType),
-		createdAtIdx: index('application_events_created_at_idx').on(table.createdAt),
+		eventTypeIdx: index('application_events_event_type_idx').on(
+			table.eventType,
+		),
+		createdAtIdx: index('application_events_created_at_idx').on(
+			table.createdAt,
+		),
 	}),
 )
 
@@ -287,71 +294,10 @@ export const emailLogs = mysqlTable(
 	}),
 )
 
-export const eventRsvps = mysqlTable(
-	'event_rsvps',
-	{
-		id: varchar('id', { length: 36 })
-			.primaryKey()
-			.$defaultFn(() => crypto.randomUUID()),
-		eventId: varchar('event_id', { length: 64 }).notNull(),
-		userId: varchar('user_id', { length: 36 }).notNull(),
-		createdAt: timestamp('created_at').defaultNow().notNull(),
-	},
-	(table) => ({
-		eventIdx: index('event_rsvps_event_idx').on(table.eventId),
-		userIdx: index('event_rsvps_user_idx').on(table.userId),
-		uniqEventUser: index('uniq_event_user').on(table.eventId, table.userId),
-	}),
-)
-
-export const eventRsvpsRelations = relations(eventRsvps, ({ one }) => ({
-	user: one(users, {
-		fields: [eventRsvps.userId],
-		references: [users.id],
-	}),
-}))
-
-export const eventRsvpAnswers = mysqlTable(
-	'event_rsvp_answers',
-	{
-		id: varchar('id', { length: 36 })
-			.primaryKey()
-			.$defaultFn(() => crypto.randomUUID()),
-		eventId: varchar('event_id', { length: 64 }).notNull(),
-		userId: varchar('user_id', { length: 36 }).notNull(),
-		questionKey: varchar('question_key', { length: 64 }).notNull(),
-		answer: text('answer').notNull(),
-		createdAt: timestamp('created_at').defaultNow().notNull(),
-		updatedAt: timestamp('updated_at').defaultNow().notNull(),
-	},
-	(table) => ({
-		uniqEventUserQuestion: index('uniq_event_user_question').on(
-			table.eventId,
-			table.userId,
-			table.questionKey,
-		),
-		eventIdx: index('event_rsvp_answers_event_idx').on(table.eventId),
-		userIdx: index('event_rsvp_answers_user_idx').on(table.userId),
-		questionIdx: index('event_rsvp_answers_question_idx').on(table.questionKey),
-	}),
-)
-
-export const eventRsvpAnswersRelations = relations(
-	eventRsvpAnswers,
-	({ one }) => ({
-		user: one(users, {
-			fields: [eventRsvpAnswers.userId],
-			references: [users.id],
-		}),
-	}),
-)
-
 // Define the relations for the users table
 export const usersRelations = relations(users, ({ many }) => ({
 	fundApplications: many(fundApplications),
 	mentorApplications: many(mentorApplications),
-	eventRsvps: many(eventRsvps),
-	eventRsvpAnswers: many(eventRsvpAnswers),
 }))
 
 // Define the relations for the fundApplications table
@@ -410,16 +356,19 @@ export const applicationEventsRelations = relations(
 	}),
 )
 
-export const applicationTasksRelations = relations(applicationTasks, ({ one }) => ({
-	fundApplication: one(fundApplications, {
-		fields: [applicationTasks.applicationId],
-		references: [fundApplications.id],
+export const applicationTasksRelations = relations(
+	applicationTasks,
+	({ one }) => ({
+		fundApplication: one(fundApplications, {
+			fields: [applicationTasks.applicationId],
+			references: [fundApplications.id],
+		}),
+		mentorApplication: one(mentorApplications, {
+			fields: [applicationTasks.applicationId],
+			references: [mentorApplications.id],
+		}),
 	}),
-	mentorApplication: one(mentorApplications, {
-		fields: [applicationTasks.applicationId],
-		references: [mentorApplications.id],
-	}),
-}))
+)
 
 // Define the relations for the emailLogs table
 export const emailLogsRelations = relations(emailLogs, ({ one }) => ({
@@ -441,7 +390,7 @@ export const emailPresets = mysqlTable(
 			.primaryKey()
 			.$defaultFn(() => crypto.randomUUID()),
 		key: varchar('key', { length: 64 }).notNull(),
-		applicationType: varchar('application_type', { length: 20 }).notNull(), // 'FUND' | 'MENTOR' | 'EVENT'
+		applicationType: varchar('application_type', { length: 20 }).notNull(), // 'FUND' | 'MENTOR'
 		category: varchar('category', { length: 20 }).notNull(), // 'STATUS' | 'INVITE' | 'REMINDER' | ...
 		status: varchar('status', { length: 20 }), // 'APPROVED' | 'WAITLISTED' | 'REJECTED' (nullable for non-status categories)
 		subjectTemplate: text('subject_template').notNull(),
@@ -458,6 +407,55 @@ export const emailPresets = mysqlTable(
 			table.key,
 			table.applicationType,
 			table.status,
+		),
+	}),
+)
+
+// Application experience telemetry log (athlete-facing UX events)
+export const applicationExperienceEvents = mysqlTable(
+	'application_experience_events',
+	{
+		id: varchar('id', { length: 36 })
+			.primaryKey()
+			.$defaultFn(() => crypto.randomUUID()),
+		userId: varchar('user_id', { length: 36 }).notNull(),
+		eventType: varchar('event_type', { length: 64 }).notNull(),
+		section: varchar('section', { length: 32 }),
+		payload: text('payload'),
+		createdAt: timestamp('created_at').defaultNow().notNull(),
+	},
+	(table) => ({
+		userIdx: index('application_experience_events_user_idx').on(table.userId),
+		eventTypeIdx: index('application_experience_events_event_type_idx').on(
+			table.eventType,
+		),
+		createdAtIdx: index('application_experience_events_created_at_idx').on(
+			table.createdAt,
+		),
+	}),
+)
+
+// In-progress fund application drafts (one per user)
+export const fundApplicationDrafts = mysqlTable(
+	'fund_application_drafts',
+	{
+		id: varchar('id', { length: 36 })
+			.primaryKey()
+			.$defaultFn(() => crypto.randomUUID()),
+		userId: varchar('user_id', { length: 36 }).notNull(),
+		draftData: text('draft_data').notNull(),
+		currentSection: int('current_section').notNull().default(1),
+		lastSavedAt: timestamp('last_saved_at').defaultNow().notNull(),
+		createdAt: timestamp('created_at').defaultNow().notNull(),
+		updatedAt: timestamp('updated_at').defaultNow().notNull(),
+	},
+	(table) => ({
+		userIdUq: uniqueIndex('fund_application_drafts_user_id_uq').on(
+			table.userId,
+		),
+		userUpdatedIdx: index('fund_application_drafts_user_updated_idx').on(
+			table.userId,
+			table.updatedAt,
 		),
 	}),
 )
