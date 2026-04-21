@@ -179,37 +179,6 @@ export const raceSeries = defineType({
 			],
 			group: 'details',
 		}),
-		// Related Events (any event associated with this race)
-		defineField({
-			name: 'relatedEvents',
-			title: 'Related Events',
-			type: 'array',
-			of: [{ type: 'reference', to: [{ type: 'event' }] }],
-			description:
-				'Reference any community events connected to this race (shakeouts, meetups, workshops, volunteering, etc.)',
-			group: 'details',
-		}),
-		// Simple flag to indicate if the race has a community shakeout event
-		defineField({
-			name: 'hasShakeoutEvent',
-			title: 'Has Community Shakeout Event',
-			type: 'boolean',
-			initialValue: false,
-			description:
-				'Check if this race has an official community shakeout event',
-			group: 'details',
-		}),
-		// Optional direct link to the specific shakeout event
-		defineField({
-			name: 'shakeoutEvent',
-			title: 'Shakeout Event',
-			type: 'reference',
-			to: [{ type: 'event' }],
-			description:
-				'Select the specific shakeout event for this race (optional)',
-			hidden: ({ document }) => document?.hasShakeoutEvent !== true,
-			group: 'details',
-		}),
 		defineField({
 			name: 'archived',
 			title: 'Archived',

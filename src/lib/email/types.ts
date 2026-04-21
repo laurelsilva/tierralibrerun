@@ -2,7 +2,7 @@
  * Core email types for a DRY, multi-context email system.
  *
  * Goals:
- * - One normalized contract to send emails across Athlete Fund, Mentor, and Events.
+ * - One normalized contract to send emails across Athlete Fund and Mentor.
  * - Clear separation between STANDARD (templated, status-driven) and CUSTOM (raw HTML) modes.
  * - Strong, type-safe tokens per context to avoid copy/paste and conditional spaghetti.
  * - Extensible categories and metadata for logging, analytics, and deliverability.
@@ -12,7 +12,7 @@
  * Which application/program the email belongs to.
  * Add more program types here as the org grows (e.g., 'SCHOLARSHIP', 'PROGRAM_X').
  */
-export type ApplicationType = 'FUND' | 'MENTOR' | 'EVENT'
+export type ApplicationType = 'FUND' | 'MENTOR'
 
 /**
  * Standard application statuses used for templated (STANDARD mode) messages.
@@ -123,19 +123,6 @@ export interface FundTokens extends BaseTokens {
 	 */
 	decisionNotes?: string
 	/**
-	 * Optional pre-race events (e.g., shakeout run) to include in approval emails.
-	 * All strings should be pre-formatted for display.
-	 */
-	preRaceEvents?: {
-		title?: string
-		start?: string // pre-formatted datetime
-		locationName?: string
-		address?: string
-		mapUrl?: string
-		details?: string // short description or notes
-		rsvpUrl?: string
-	}[]
-	/**
 	 * Optional recommended race suggestion to include on waitlist/rejection emails.
 	 */
 	recommendedRace?: {
@@ -163,29 +150,11 @@ export interface MentorTokens extends BaseTokens {
 }
 
 /**
- * Events tokens
- */
-export interface EventTokens extends BaseTokens {
-	eventTitle?: string
-	eventStart?: string // pre-formatted datetime
-	eventEnd?: string // pre-formatted datetime
-	eventLocationName?: string
-	eventAddress?: string
-	eventMapUrl?: string
-	eventAudience?: 'bipoc-only' | 'everyone'
-	rsvpEnabled?: boolean
-	rsvpUrl?: string
-	eventMessage?: string // optional paragraph to include in invite emails
-	descriptionHtml?: string // optional rich content
-}
-
-/**
  * Map the tokens by application type for strong typing.
  */
 export type TokensByType = {
 	FUND: FundTokens
 	MENTOR: MentorTokens
-	EVENT: EventTokens
 }
 
 /* ===========================
@@ -293,9 +262,7 @@ export type TokensFor<T extends ApplicationType> = T extends 'FUND'
 	? FundTokens
 	: T extends 'MENTOR'
 		? MentorTokens
-		: T extends 'EVENT'
-			? EventTokens
-			: never
+		: never
 
 /**
  * Common preset keys if you decide to persist presets in DB (optional).
@@ -308,8 +275,6 @@ export type PresetKey =
 	| 'MENTOR_APPROVED'
 	| 'MENTOR_WAITLISTED'
 	| 'MENTOR_REJECTED'
-	| 'EVENT_INVITE'
-	| 'EVENT_REMINDER'
 	| 'CUSTOM_DEFAULT'
 
 /**

@@ -172,12 +172,6 @@ export function formatAdminRelativeOrDate(
 }
 
 /**
- * Convenience wrappers mirroring existing usage patterns in the codebase.
- */
-export const formatEventDateTime = formatAdminDateTime
-export const formatEventDateTimeLong = formatAdminDateTimeLong
-
-/**
  * Format a date as "January 5, 2025" (long month, no time).
  * Accepts Date, string, number, null, or undefined. Returns 'Date TBD' for
  * falsy or unparseable values.

@@ -2,7 +2,7 @@
  * DRY email orchestrator with STANDARD and CUSTOM modes.
  *
  * Responsibilities:
- * - Normalize email sending across Athlete Fund, Mentor, and Events.
+ * - Normalize email sending across Athlete Fund and Mentor.
  * - Resolve STANDARD (templated) emails from applicationType + status + tokens.
  * - Send CUSTOM (raw HTML) emails as-is.
  * - Fallback to application email (by applicationId) when "to" is omitted.
@@ -172,7 +172,6 @@ async function resolveRecipient<T extends ApplicationType>(
 				.where(eq(mentorApplications.id, req.applicationId))
 			if (app?.email) return app.email
 		}
-		// For 'EVENT' we generally expect explicit recipient(s)
 	}
 
 	throw new Error(
@@ -228,18 +227,6 @@ async function resolveSubjectAndHtml<T extends ApplicationType>(
 			const t = (req.tokens || {}) as TokensByType['MENTOR']
 			const out = mentorStandardResolver({
 				applicationType: 'MENTOR',
-				status: status as Exclude<StandardStatus, 'PENDING'>,
-				category: category as Exclude<EmailCategory, 'CUSTOM'>,
-				tokens: t,
-			})
-			subject = out.subject
-			html = out.html
-			break
-		}
-		case 'EVENT': {
-			const t = (req.tokens || {}) as TokensByType['EVENT']
-			const out = eventStandardResolver({
-				applicationType: 'EVENT',
 				status: status as Exclude<StandardStatus, 'PENDING'>,
 				category: category as Exclude<EmailCategory, 'CUSTOM'>,
 				tokens: t,
@@ -316,41 +303,6 @@ function mentorStandardResolver(input: {
 	}
 
 	const body = renderMentorBody(input.status, t)
-	return { subject, html: wrapHtml(body) }
-}
-
-function eventStandardResolver(input: {
-	applicationType: 'EVENT'
-	status: Exclude<StandardStatus, 'PENDING'>
-	category: Exclude<EmailCategory, 'CUSTOM'>
-	tokens: TokensFor<'EVENT'>
-}) {
-	const t = normalizeEventTokens(input.tokens)
-	// Subject varies more by category than status for events
-	let subject = ''
-	switch (input.category) {
-		case 'INVITE':
-			subject = t.eventTitle
-				? `You're invited: ${t.eventTitle} — ${siteConfig.name}`
-				: `You're invited — ${siteConfig.name}`
-			break
-		case 'REMINDER':
-			subject = t.eventTitle
-				? `Reminder: ${t.eventTitle} — ${siteConfig.name}`
-				: `Event reminder — ${siteConfig.name}`
-			break
-		case 'ANNOUNCEMENT':
-			subject = t.eventTitle
-				? `Announcement: ${t.eventTitle} — ${siteConfig.name}`
-				: `Announcement — ${siteConfig.name}`
-			break
-		default:
-			subject = t.eventTitle
-				? `${t.eventTitle} — ${siteConfig.name}`
-				: `${siteConfig.name} — Update`
-	}
-
-	const body = renderEventBody(input.category, t)
 	return { subject, html: wrapHtml(body) }
 }
 
@@ -442,24 +394,6 @@ function renderFundBody(
 					`<li><strong>Mentorship commitment</strong><br>Please confirm you can connect ~30 minutes every two weeks with your mentor leading up to race day. You’ll decide cadence, timing, and communication style together.</li>`,
 				)
 			}
-			if (Array.isArray(t.preRaceEvents) && t.preRaceEvents.length > 0) {
-				const eventLis: string[] = []
-				for (const ev of t.preRaceEvents) {
-					if (!ev) continue
-					let line = ''
-					if (ev.title) line += `<strong>${escapeHtml(ev.title)}</strong>`
-					if (ev.start) line += ` — ${escapeHtml(ev.start)}`
-					if (ev.locationName) line += ` @ ${escapeHtml(ev.locationName)}`
-					if (ev.rsvpUrl)
-						line += ` — <a href="${escapeAttr(ev.rsvpUrl)}" target="_blank" rel="noopener noreferrer">RSVP</a>`
-					eventLis.push(`<li>${line}</li>`)
-				}
-				parts.push(
-					`<li><strong>Pre-Race Events</strong><br>We encourage you to join these optional community events before race day.<ul>${eventLis.join(
-						'',
-					)}</ul></li>`,
-				)
-			}
 			parts.push(`</ol>`)
 		} else if (status === 'WAITLISTED') {
 			parts.push(
@@ -486,7 +420,7 @@ function renderFundBody(
 					? ` <a href="${escapeAttr(rr.url)}" target="_blank" rel="noopener noreferrer">View race</a>`
 					: ''
 				parts.push(
-					`<p>If helpful, here’s an event to consider: ${details}${link}</p>`,
+					`<p>If helpful, here’s a race to consider: ${details}${link}</p>`,
 				)
 			}
 		} else {
@@ -579,58 +513,6 @@ function renderMentorBody(
 	return parts.join('\n')
 }
 
-function renderEventBody(
-	category: EmailCategory,
-	t: ReturnType<typeof normalizeEventTokens>,
-) {
-	const parts: string[] = []
-	parts.push(
-		`<p>Dear ${escapeHtml(t.firstName || t.applicantName || 'friend')},</p>`,
-	)
-	if (category === 'INVITE') {
-		parts.push(
-			`<p><strong>You’re invited${t.eventTitle ? ` to ${escapeHtml(t.eventTitle)}` : ''}!</strong></p>`,
-		)
-		if (t.eventMessage) {
-			parts.push(`<p>${escapeHtml(t.eventMessage)}</p>`)
-		}
-	} else if (category === 'REMINDER') {
-		parts.push(
-			`<p><strong>Reminder${t.eventTitle ? ` — ${escapeHtml(t.eventTitle)}` : ''}</strong></p>`,
-		)
-	} else if (category === 'ANNOUNCEMENT') {
-		parts.push(
-			`<p><strong>Announcement${t.eventTitle ? ` — ${escapeHtml(t.eventTitle)}` : ''}</strong></p>`,
-		)
-	}
-	if (t.eventStart || t.eventLocationName) {
-		parts.push(
-			`<p>${t.eventStart ? `${escapeHtml(t.eventStart)}` : ''}${
-				t.eventLocationName ? ` — ${escapeHtml(t.eventLocationName)}` : ''
-			}</p>`,
-		)
-	}
-	if (t.eventAddress) {
-		parts.push(`<p>${escapeHtml(t.eventAddress)}</p>`)
-	}
-	if (t.descriptionHtml) {
-		parts.push(`<div>${t.descriptionHtml}</div>`)
-	}
-	if (t.rsvpEnabled && t.eventMapUrl) {
-		parts.push(
-			`<p><a href="${escapeAttr(t.eventMapUrl)}" target="_blank" rel="noopener noreferrer">View Map</a></p>`,
-		)
-	}
-	if (t.rsvpEnabled && t.rsvpUrl) {
-		parts.push(
-			`<p><a href="${escapeAttr(t.rsvpUrl)}" target="_blank" rel="noopener noreferrer"><strong>RSVP Now</strong></a></p>`,
-		)
-	}
-
-	parts.push(renderSignature())
-	return parts.join('\n')
-}
-
 /* =======================================================
    Logging + type mapping
    ======================================================= */
@@ -675,19 +557,7 @@ function mapEmailTypeTag<T extends ApplicationType>(
 				return 'UPDATE'
 		}
 	}
-	// Events or other categories
-	switch (req.category) {
-		case 'INVITE':
-			return 'INVITE'
-		case 'REMINDER':
-			return 'REMINDER'
-		case 'ANNOUNCEMENT':
-			return 'ANNOUNCEMENT'
-		case 'UPDATE':
-			return 'UPDATE'
-		default:
-			return 'UPDATE'
-	}
+	return 'UPDATE'
 }
 
 /* =======================================================
@@ -702,9 +572,6 @@ function deriveFirstName(name?: string) {
 
 function normalizeFundTokens(tokens: TokensFor<'FUND'>) {
 	const brand = tokens.brand || defaultBrand()
-	const preRaceEvents = Array.isArray(tokens.preRaceEvents)
-		? tokens.preRaceEvents.filter(Boolean)
-		: []
 	return {
 		...tokens,
 		firstName: tokens.firstName || deriveFirstName(tokens.applicantName),
@@ -714,7 +581,6 @@ function normalizeFundTokens(tokens: TokensFor<'FUND'>) {
 		customSubject:
 			typeof tokens.customSubject === 'string' ? tokens.customSubject : '',
 		customBody: typeof tokens.customBody === 'string' ? tokens.customBody : '',
-		preRaceEvents,
 		registrationMode:
 			tokens.registrationMode === 'SELF_REGISTER'
 				? 'SELF_REGISTER'
@@ -723,18 +589,6 @@ function normalizeFundTokens(tokens: TokensFor<'FUND'>) {
 }
 
 function normalizeMentorTokens(tokens: TokensFor<'MENTOR'>) {
-	const brand = tokens.brand || defaultBrand()
-	return {
-		...tokens,
-		firstName: tokens.firstName || deriveFirstName(tokens.applicantName),
-		brand,
-		customSubject:
-			typeof tokens.customSubject === 'string' ? tokens.customSubject : '',
-		customBody: typeof tokens.customBody === 'string' ? tokens.customBody : '',
-	}
-}
-
-function normalizeEventTokens(tokens: TokensFor<'EVENT'>) {
 	const brand = tokens.brand || defaultBrand()
 	return {
 		...tokens,

@@ -80,7 +80,12 @@ export async function sendBroadcast(input: {
 	const { recipients, subject, body, ctaUrl, ctaLabel, groupId } = input
 
 	if (!subject.trim()) {
-		return { success: false, sent: 0, failed: 0, errors: ['Subject is required'] }
+		return {
+			success: false,
+			sent: 0,
+			failed: 0,
+			errors: ['Subject is required'],
+		}
 	}
 	if (!body.trim()) {
 		return {
@@ -104,7 +109,10 @@ export async function sendBroadcast(input: {
 	// Personalize each email with the recipient's first name
 	const emails = recipients.map((r) => {
 		const firstName = deriveFirstName(r.name)
-		const personalizedHtml = html.replace('{{GREETING_NAME}}', escapeHtml(firstName || 'friend'))
+		const personalizedHtml = html.replace(
+			'{{GREETING_NAME}}',
+			escapeHtml(firstName || 'friend'),
+		)
 		return {
 			to: r.email,
 			subject,
@@ -226,9 +234,7 @@ function deriveFirstName(name?: string): string {
 	return first || ''
 }
 
-function resolveApplicationType(
-	groupId: GroupId,
-): 'FUND' | 'MENTOR' | 'EVENT' {
+function resolveApplicationType(groupId: GroupId): 'FUND' | 'MENTOR' {
 	switch (groupId) {
 		case 'active-athletes':
 		case 'active-by-race-series':
@@ -238,8 +244,8 @@ function resolveApplicationType(
 		case 'active-mentors':
 			return 'MENTOR'
 		case 'newsletter':
-			return 'EVENT' // closest match for newsletter broadcasts
+			return 'FUND' // newsletter broadcasts default to FUND for logging
 		default:
-			return 'EVENT'
+			return 'FUND'
 	}
 }
