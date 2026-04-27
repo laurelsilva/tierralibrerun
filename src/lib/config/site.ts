@@ -8,21 +8,41 @@
  * in Sanity CMS via the "siteSettings" singleton document type.
  */
 
+function normalizeEnvString(value: string | undefined, fallback: string) {
+	return (value ?? fallback).replace(/[\r\n]+/g, ' ').trim()
+}
+
+function normalizeEnvList(value: string | undefined) {
+	return (value || '')
+		.split(',')
+		.map((entry) => normalizeEnvString(entry, ''))
+		.filter(Boolean)
+}
+
 export const siteConfig = {
 	/** Organization / site name */
-	name: process.env.NEXT_PUBLIC_SITE_NAME || 'Trail Running Community',
+	name: normalizeEnvString(
+		process.env.NEXT_PUBLIC_SITE_NAME,
+		'Trail Running Community',
+	),
 
 	/** Short tagline */
-	tagline:
-		process.env.NEXT_PUBLIC_SITE_TAGLINE || 'Advancing Access in Trail Running',
+	tagline: normalizeEnvString(
+		process.env.NEXT_PUBLIC_SITE_TAGLINE,
+		'Advancing Access in Trail Running',
+	),
 
 	/** One-sentence description used in metadata */
-	description:
-		process.env.NEXT_PUBLIC_SITE_DESCRIPTION ||
+	description: normalizeEnvString(
+		process.env.NEXT_PUBLIC_SITE_DESCRIPTION,
 		'A trail running community building authentic connections through nature. Apply for race funding and connect with fellow athletes.',
+	),
 
 	/** Canonical site URL */
-	url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+	url: normalizeEnvString(
+		process.env.NEXT_PUBLIC_SITE_URL,
+		'http://localhost:3000',
+	),
 
 	/** Keywords for SEO */
 	keywords:
@@ -35,52 +55,58 @@ export const siteConfig = {
 	foundingYear: '2024',
 
 	/** Tax / EIN for 501(c)(3) display — leave empty to hide */
-	taxId: process.env.NEXT_PUBLIC_TAX_ID || '',
+	taxId: normalizeEnvString(process.env.NEXT_PUBLIC_TAX_ID, ''),
 
 	/** Donation platform embed URL — leave empty to disable donations page */
-	donationUrl: process.env.NEXT_PUBLIC_DONATION_URL || '',
+	donationUrl: normalizeEnvString(process.env.NEXT_PUBLIC_DONATION_URL, ''),
 
 	/**
 	 * Default Open Graph / social share image URL.
 	 * Set NEXT_PUBLIC_DEFAULT_OG_IMAGE to your own Sanity CDN image URL.
 	 * Falls back to empty string (no OG image) if not set.
 	 */
-	defaultOgImage: process.env.NEXT_PUBLIC_DEFAULT_OG_IMAGE || '',
+	defaultOgImage: normalizeEnvString(process.env.NEXT_PUBLIC_DEFAULT_OG_IMAGE, ''),
 } as const
 
 export const socialConfig = {
-	instagram: process.env.NEXT_PUBLIC_INSTAGRAM_URL || '',
-	strava: process.env.NEXT_PUBLIC_STRAVA_URL || '',
-	twitter: process.env.NEXT_PUBLIC_TWITTER_URL || '',
-	twitterHandle: process.env.NEXT_PUBLIC_TWITTER_HANDLE || '',
+	instagram: normalizeEnvString(process.env.NEXT_PUBLIC_INSTAGRAM_URL, ''),
+	strava: normalizeEnvString(process.env.NEXT_PUBLIC_STRAVA_URL, ''),
+	twitter: normalizeEnvString(process.env.NEXT_PUBLIC_TWITTER_URL, ''),
+	twitterHandle: normalizeEnvString(process.env.NEXT_PUBLIC_TWITTER_HANDLE, ''),
 } as const
 
 export const emailConfig = {
 	/** Default from address for transactional emails */
-	fromAddress:
-		process.env.EMAIL_FROM_ADDRESS || 'noreply@example.com',
+	fromAddress: normalizeEnvString(
+		process.env.EMAIL_FROM_ADDRESS,
+		'noreply@example.com',
+	),
 
 	/** Default reply-to address */
-	replyToAddress:
-		process.env.EMAIL_REPLY_TO_ADDRESS || 'team@example.com',
+	replyToAddress: normalizeEnvString(
+		process.env.EMAIL_REPLY_TO_ADDRESS,
+		'team@example.com',
+	),
 
 	/** Contact email shown in UI */
-	contactEmail:
-		process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'team@example.com',
+	contactEmail: normalizeEnvString(
+		process.env.NEXT_PUBLIC_CONTACT_EMAIL,
+		'team@example.com',
+	),
 
 	/** Admin email addresses (comma-separated) for BCC on important emails */
-	adminEmails: (process.env.ADMIN_EMAILS || '').split(',').filter(Boolean),
+	adminEmails: normalizeEnvList(process.env.ADMIN_EMAILS),
 } as const
 
 export const teamConfig = {
 	/** Primary contact / founder name used in email signatures */
-	founderName: process.env.SITE_FOUNDER_NAME || '',
+	founderName: normalizeEnvString(process.env.SITE_FOUNDER_NAME, ''),
 
 	/** Program lead name (used in mentorship emails) */
-	programLeadName: process.env.SITE_PROGRAM_LEAD_NAME || '',
+	programLeadName: normalizeEnvString(process.env.SITE_PROGRAM_LEAD_NAME, ''),
 
 	/** Program lead email */
-	programLeadEmail: process.env.SITE_PROGRAM_LEAD_EMAIL || '',
+	programLeadEmail: normalizeEnvString(process.env.SITE_PROGRAM_LEAD_EMAIL, ''),
 } as const
 
 export type SiteConfig = typeof siteConfig

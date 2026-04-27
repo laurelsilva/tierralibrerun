@@ -21,6 +21,33 @@ export interface SendEmailOptions {
 const RESEND_DEFAULT_AUDIENCE_ID = '885955fd-ef75-458e-9015-f61d1cbe97ec'
 const RESEND_MENTOR_AUDIENCE_ID = env.RESEND_MENTOR_AUDIENCE_ID
 
+function sanitizeHeaderValue(value: string) {
+	return value.replace(/[\r\n]+/g, ' ').trim()
+}
+
+function sanitizeEmailField(
+	value: string | undefined,
+	fieldName: string,
+	options?: { required?: boolean },
+) {
+	const cleaned = sanitizeHeaderValue(String(value || ''))
+	if (!cleaned && options?.required) {
+		throw new Error(`Email ${fieldName} is required`)
+	}
+	return cleaned
+}
+
+function sanitizeEmailList(value: string | string[] | undefined) {
+	if (!value) return []
+	return (Array.isArray(value) ? value : [value])
+		.map((entry) => sanitizeHeaderValue(String(entry)))
+		.filter(Boolean)
+}
+
+function unique(values: string[]) {
+	return Array.from(new Set(values))
+}
+
 class ResendService {
 	private fromEmail = emailConfig.fromAddress
 
@@ -164,10 +191,24 @@ class ResendService {
 			const resend = getResendClient()
 
 			// Use verified domain for sending emails
-			const from = options.from || this.fromEmail
-			const to = options.to
-			const subject = options.subject
+			const from = sanitizeEmailField(
+				options.from || this.fromEmail,
+				'from',
+				{ required: true },
+			)
+			const toList = unique(sanitizeEmailList(options.to))
+			if (toList.length === 0) {
+				throw new Error('Email to is required')
+			}
+			const to = Array.isArray(options.to) ? toList : toList[0]!
+			const subject = sanitizeEmailField(options.subject, 'subject', {
+				required: true,
+			})
 			const html = options.html
+			const replyTo = sanitizeEmailField(
+				options.replyTo || emailConfig.replyToAddress,
+				'replyTo',
+			)
 
 			console.log('[Resend] Sending email:', {
 				from,
@@ -177,22 +218,15 @@ class ResendService {
 			})
 
 			const defaultBcc = this.fromEmail
-			const normalizeList = (v: string | string[] | undefined) => {
-				if (!v) return []
-				return (Array.isArray(v) ? v : [v])
-					.map((s) => String(s).trim())
-					.filter(Boolean)
-			}
-			const unique = (arr: string[]) => Array.from(new Set(arr))
-			const cc = unique(normalizeList(options.cc))
-			const bcc = unique([defaultBcc, ...normalizeList(options.bcc)])
+			const cc = unique(sanitizeEmailList(options.cc))
+			const bcc = unique([defaultBcc, ...sanitizeEmailList(options.bcc)])
 
 			const result = await resend.emails.send({
 				from,
 				to,
 				subject,
 				html,
-				replyTo: options.replyTo || emailConfig.replyToAddress,
+				replyTo: replyTo || undefined,
 				cc: cc.length ? cc : undefined,
 				bcc: bcc.length ? bcc : undefined,
 			})
@@ -246,11 +280,11 @@ class ResendService {
 		for (let i = 0; i < emails.length; i += CHUNK_SIZE) {
 			const chunk = emails.slice(i, i + CHUNK_SIZE)
 			const payload = chunk.map((e) => ({
-				from: this.fromEmail,
-				to: e.to,
-				subject: e.subject,
+				from: sanitizeEmailField(this.fromEmail, 'from', { required: true }),
+				to: sanitizeEmailField(e.to, 'to', { required: true }),
+				subject: sanitizeEmailField(e.subject, 'subject', { required: true }),
 				html: e.html,
-				replyTo: emailConfig.replyToAddress,
+				replyTo: sanitizeEmailField(emailConfig.replyToAddress, 'replyTo'),
 			}))
 
 			// Retry with backoff for rate limits
