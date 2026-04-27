@@ -1520,6 +1520,8 @@ export async function transitionFundWorkflow(input: {
 		workflowStage: input.toStage,
 		updatedAt: now,
 	}
+	const shouldResetLifecycle =
+		input.toStage === 'IN_REVIEW' && input.metadata?.resetLifecycle === true
 
 	const legacy = computeFundLegacyFields({
 		currentStatus: application.status,
@@ -1529,6 +1531,21 @@ export async function transitionFundWorkflow(input: {
 	})
 	if (legacy.status) updates.status = legacy.status
 	if (legacy.registrationStatus) updates.registrationStatus = legacy.registrationStatus
+	if (shouldResetLifecycle) {
+		updates.status = 'PENDING'
+		updates.registrationStatus = 'PENDING'
+		updates.decisionAt = null
+		updates.offerSentAt = null
+		updates.confirmationDeadlineAt = null
+		updates.confirmedAt = null
+		updates.registrationStartedAt = null
+		updates.registrationConfirmationPhotos = null
+		updates.registeredAt = null
+		updates.onboardingStartedAt = null
+		updates.activatedAt = null
+		updates.closedAt = null
+		updates.closedReason = null
+	}
 
 	if (
 		(input.toStage === 'WAITLISTED' || input.toStage === 'DECLINED') &&

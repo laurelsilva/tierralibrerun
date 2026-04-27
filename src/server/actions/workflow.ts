@@ -1,6 +1,6 @@
 'use server'
 
-import { and, eq, or, sql } from 'drizzle-orm'
+import { and, eq, isNull, or, sql } from 'drizzle-orm'
 import { revalidatePath } from 'next/cache'
 import {
 	type FundWorkflowStage,
@@ -9,7 +9,7 @@ import {
 } from '@/lib/types/workflow'
 import { getCurrentUser } from '@/server/auth'
 import { requireAdmin } from '@/server/auth/admin'
-import { db, fundApplications, users } from '@/server/db'
+import { db, fundApplications, mentorshipMatches, users } from '@/server/db'
 import {
 	assignMentorToFundApplication,
 	removeMentorFromFundApplication,
@@ -22,6 +22,7 @@ type FundAdminActionKey =
 	| 'APPROVE_AND_REQUEST_CONFIRMATION'
 	| 'WAITLIST'
 	| 'REJECT'
+	| 'RESTART_WORKFLOW'
 	| 'MARK_CONFIRMED'
 	| 'MARK_REGISTERED_AND_ACTIVE'
 	| 'MARK_COMPLETED'
@@ -65,6 +66,7 @@ function isFundAdminAction(value: string): value is FundAdminActionKey {
 		'APPROVE_AND_REQUEST_CONFIRMATION',
 		'WAITLIST',
 		'REJECT',
+		'RESTART_WORKFLOW',
 		'MARK_CONFIRMED',
 		'MARK_REGISTERED_AND_ACTIVE',
 		'MARK_COMPLETED',
@@ -117,6 +119,7 @@ export async function runFundAdminAction(formData: FormData) {
 			sendEmail?: boolean
 			registrationStatus?: string
 			closedReason?: string
+			metadata?: Record<string, unknown>
 		},
 	) =>
 		transitionFundWorkflow({
@@ -127,6 +130,7 @@ export async function runFundAdminAction(formData: FormData) {
 				registrationStatus: options?.registrationStatus,
 				closedReason: options?.closedReason,
 				actorEmail,
+				...(options?.metadata ?? {}),
 			},
 			sendEmail: options?.sendEmail ?? false,
 		})
@@ -155,6 +159,53 @@ export async function runFundAdminAction(formData: FormData) {
 				}),
 			)
 			break
+		case 'RESTART_WORKFLOW': {
+			const [openMentorMatch] = await db
+				.select({ id: mentorshipMatches.id })
+				.from(mentorshipMatches)
+				.where(
+					and(
+						eq(mentorshipMatches.fundApplicationId, applicationId),
+						isNull(mentorshipMatches.endedAt),
+					),
+				)
+				.limit(1)
+
+			if (openMentorMatch) {
+				const unassignResult = await removeMentorFromFundApplication({
+					fundApplicationId: applicationId,
+					actor,
+				})
+				if (!unassignResult.success) {
+					return unassignResult
+				}
+			}
+
+			if (currentStage !== 'CLOSED') {
+				chain.push(() =>
+					runTransition('CLOSED', {
+						closedReason: 'Workflow restarted by admin.',
+						metadata: {
+							restartReason:
+								'Workflow restarted by admin; application will be re-processed from review.',
+							restartFromStage: currentStage,
+						},
+					}),
+				)
+			}
+
+			chain.push(() =>
+				runTransition('IN_REVIEW', {
+					metadata: {
+						resetLifecycle: true,
+						restartReason:
+							'Application lifecycle reset and moved back to review.',
+						restartFromStage: currentStage,
+					},
+				}),
+			)
+			break
+		}
 		case 'MARK_CONFIRMED':
 			chain.push(() => runTransition('CONFIRMED'))
 			break

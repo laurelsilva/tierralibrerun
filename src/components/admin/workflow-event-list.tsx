@@ -79,6 +79,9 @@ function getMetadataNote(event: WorkflowEventItem) {
 	const payload = asRecord(event.payloadObject)
 	const metadata = asRecord(payload?.metadata)
 
+	const restartReason = getString(metadata?.restartReason)
+	if (restartReason) return restartReason
+
 	const closedReason = getString(metadata?.closedReason)
 	if (closedReason) return closedReason
 

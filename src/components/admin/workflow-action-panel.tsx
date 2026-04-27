@@ -29,6 +29,7 @@ type FundAdminAction = {
 		| 'WAITLIST'
 		| 'REJECT'
 		| 'REOPEN_REVIEW'
+		| 'RESTART_WORKFLOW'
 		| 'MARK_CONFIRMED'
 		| 'MARK_REGISTERED_AND_ACTIVE'
 		| 'MARK_COMPLETED'
@@ -86,6 +87,12 @@ function getFundAdminActions(stage: FundWorkflowStage): FundAdminAction[] {
 					description: 'Bring this application back into active review.',
 				},
 				{
+					key: 'RESTART_WORKFLOW',
+					label: 'Restart Workflow from Beginning',
+					description:
+						'Reset this application to the start of admin review and clear prior lifecycle progress.',
+				},
+				{
 					key: 'CLOSE_OUT',
 					label: 'Close Out',
 					description: 'Close this held application without moving it forward.',
@@ -102,6 +109,12 @@ function getFundAdminActions(stage: FundWorkflowStage): FundAdminAction[] {
 					key: 'WAITLIST',
 					label: 'Put on Hold',
 					description: 'Move this athlete back to the hold bucket.',
+				},
+				{
+					key: 'RESTART_WORKFLOW',
+					label: 'Restart Workflow from Beginning',
+					description:
+						'Restart this athlete at review so confirmation and outreach can be rerun cleanly.',
 				},
 				{
 					key: 'CLOSE_OUT',
@@ -122,6 +135,12 @@ function getFundAdminActions(stage: FundWorkflowStage): FundAdminAction[] {
 					requiresRegistrationStatus: true,
 				},
 				{
+					key: 'RESTART_WORKFLOW',
+					label: 'Restart Workflow from Beginning',
+					description:
+						'Move this athlete back to review and reset this cycle before processing again.',
+				},
+				{
 					key: 'CLOSE_OUT',
 					label: 'Close Out',
 					description: 'Use when the athlete backs out before becoming active.',
@@ -140,6 +159,12 @@ function getFundAdminActions(stage: FundWorkflowStage): FundAdminAction[] {
 					description:
 						'The athlete did not make it to the start or dropped out.',
 				},
+				{
+					key: 'RESTART_WORKFLOW',
+					label: 'Restart Workflow from Beginning',
+					description:
+						'Restart this athlete at review to rerun lifecycle actions for this cycle.',
+				},
 			]
 		case 'DECLINED':
 		case 'CLOSED':
@@ -149,10 +174,23 @@ function getFundAdminActions(stage: FundWorkflowStage): FundAdminAction[] {
 					label: 'Reopen Application',
 					description: 'Move this application back into review.',
 				},
+				{
+					key: 'RESTART_WORKFLOW',
+					label: 'Restart Workflow from Beginning',
+					description:
+						'Reset this application back to review and clear prior workflow milestones.',
+				},
 			]
 		case 'NO_LONGER_ACTIVE':
 		case 'NO_SHOW_OR_DROPPED':
-			return []
+			return [
+				{
+					key: 'RESTART_WORKFLOW',
+					label: 'Restart Workflow from Beginning',
+					description:
+						'Use when this athlete should be processed from the beginning again.',
+				},
+			]
 		default:
 			return []
 	}

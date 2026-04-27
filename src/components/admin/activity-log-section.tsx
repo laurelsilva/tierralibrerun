@@ -109,7 +109,11 @@ function getWorkflowNote(event: WorkflowEventItem) {
 	const payload = asRecord(event.payloadObject)
 	const metadata = asRecord(payload?.metadata)
 
-	return getString(metadata?.closedReason) ?? getString(payload?.error)
+	return (
+		getString(metadata?.restartReason) ??
+		getString(metadata?.closedReason) ??
+		getString(payload?.error)
+	)
 }
 
 function getWorkflowTone(event: WorkflowEventItem): ActivityItem['tone'] {
