@@ -6,7 +6,6 @@ import {
 	Settings,
 	Mail,
 	Activity,
-	BarChart2,
 } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
@@ -159,7 +158,7 @@ export default async function AdminPage() {
 					<CardContent>
 						<p className="text-muted-foreground mb-4 text-sm">
 							View active participants grouped by race series for upcoming
-							races.
+							events.
 						</p>
 						<Button asChild className="w-full" variant="outline">
 							<Link href="/admin/fund-athletes/active">
@@ -190,30 +189,6 @@ export default async function AdminPage() {
 						</p>
 						<Button asChild variant="outline" className="w-full">
 							<Link href="/admin/debug">Open Debug Tools</Link>
-						</Button>
-					</CardContent>
-				</Card>
-
-				{/* Metrics */}
-				<Card className="transition-shadow hover:shadow-md">
-					<CardHeader>
-						<div className="flex items-center gap-3">
-							<div className="bg-primary/15 text-primary rounded-lg p-2">
-								<BarChart2 className="h-6 w-6" />
-							</div>
-							<div>
-								<CardTitle>Metrics</CardTitle>
-								<CardDescription>Program health at a glance</CardDescription>
-							</div>
-						</div>
-					</CardHeader>
-					<CardContent>
-						<p className="text-muted-foreground mb-4 text-sm">
-							Pipeline breakdowns, stage-by-stage counts, and program-wide
-							totals across athletes, mentors, and pairings.
-						</p>
-						<Button asChild variant="outline" className="w-full">
-							<Link href="/admin/metrics">Open Metrics</Link>
 						</Button>
 					</CardContent>
 				</Card>

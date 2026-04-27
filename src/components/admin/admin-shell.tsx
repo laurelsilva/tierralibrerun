@@ -3,7 +3,6 @@
 import { motion } from 'framer-motion'
 import {
 	Activity,
-	BarChart2,
 	CreditCard,
 	Handshake,
 	LayoutDashboard,
@@ -72,11 +71,6 @@ const PRIMARY_NAV: NavItem[] = [
 		href: '/admin/debug',
 		label: 'Debug Tools',
 		icon: Settings,
-	},
-	{
-		href: '/admin/metrics',
-		label: 'Metrics',
-		icon: BarChart2,
 	},
 ]
 
