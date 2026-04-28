@@ -1,4 +1,4 @@
-import { eq, desc } from 'drizzle-orm'
+import { and, desc, eq } from 'drizzle-orm'
 import { ChevronLeft, Users, Mail } from 'lucide-react'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
@@ -28,6 +28,7 @@ import {
 	users as usersTable,
 	fundApplications,
 	mentorApplications,
+	mentorshipMatches,
 } from '@/server/db'
 
 interface Params {
@@ -62,6 +63,39 @@ export default async function AdminUserDetailPage(props: Props) {
 		.where(eq(mentorApplications.userId, id))
 		.orderBy(desc(mentorApplications.createdAt))
 
+	const mentorPairings = await db
+		.select({
+			matchId: mentorshipMatches.id,
+			mentorApplicationId: mentorshipMatches.mentorApplicationId,
+			fundApplicationId: mentorshipMatches.fundApplicationId,
+			menteeName: fundApplications.name,
+			menteeEmail: fundApplications.email,
+			menteeRace: fundApplications.race,
+			menteeRaceDate: fundApplications.raceDate,
+			matchedAt: mentorshipMatches.createdAt,
+			endedAt: mentorshipMatches.endedAt,
+		})
+		.from(mentorshipMatches)
+		.innerJoin(
+			mentorApplications,
+			and(
+				eq(mentorApplications.id, mentorshipMatches.mentorApplicationId),
+				eq(mentorApplications.userId, id),
+			),
+		)
+		.innerJoin(
+			fundApplications,
+			eq(fundApplications.id, mentorshipMatches.fundApplicationId),
+		)
+		.orderBy(desc(mentorshipMatches.createdAt))
+
+	const activeMentorshipPairings = mentorPairings.filter(
+		(pairing) => pairing.endedAt === null,
+	)
+	const pastMentorshipPairings = mentorPairings.filter(
+		(pairing) => pairing.endedAt !== null,
+	)
+
 	// Stats
 	const stats = [
 		{
@@ -74,6 +108,11 @@ export default async function AdminUserDetailPage(props: Props) {
 			label: 'Mentor Applications',
 			value: mentorApps.length,
 			variant: 'purple' as const,
+		},
+		{
+			label: 'Active Mentees',
+			value: activeMentorshipPairings.length,
+			variant: activeMentorshipPairings.length > 0 ? ('green' as const) : ('muted' as const),
 		},
 		{
 			label: 'Onboarding',
@@ -450,6 +489,165 @@ export default async function AdminUserDetailPage(props: Props) {
 						</div>
 					}
 				/>
+			</AdminDetailSection>
+
+			{/* Mentorship Pairings */}
+			<AdminDetailSection
+				title="Mentorship Pairings"
+				description="Mentees this mentor is currently supporting and past pairings."
+			>
+				<div className="space-y-6">
+					<div>
+						<h3 className="mb-2 text-sm font-semibold tracking-wide uppercase">
+							Active Mentees
+						</h3>
+						<AdminDataTable
+							columns={[
+								{ key: 'mentee', content: 'Mentee', className: 'font-medium' },
+								{ key: 'race', content: 'Race' },
+								{ key: 'matchedAt', content: 'Matched' },
+								{ key: 'actions', content: 'View', align: 'right' },
+							]}
+							rows={activeMentorshipPairings.map((pairing) => ({
+								id: pairing.matchId,
+								cells: [
+									{
+										key: 'mentee',
+										content: (
+											<div className="flex flex-col">
+												<div>{pairing.menteeName}</div>
+												<div className="text-muted-foreground mt-0.5 text-xs">
+													{pairing.menteeEmail}
+												</div>
+											</div>
+										),
+									},
+									{
+										key: 'race',
+										content: (
+											<div className="flex flex-col">
+												<div>{pairing.menteeRace}</div>
+												<div className="text-muted-foreground mt-0.5 text-xs">
+													{pairing.menteeRaceDate
+														? new Date(
+																pairing.menteeRaceDate,
+															).toLocaleDateString()
+														: 'Date not set'}
+												</div>
+											</div>
+										),
+									},
+									{
+										key: 'matchedAt',
+										content: (
+											<div className="text-sm">
+												{new Date(pairing.matchedAt).toLocaleString()}
+											</div>
+										),
+									},
+									{
+										key: 'actions',
+										align: 'right' as const,
+										content: (
+											<Link
+												href={`/admin/applications/${pairing.fundApplicationId}`}
+												className="text-primary hover:underline"
+											>
+												View
+											</Link>
+										),
+									},
+								],
+							}))}
+							emptyState={
+								<div className="text-muted-foreground text-sm">
+									No active mentees for this mentor right now.
+								</div>
+							}
+						/>
+					</div>
+
+					<div>
+						<h3 className="mb-2 text-sm font-semibold tracking-wide uppercase">
+							Past Mentorship Pairings
+						</h3>
+						<AdminDataTable
+							columns={[
+								{ key: 'mentee', content: 'Mentee', className: 'font-medium' },
+								{ key: 'race', content: 'Race' },
+								{ key: 'matchedAt', content: 'Matched' },
+								{ key: 'endedAt', content: 'Ended' },
+								{ key: 'actions', content: 'View', align: 'right' },
+							]}
+							rows={pastMentorshipPairings.map((pairing) => ({
+								id: pairing.matchId,
+								cells: [
+									{
+										key: 'mentee',
+										content: (
+											<div className="flex flex-col">
+												<div>{pairing.menteeName}</div>
+												<div className="text-muted-foreground mt-0.5 text-xs">
+													{pairing.menteeEmail}
+												</div>
+											</div>
+										),
+									},
+									{
+										key: 'race',
+										content: (
+											<div className="flex flex-col">
+												<div>{pairing.menteeRace}</div>
+												<div className="text-muted-foreground mt-0.5 text-xs">
+													{pairing.menteeRaceDate
+														? new Date(
+																pairing.menteeRaceDate,
+															).toLocaleDateString()
+														: 'Date not set'}
+												</div>
+											</div>
+										),
+									},
+									{
+										key: 'matchedAt',
+										content: (
+											<div className="text-sm">
+												{new Date(pairing.matchedAt).toLocaleString()}
+											</div>
+										),
+									},
+									{
+										key: 'endedAt',
+										content: (
+											<div className="text-sm">
+												{pairing.endedAt
+													? new Date(pairing.endedAt).toLocaleString()
+													: '—'}
+											</div>
+										),
+									},
+									{
+										key: 'actions',
+										align: 'right' as const,
+										content: (
+											<Link
+												href={`/admin/applications/${pairing.fundApplicationId}`}
+												className="text-primary hover:underline"
+											>
+												View
+											</Link>
+										),
+									},
+								],
+							}))}
+							emptyState={
+								<div className="text-muted-foreground text-sm">
+									No past mentorship pairings yet.
+								</div>
+							}
+						/>
+					</div>
+				</div>
 			</AdminDetailSection>
 
 			<AdminDetailActions className="pt-2">
