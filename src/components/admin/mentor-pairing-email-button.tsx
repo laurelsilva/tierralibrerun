@@ -32,6 +32,7 @@ interface MentorPairingEmailButtonProps {
 type PreviewState = {
 	subject: string
 	html: string
+	bcc?: string[]
 	to: Array<{
 		name: string
 		email: string
@@ -58,6 +59,10 @@ export function MentorPairingEmailButton({
 	const [preview, setPreview] = useState<PreviewState | null>(null)
 	const previewRef = useRef<HTMLIFrameElement | null>(null)
 	const [iframeHeight, setIframeHeight] = useState(960)
+	const bccDisplayValue =
+		preview?.bcc?.length && preview.bcc.length > 0
+			? preview.bcc.join(', ')
+			: process.env.NEXT_PUBLIC_ADMIN_EMAILS || 'Admin team'
 
 	function recalcIframeHeight() {
 		const el = previewRef.current
@@ -168,7 +173,7 @@ export function MentorPairingEmailButton({
 									<Label>BCC</Label>
 									<Input
 										readOnly
-										value={process.env.NEXT_PUBLIC_ADMIN_EMAILS || 'Admin team'}
+										value={bccDisplayValue}
 										className="text-muted-foreground cursor-default"
 									/>
 								</div>
@@ -242,7 +247,7 @@ export function MentorPairingEmailButton({
 								</div>
 								<div>
 									<strong>BCC:</strong>{' '}
-									{process.env.NEXT_PUBLIC_ADMIN_EMAILS || 'Admin team'}
+									{bccDisplayValue}
 								</div>
 								<div>
 									<strong>Subject:</strong>{' '}

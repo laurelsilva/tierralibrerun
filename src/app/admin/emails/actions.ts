@@ -1,4 +1,5 @@
 'use server'
+import { clerkClient } from '@clerk/nextjs/server'
 import { and, desc, eq, isNull } from 'drizzle-orm'
 import { revalidatePath } from 'next/cache'
 import { emailConfig, teamConfig } from '@/lib/config/site'
@@ -171,6 +172,82 @@ function formatRaceDate(value: Date | string | null | undefined) {
 	})
 }
 
+function normalizeEmail(value: string | null | undefined) {
+	return String(value || '')
+		.trim()
+		.toLowerCase()
+}
+
+function parseEmailList(value: string | undefined) {
+	return String(value || '')
+		.split(',')
+		.map((entry) => normalizeEmail(entry))
+		.filter(Boolean)
+}
+
+function hasAdminRole(value: unknown): boolean {
+	if (typeof value === 'string') {
+		const role = value.trim().toLowerCase()
+		return role === 'admin' || role === 'admin_readonly'
+	}
+	if (Array.isArray(value)) {
+		return (value as unknown[]).some((entry) => hasAdminRole(entry))
+	}
+	return false
+}
+
+function userHasAdminRole(user: {
+	publicMetadata?: { role?: unknown }
+}): boolean {
+	return hasAdminRole(user.publicMetadata?.role)
+}
+
+async function resolveAdminBccEmails() {
+	const recipients = new Set<string>()
+
+	for (const email of emailConfig.adminEmails) {
+		const normalized = normalizeEmail(email)
+		if (normalized) recipients.add(normalized)
+	}
+
+	for (const email of parseEmailList(process.env.NEXT_PUBLIC_ADMIN_EMAILS)) {
+		recipients.add(email)
+	}
+
+	// Include all Clerk admins so BCC covers both env-configured admins and
+	// role-based admin users.
+	try {
+		const clerk = await clerkClient()
+		let offset = 0
+		const limit = 100
+
+		while (true) {
+			const page = await clerk.users.getUserList({ limit, offset })
+			const data = Array.isArray((page as { data?: unknown[] }).data)
+				? ((page as { data: unknown[] }).data as Array<{
+						publicMetadata?: { role?: unknown }
+						emailAddresses?: Array<{ id: string; emailAddress: string }>
+				  }>)
+				: []
+
+			for (const user of data) {
+				if (!userHasAdminRole(user)) continue
+				for (const emailAddress of user.emailAddresses || []) {
+					const normalized = normalizeEmail(emailAddress.emailAddress)
+					if (normalized) recipients.add(normalized)
+				}
+			}
+
+			if (data.length < limit) break
+			offset += data.length
+		}
+	} catch (error) {
+		console.warn('[emails] Unable to load Clerk admin users for BCC', error)
+	}
+
+	return Array.from(recipients)
+}
+
 export async function previewMentorshipPairingEmail(input: {
 	fundApplicationId: string
 	subjectOverride?: string
@@ -192,11 +269,13 @@ export async function previewMentorshipPairingEmail(input: {
 			subjectOverride: input.subjectOverride,
 			additionalContext: input.additionalContext,
 		})
+		const bcc = await resolveAdminBccEmails()
 
 		return {
 			success: true as const,
 			subject,
 			html,
+			bcc,
 			to: [
 				{
 					name: application.name,
@@ -240,6 +319,7 @@ export async function sendMentorshipPairingEmail(input: {
 			subjectOverride: input.subjectOverride,
 			additionalContext: input.additionalContext,
 		})
+		const bcc = await resolveAdminBccEmails()
 
 		const result = await sendApplicationEmail({
 			applicationType: 'FUND',
@@ -250,7 +330,7 @@ export async function sendMentorshipPairingEmail(input: {
 			from: teamConfig.founderName
 				? `${teamConfig.founderName} <${emailConfig.fromAddress}>`
 				: emailConfig.fromAddress,
-			bcc: emailConfig.adminEmails,
+			bcc,
 			replyTo: emailConfig.replyToAddress,
 			subject,
 			html,
