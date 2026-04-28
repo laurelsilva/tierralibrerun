@@ -365,9 +365,6 @@ const MENTOR_TRANSITIONS: Record<MentorWorkflowStage, WorkflowTransition[]> = {
 }
 
 const FUND_MENTOR_ASSIGNABLE_STAGES: FundWorkflowStage[] = [
-	'AWAITING_CONFIRMATION',
-	'CONFIRMED',
-	'REGISTRATION_IN_PROGRESS',
 	'REGISTERED',
 	'ONBOARDING_IN_PROGRESS',
 	'ACTIVE_IN_PROGRAM',
@@ -1100,7 +1097,7 @@ export async function assignMentorToFundApplication(input: {
 		return {
 			success: false as const,
 			error:
-				'Mentor pairing is only available after the athlete has been approved.',
+				'Mentor pairing is only available after the athlete is marked as registered.',
 		}
 	}
 
