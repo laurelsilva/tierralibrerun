@@ -17,6 +17,7 @@
 import { eq } from 'drizzle-orm'
 import { siteConfig, emailConfig, teamConfig } from '@/lib/config/site'
 import { getBrandLinks } from '@/lib/email/brand'
+import { getEmailLogoDataUri } from '@/lib/email/logo'
 import {
 	type ApplicationType,
 	type StandardStatus,
@@ -645,6 +646,7 @@ function getPathValue(obj: Record<string, unknown>, path: string) {
    ======================================================= */
 
 export function wrapHtml(inner: string) {
+	const logoDataUri = getEmailLogoDataUri()
 	return `<!DOCTYPE html>
 <html>
 <head>
@@ -667,6 +669,12 @@ export function wrapHtml(inner: string) {
 		padding: 28px 24px;
 		border-radius: 10px 10px 0 0;
 		text-align: center;
+	}
+	.header .brand-logo {
+		display: block;
+		margin: 0 auto 10px auto;
+		width: 56px;
+		height: 56px;
 	}
 	.header h1 {
 		margin: 0;
@@ -713,6 +721,7 @@ export function wrapHtml(inner: string) {
 </head>
 <body>
 	<div class="header">
+		<img class="brand-logo" src="${escapeAttr(logoDataUri)}" alt="${escapeAttr(siteConfig.name)} logo" width="56" height="56" />
 		<h1>${siteConfig.name}</h1>
 	</div>
 	<div class="content">
