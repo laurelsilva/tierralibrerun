@@ -71,18 +71,14 @@ export default async function AthletesFund() {
 						{/* Content - on RIGHT side */}
 						<div className="order-2 lg:col-span-6">
 							<span className="text-primary-foreground/60 mb-2 inline-block text-sm font-medium tracking-widest">
-								TRAIL ACCESS PLATFORM
+								TIERRA LIBRE, NONPROFIT INITIATIVE
 							</span>
 							<div className="space-y-10 md:space-y-12">
 								<h1 className="mb-6 text-5xl leading-[1.1] font-bold tracking-[-0.03em] md:text-6xl">
-									The BIPOC Athlete Fund
+									Athlete Fund
 								</h1>
 								<p className="text-primary-foreground/90 text-xl leading-relaxed md:text-2xl">
-									We’re building a trail access platform for athletes. Choose a
-									race from our partner network and apply. If you’re accepted,
-									we cover your entry and connect you to mentorship and
-									community care so you can show up, prepare, and feel
-									belonging.
+									Select a race from our partner network and apply. If accepted, we cover your registration fee entirely, then connect you to a mentor and community support that carries you through to race day.
 								</p>
 								<div className="flex flex-col gap-4 pt-2 sm:flex-row sm:gap-4">
 									<Button
@@ -139,75 +135,18 @@ export default async function AthletesFund() {
 				</div>
 			</section>
 
-			{/* Purpose Section - Large image with content */}
-			<section className="bg-secondary py-28 md:py-44 lg:py-60">
-				<div className="container mx-auto px-6 md:px-8 lg:px-12">
-					<div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2 lg:gap-28">
-						{/* Large Image */}
-						<div className="relative h-[60vh] w-full overflow-hidden rounded-3xl shadow-2xl lg:h-[75vh]">
-							<Image
-								src="https://cdn.sanity.io/images/qgy6qhm1/production/d7e38d983bc3a21cf5201eb7a2e9afda6f02d40a-6000x4000.jpg"
-								alt="Athletes breaking barriers on the trails"
-								fill
-								loading="lazy"
-								quality={80}
-								className="object-cover"
-								sizes="(max-width: 1024px) 100vw, 50vw"
-							/>
-							<div className="absolute inset-0 bg-linear-to-t from-black/40 to-transparent" />
-						</div>
-
-						{/* Content */}
-						<div className="space-y-12 lg:pl-12">
-							<div className="space-y-6">
-								<span className="text-primary mb-2 inline-block text-sm font-medium tracking-widest">
-									THE IDEA
-								</span>
-								<h2 className="text-4xl font-bold md:text-5xl">
-									More Than a Bib
-								</h2>
-							</div>
-							<div className="space-y-7">
-								<p className="text-muted-foreground text-lg leading-[1.7] md:text-xl md:leading-[1.7]">
-									Trail running can be life giving, but it hasn’t been equally
-									accessible. Cost matters. So do the barriers you don’t always
-									see: not knowing where to start, not seeing yourself
-									represented, and walking into a start line feeling like you
-									have to do it alone.
-								</p>
-								<p className="text-muted-foreground text-lg leading-[1.7] md:text-xl md:leading-[1.7]">
-									This fund is built to change what access feels like. We work
-									with race partners throughout the year to lower hurdles and
-									raise the level of support, so your first start can become a
-									lasting part of the sport.
-								</p>
-								<p className="text-muted-foreground text-lg leading-[1.7] md:text-xl md:leading-[1.7]">
-									You’ll find mentorship, course previews, and in person support
-									at select races. The goal is simple: show up, prepare, and
-									feel belonging.
-								</p>
-							</div>
-						</div>
-					</div>
-				</div>
-			</section>
-
 			{/* What We Provide - Redesigned with asymmetric layout */}
 			<section className="bg-primary text-primary-foreground py-28 md:py-44 lg:py-60">
 				<div className="container mx-auto px-6 md:px-8 lg:px-12">
 					<div className="mb-24 md:mb-32">
 						<span className="text-primary-foreground/60 mb-6 inline-block text-sm font-medium tracking-widest">
-							THE EXPERIENCE
+							THE FUND
 						</span>
 						<h2 className="mb-8 text-4xl font-bold md:text-5xl">
-							What You Get
+							What You Receive
 						</h2>
 						<p className="text-primary-foreground/90 max-w-3xl text-base leading-relaxed md:text-lg">
-							This is more than entry coverage. It starts with a thoughtful
-							application and a questionnaire that helps us get to know you and
-							how we can support you. If you’re accepted, we cover your entry,
-							connect you to mentorship, and bring you into community so you can
-							show up, prepare, and feel belonging.
+							Acceptance into the Athlete Fund means more than a covered entry. You receive a funded registration, a matched mentor, and community support from your first training run to race day.
 						</p>
 					</div>
 
@@ -237,9 +176,7 @@ export default async function AthletesFund() {
 											Your Entry Is Covered
 										</h3>
 										<p className="max-w-2xl text-base leading-relaxed text-white/90 md:text-lg">
-											Once you’re accepted, we take care of your registration so
-											you can focus on training, learning, and showing up with
-											confidence.
+											Once accepted, we handle your race registration entirely. No fees. No barriers. You focus on training and showing up.
 										</p>
 									</div>
 								</div>
@@ -270,11 +207,10 @@ export default async function AthletesFund() {
 										</span>
 									</div>
 									<h3 className="mb-3 text-xl leading-tight font-bold text-white md:text-2xl">
-										Find Your People
+										Your People Are Here
 									</h3>
 									<p className="text-sm leading-relaxed text-white/90 md:text-base">
-										Join our Slack and connect with other athletes through
-										community runs and meetups around select races.
+										Join a Slack community of runners of color. Connect through training runs, virtual check-ins, and in-person meetups around race weekend.
 									</p>
 								</div>
 							</div>
@@ -301,13 +237,10 @@ export default async function AthletesFund() {
 										</span>
 									</div>
 									<h3 className="mb-3 text-xl leading-tight font-bold text-white md:text-2xl">
-										Guidance That’s Real
+										Your Mentor. Your Teammate.
 									</h3>
 									<p className="text-sm leading-relaxed text-white/90 md:text-base">
-										Get paired with an experienced mentor. This is not coaching.
-										It is a relationship with someone you can trust for
-										questions about training, nutrition, course preparation, and
-										race week nerves.
+										Paired with an experienced BIPOC mentor from the moment you’re accepted. Not coaching, a real relationship built to carry you from your first training run to the finish line.
 									</p>
 								</div>
 							</div>
@@ -339,15 +272,11 @@ export default async function AthletesFund() {
 										</span>
 									</div>
 									<h3 className="text-3xl leading-tight font-bold md:text-4xl">
-										Support on Race Week
+										Race Day, Together
 									</h3>
 									<div className="space-y-4">
 										<p className="text-primary-foreground/90 text-base leading-relaxed md:text-lg">
-											We’ll help you feel ready with course previews, guidance,
-											and community energy. At select races, we show up in big
-											ways with our partners, including aid station presence,
-											finish line support, and in person connection before and
-											during race week.
+											At select partner races, Tierra Libre Run shows up. Aid station presence, finish line support, and in-person community the week of your race. You’re not racing alone.
 										</p>
 									</div>
 								</div>
@@ -362,15 +291,13 @@ export default async function AthletesFund() {
 				<div className="container mx-auto px-6 md:px-8 lg:px-12">
 					<div className="mb-20 text-center md:mb-28">
 						<span className="text-primary mb-6 inline-block text-sm font-medium tracking-widest">
-							WHO THIS IS FOR
+							ELIGIBILITY
 						</span>
 						<h2 className="mb-8 text-4xl font-bold md:text-5xl">
 							Who Can Apply
 						</h2>
 						<p className="text-muted-foreground mx-auto max-w-3xl text-base leading-relaxed md:text-lg">
-							This fund is for athletes who want support getting into trail
-							running or staying in it. If you are looking for entry support,
-							mentorship, and community care, you are in the right place.
+							The Athlete Fund is built for athletes of color who are entering trail running or looking for support to go further in the sport.
 						</p>
 					</div>
 
@@ -393,10 +320,10 @@ export default async function AthletesFund() {
 					<div className="bg-card border-border mx-auto mt-20 max-w-5xl rounded-3xl border p-12 shadow-sm md:mt-28 md:p-20">
 						<div className="mb-12 text-center">
 							<h4 className="mb-6 text-3xl font-bold tracking-tight md:text-4xl">
-								Eligibility
+								Who Can Apply
 							</h4>
 							<p className="text-muted-foreground text-lg leading-[1.7] md:text-xl">
-								This fund supports athletes who:
+								We are built for athletes who:
 							</p>
 						</div>
 
@@ -406,8 +333,7 @@ export default async function AthletesFund() {
 									<CheckCircle2 className="text-primary h-5 w-5" />
 								</div>
 								<p className="text-foreground pt-1 text-lg leading-[1.7]">
-									Identify as a person of color, including Black and Indigenous
-									athletes
+									Identify as a person of color, including Black, Indigenous, and multiracial athletes
 								</p>
 							</div>
 
@@ -416,8 +342,7 @@ export default async function AthletesFund() {
 									<CheckCircle2 className="text-primary h-5 w-5" />
 								</div>
 								<p className="text-foreground pt-1 text-lg leading-[1.7]">
-									New to trail running, doing your first trail race, or looking
-									for support to stay in the sport
+									Are new to trail running, preparing for your first trail race, or looking for support to go deeper in the sport
 								</p>
 							</div>
 
@@ -426,9 +351,7 @@ export default async function AthletesFund() {
 									<CheckCircle2 className="text-primary h-5 w-5" />
 								</div>
 								<p className="text-foreground pt-1 text-lg leading-[1.7]">
-									We prioritize applicants with underrepresented identities
-									within communities of color, including women, LGBTQ+ people,
-									immigrants, and people with disabilities
+									Hold underrepresented identities within communities of color, including women, LGBTQ+ individuals, immigrants, and people with disabilities (priority consideration)
 								</p>
 							</div>
 
@@ -437,8 +360,7 @@ export default async function AthletesFund() {
 									<CheckCircle2 className="text-primary h-5 w-5" />
 								</div>
 								<p className="text-foreground pt-1 text-lg leading-[1.7]">
-									Engage with the community when possible through Slack and race
-									connections
+									Are willing to engage with the community through our Slack workspace and race-day connections
 								</p>
 							</div>
 						</div>
@@ -455,13 +377,10 @@ export default async function AthletesFund() {
 								Race Partners
 							</span>
 							<h2 className="mb-8 text-5xl leading-[1.1] font-bold tracking-tight md:text-6xl lg:text-7xl">
-								Our Partner Races
+								The Race Network
 							</h2>
 							<p className="text-muted-foreground mx-auto max-w-3xl text-lg leading-[1.7] md:text-xl md:leading-[1.7]">
-								Our partners host races across the Pacific Northwest and beyond.
-								They share our values and help expand the sport by making space
-								for athletes. Supported entries through the Athlete Fund come
-								from these partner organizations.
+								Tierra Libre Run partners with race directors who are committed to expanding access. Supported entries are available through these organizations.
 							</p>
 							<div className="mt-10">
 								<Link href="/races">
@@ -526,8 +445,8 @@ export default async function AthletesFund() {
 												</p>
 											) : (
 												<p className="text-muted-foreground text-base leading-[1.7]">
-													Partnering with Trail Running Community to expand
-													access to trail running for athletes.
+													A race partner committed to expanding access
+													to trail running for runners of color.
 												</p>
 											)}
 										</div>
@@ -588,7 +507,7 @@ export default async function AthletesFund() {
 								</h2>
 								<p className="text-muted-foreground mx-auto mt-6 max-w-2xl text-lg leading-relaxed">
 									These brands believe in the power of investing in BIPOC
-									athletes—their support makes our fund possible.
+									athletes, their support makes our fund possible.
 								</p>
 							</div>
 
@@ -633,27 +552,21 @@ export default async function AthletesFund() {
 						<div className="space-y-12">
 							<div className="space-y-6">
 								<span className="text-primary-foreground/60 mb-2 inline-block text-xs font-bold tracking-[0.25em] uppercase md:text-sm">
-									OUR INVITATION
+									TIERRA LIBRE
 								</span>
 								<h2 className="text-5xl leading-[1.1] font-bold tracking-tight md:text-6xl lg:text-7xl">
-									Belonging Is the Goal
+									Built for You.
 								</h2>
 							</div>
 							<div className="space-y-7">
 								<p className="text-primary-foreground/90 text-lg leading-[1.7] md:text-xl md:leading-[1.7]">
-									Trail Running Community is created and led by people of color.
-									We believe our community deserves more than access. We deserve
-									power, joy, and a real home in trail running.
+									Tierra Libre Run is created and led by people of color. We believe runners of color deserve more than access. We deserve power, belonging, and a real home in this sport.
 								</p>
 								<p className="text-primary-foreground/90 text-lg leading-[1.7] md:text-xl md:leading-[1.7]">
-									This fund is one way we show up for each other. The bigger
-									vision is a trail access platform for belonging, where you can
-									learn, ask questions, and build relationships that last beyond
-									a single race.
+									The Athlete Fund is one part of how we build that. The bigger vision is infrastructure for trail access, a platform where runners of color can learn, connect, and lead in the sport.
 								</p>
 								<p className="text-primary-foreground/90 text-lg leading-[1.7] md:text-xl md:leading-[1.7]">
-									You do not have to already be a trail runner to belong here.
-									If you are curious, we are ready to welcome you.
+									You do not have to already be a trail runner. If you are curious about trail running and ready to commit to a race, we are ready to support you.
 								</p>
 							</div>
 						</div>
@@ -679,15 +592,10 @@ export default async function AthletesFund() {
 				<div className="container mx-auto px-6 text-center md:px-8 lg:px-12">
 					<div className="mx-auto max-w-4xl">
 						<h2 className="mb-10 text-5xl leading-[1.1] font-bold tracking-tight md:text-6xl lg:text-7xl">
-							Ready to Start?
+							Apply for the Fund.
 						</h2>
 						<p className="text-primary-foreground/90 mb-16 text-lg leading-[1.7] md:text-xl md:leading-[1.7]">
-							Start by exploring the races in our partner network and choosing
-							one that feels right for you. If you are an ally, your donation
-							helps keep this work going, including entries, mentorship, and
-							community care. The Athlete Fund is a 501(c)(3) nonprofit
-							initiative with fiscal sponsorship through our nonprofit partner.
-							Donations are tax deductible.{' '}
+							Browse the races in our partner network and choose one that fits your goals. Applications are reviewed on a rolling basis. Tierra Libre Run is a 501(c)(3) nonprofit initiative with fiscal sponsorship through our nonprofit partner. Donations are tax deductible.{' '}
 							{process.env.NEXT_PUBLIC_TAX_ID || ''}.
 						</p>
 						<div className="mb-20 flex flex-col justify-center gap-4 sm:flex-row md:mb-24">

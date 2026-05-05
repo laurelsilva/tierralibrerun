@@ -3,8 +3,7 @@ import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { donateMetadata } from '@/lib/metadata'
 
-const siteName = process.env.NEXT_PUBLIC_SITE_NAME || 'Trail Running Community'
-const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'team@example.com'
+const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'team@tierralibre.run'
 const taxId = process.env.NEXT_PUBLIC_TAX_ID || ''
 const donationUrl = process.env.NEXT_PUBLIC_DONATION_URL || ''
 
@@ -18,18 +17,16 @@ export default function DonatePage() {
 				<div className="container mx-auto px-4 md:px-6">
 					<div className="grid grid-cols-1 items-center gap-12 md:grid-cols-2 md:gap-24">
 						<div className="text-primary-foreground space-y-8">
-							<span className="mb-2 inline-block text-sm font-medium tracking-widest">
-								{siteName.toUpperCase()}
-							</span>
-							<h1 className="mb-6 text-5xl leading-[1.1] font-bold tracking-[-0.03em] md:text-6xl">
-								Donate to Our Mission
-							</h1>
-							<div className="bg-primary-foreground/50 h-0.5 w-20 rounded-full"></div>
-							<p className="text-primary-foreground/90 text-xl leading-relaxed md:text-2xl">
-								Help us create pathways for athletes to access, enjoy, and lead
-								in the sport. Your contribution directly supports programs that
-								increase representation, access, and community in trail running.
-							</p>
+					<span className="mb-2 inline-block text-sm font-medium tracking-widest">
+							TIERRA LIBRE, NONPROFIT INITIATIVE
+						</span>
+						<h1 className="mb-6 text-5xl leading-[1.1] font-bold tracking-[-0.03em] md:text-6xl">
+							Fund Trail Access for BIPOC Athletes.
+						</h1>
+						<div className="bg-primary-foreground/50 h-0.5 w-20 rounded-full"></div>
+						<p className="text-primary-foreground/90 text-xl leading-relaxed md:text-2xl">
+							Your donation directly funds race entries and mentorship for runners of color entering trail running. Every dollar goes toward removing the barriers between an athlete and the start line.
+						</p>
 						</div>
 
 						<div className="relative h-[500px] overflow-hidden rounded-3xl md:h-[600px]">
@@ -48,12 +45,12 @@ export default function DonatePage() {
 			{/* Impact areas - Card grid layout */}
 			<section className="py-32 md:py-48">
 				<div className="container mx-auto px-4 md:px-6">
-					<div className="mb-24 text-center">
-						<span className="text-primary mb-2 text-sm font-medium tracking-widest">
-							HOW FUNDS ARE USED
-						</span>
-						<h2 className="mt-2 text-5xl font-bold">Your Impact</h2>
-					</div>
+				<div className="mb-24 text-center">
+					<span className="text-primary mb-2 text-sm font-medium tracking-widest">
+						WHERE YOUR DONATION GOES
+					</span>
+					<h2 className="mt-2 text-5xl font-bold">Exactly Where It Counts</h2>
+				</div>
 
 					<div className="grid grid-cols-1 gap-10 md:grid-cols-3">
 						{impactAreas.map((item, index) => (
@@ -80,10 +77,10 @@ export default function DonatePage() {
 				<div className="container mx-auto px-4 md:px-6">
 					<div className="grid grid-cols-1 items-center gap-16 md:grid-cols-12">
 						<div className="md:col-span-5">
-							<span className="text-primary-foreground/70 text-sm font-medium tracking-widest">
-								TRANSPARENCY
-							</span>
-							<h2 className="mt-2 mb-10 text-5xl font-bold">Our Commitment</h2>
+						<span className="text-primary-foreground/70 text-sm font-medium tracking-widest">
+							HOW WE OPERATE
+						</span>
+						<h2 className="mt-2 mb-10 text-5xl font-bold">Our Commitment to Donors</h2>
 							<div className="relative aspect-square overflow-hidden rounded-3xl md:aspect-[4/3]">
 								<Image
 									src="https://cdn.sanity.io/images/qgy6qhm1/production/8f204f7b8f37ee12ebb64459a82b1ce3f68ed25f-768x1024.jpg"
@@ -117,12 +114,12 @@ export default function DonatePage() {
 			{/* Donation options and form - Premium card layout */}
 			<section className="py-32 md:py-48">
 				<div className="container mx-auto px-4 md:px-6">
-					<div className="mb-24 text-center">
-						<span className="text-primary mb-2 text-sm font-medium tracking-widest">
-							SUPPORT OUR MISSION
-						</span>
-						<h2 className="mt-2 text-5xl font-bold">Ways to Give</h2>
-					</div>
+				<div className="mb-24 text-center">
+					<span className="text-primary mb-2 text-sm font-medium tracking-widest">
+						DONATE
+					</span>
+					<h2 className="mt-2 text-5xl font-bold">Ways to Give</h2>
+				</div>
 
 					<div className="bg-primary overflow-hidden rounded-3xl">
 						<div className="grid grid-cols-1 gap-0 md:grid-cols-12">
@@ -134,11 +131,10 @@ export default function DonatePage() {
 											<CreditCard className="text-primary h-5 w-5" />
 										</div>
 										<h3 className="mb-3 text-2xl font-bold">
-											One-time donation
+											One-time gift
 										</h3>
 										<p className="text-primary-foreground/80">
-											Make a single contribution to support our work in the
-											community.
+											Make a direct contribution to the Athlete Fund and Mentor Program.
 										</p>
 									</div>
 
@@ -146,10 +142,9 @@ export default function DonatePage() {
 										<div className="bg-primary-foreground mb-4 flex h-10 w-10 items-center justify-center rounded-full">
 											<Calendar className="text-primary h-5 w-5" />
 										</div>
-										<h3 className="mb-3 text-2xl font-bold">Monthly support</h3>
+										<h3 className="mb-3 text-2xl font-bold">Monthly sustainer</h3>
 										<p className="text-primary-foreground/80">
-											Become a sustaining supporter with a recurring monthly
-											donation.
+											Recurring monthly support powers consistent programming year-round.
 										</p>
 									</div>
 
@@ -157,18 +152,16 @@ export default function DonatePage() {
 										<div className="bg-primary-foreground mb-4 flex h-10 w-10 items-center justify-center rounded-full">
 											<HandHeart className="text-primary h-5 w-5" />
 										</div>
-										<h3 className="mb-3 text-2xl font-bold">Sponsor</h3>
+										<h3 className="mb-3 text-2xl font-bold">Organizational sponsor</h3>
 										<p className="text-primary-foreground/80">
-											For organizations interested in sponsoring specific
-											programs or events.
+											Race directors and brands: co-fund entries, sponsor mentorship pairs, or support race day operations.
 										</p>
 									</div>
 								</div>
 
 								<div className="border-primary-foreground/20 mt-12 border-t pt-12">
 									<p className="text-primary-foreground/80 mb-4">
-										The BIPOC Athlete Fund is a 501(c)(3) nonprofit initiative
-										with fiscal sponsorship through our nonprofit partner.
+										Tierra Libre Run is a 501(c)(3) nonprofit initiative with fiscal sponsorship through our nonprofit partner.
 										Donations are tax-deductible.
 									</p>
 									<p className="text-lg font-medium">Tax ID: {taxId}</p>
@@ -201,18 +194,17 @@ export default function DonatePage() {
 			{/* Closing CTA */}
 			<section className="bg-background py-24 md:py-32">
 				<div className="container mx-auto px-4 md:px-6">
-					<div className="mx-auto max-w-3xl space-y-8 text-center">
-						<h2 className="text-4xl font-bold">Have Questions?</h2>
-						<p className="text-muted-foreground text-xl">
-							Reach out to us for more information about our programs,
-							sponsorship opportunities, or how your donation makes an impact.
-						</p>
-						<div className="pt-4">
-							<Button>
-								<a href={`mailto:${contactEmail}`}>Contact Us</a>
-							</Button>
-						</div>
+				<div className="mx-auto max-w-3xl space-y-8 text-center">
+					<h2 className="text-4xl font-bold">Questions about giving?</h2>
+					<p className="text-muted-foreground text-xl">
+						Reach out to learn more about organizational sponsorships, race co-funding, or how your donation is put to work.
+					</p>
+					<div className="pt-4">
+						<Button asChild>
+							<a href={`mailto:${contactEmail}`}>Get in Touch</a>
+						</Button>
 					</div>
+				</div>
 				</div>
 			</section>
 		</div>
@@ -221,19 +213,24 @@ export default function DonatePage() {
 
 const impactAreas = [
 	{
-		title: 'Race Entry Support',
+		title: 'Athlete Fund',
 		description:
-			'Sponsor athletes at major races. Provide registration fees, travel stipends, and community connections.',
+			'Cover race registration fees for runners of color. Your donation funds entries into partner races and removes the financial barrier to the start line.',
 	},
 	{
-		title: 'Annual Retreat',
+		title: 'Mentor Program',
 		description:
-			'Support our first annual multi-day immersive trail running experience focused on community building, skill development, and storytelling.',
+			'Support the infrastructure that powers our mentorship pairs, matching, coordination, training resources, and program operations that connect mentors with funded athletes.',
+	},
+	{
+		title: 'Community & Race Day',
+		description:
+			'Fund community runs, race day aid station operations, and our annual multi-day trail experience focused on skill-building, storytelling, and connection.',
 	},
 ]
 
 const commitments = [
-	'All donations directly support community programs and participants',
-	'Annual impact reports shared with donors',
-	'Transparent allocation of resources to maximize community benefit',
+	'100% of program donations go directly to athlete support, mentorship, and community operations',
+	'Annual impact reports shared publicly and with all donors',
+	'Transparent fund allocation, we report exactly where every dollar goes',
 ]

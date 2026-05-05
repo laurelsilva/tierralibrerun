@@ -5,8 +5,8 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { TrailMarkerLogo } from '@/components/trail-marker-logo'
 
-const siteName = process.env.NEXT_PUBLIC_SITE_NAME || 'Trail Running Community'
-const siteTagline = process.env.NEXT_PUBLIC_SITE_TAGLINE || 'Advancing Access in Trail Running'
+const siteName = process.env.NEXT_PUBLIC_SITE_NAME || 'Tierra Libre Run'
+const siteTagline = process.env.NEXT_PUBLIC_SITE_TAGLINE || 'Trail Access for BIPOC Athletes'
 const instagramUrl = process.env.NEXT_PUBLIC_INSTAGRAM_URL || ''
 const taxId = process.env.NEXT_PUBLIC_TAX_ID || ''
 
@@ -87,7 +87,7 @@ export function Footer() {
 									href="/races"
 									className="text-muted-foreground hover:text-foreground text-sm transition-colors"
 								>
-									Races
+									Supported Races
 								</Link>
 							</li>
 							<li>
@@ -95,7 +95,7 @@ export function Footer() {
 									href="/companies"
 									className="text-muted-foreground hover:text-foreground text-sm transition-colors"
 								>
-									Companies
+									Race Partners
 								</Link>
 							</li>
 						</ul>
@@ -112,7 +112,7 @@ export function Footer() {
 											href="/blog"
 											className="text-muted-foreground hover:text-foreground text-sm transition-colors"
 										>
-											Blog
+											Field Notes
 										</Link>
 									</li>
 									<li>
@@ -152,19 +152,19 @@ export function Footer() {
 					</div>
 
 					{/* Bottom Section */}
-					<div className="border-border/40 mt-16 border-t pt-10">
-						<div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+				<div className="border-border/40 mt-16 border-t pt-10">
+					<div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+						<p className="text-muted-foreground text-xs">
+							© {new Date().getFullYear()} {siteName}, Nonprofit Initiative
+						</p>
+						{taxId && (
 							<p className="text-muted-foreground text-xs">
-								© {new Date().getFullYear()} {siteName}
+								501(c)(3) with fiscal sponsorship. Donations are tax-deductible. Tax ID:{' '}
+								{taxId}
 							</p>
-							{taxId && (
-								<p className="text-muted-foreground text-xs">
-									501(c)(3) nonprofit initiative with fiscal sponsorship. Tax ID:{' '}
-									{taxId}
-								</p>
-							)}
-						</div>
+						)}
 					</div>
+				</div>
 				</div>
 			</div>
 		</footer>

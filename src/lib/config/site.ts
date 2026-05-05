@@ -23,19 +23,19 @@ export const siteConfig = {
 	/** Organization / site name */
 	name: normalizeEnvString(
 		process.env.NEXT_PUBLIC_SITE_NAME,
-		'Trail Running Community',
+		'Tierra Libre Run',
 	),
 
 	/** Short tagline */
 	tagline: normalizeEnvString(
 		process.env.NEXT_PUBLIC_SITE_TAGLINE,
-		'Advancing Access in Trail Running',
+		'Trail Access for BIPOC Athletes',
 	),
 
 	/** One-sentence description used in metadata */
 	description: normalizeEnvString(
 		process.env.NEXT_PUBLIC_SITE_DESCRIPTION,
-		'A trail running community building authentic connections through nature. Apply for race funding and connect with fellow athletes.',
+		'Tierra Libre Run is a nonprofit initiative that funds race entries and provides mentorship for runners of color entering trail running. Everything built around the trail race experience.',
 	),
 
 	/** Canonical site URL */
@@ -46,7 +46,7 @@ export const siteConfig = {
 
 	/** Keywords for SEO */
 	keywords:
-		'trail running, athletes, community, nature, race funding, ultramarathon',
+		'trail running, runners of color, race funding, mentorship, nonprofit, trail access, underrepresented communities, outdoor access',
 
 	/** Locale */
 	locale: 'en_US',
@@ -54,10 +54,10 @@ export const siteConfig = {
 	/** Year the organization was founded */
 	foundingYear: '2024',
 
-	/** Tax / EIN for 501(c)(3) display — leave empty to hide */
+	/** Tax / EIN for 501(c)(3) display, leave empty to hide */
 	taxId: normalizeEnvString(process.env.NEXT_PUBLIC_TAX_ID, ''),
 
-	/** Donation platform embed URL — leave empty to disable donations page */
+	/** Donation platform embed URL, leave empty to disable donations page */
 	donationUrl: normalizeEnvString(process.env.NEXT_PUBLIC_DONATION_URL, ''),
 
 	/**
@@ -85,13 +85,13 @@ export const emailConfig = {
 	/** Default reply-to address */
 	replyToAddress: normalizeEnvString(
 		process.env.EMAIL_REPLY_TO_ADDRESS,
-		'team@example.com',
+		'team@tierralibre.run',
 	),
 
 	/** Contact email shown in UI */
 	contactEmail: normalizeEnvString(
 		process.env.NEXT_PUBLIC_CONTACT_EMAIL,
-		'team@example.com',
+		'team@tierralibre.run',
 	),
 
 	/** Admin email addresses (comma-separated) for BCC on important emails */

@@ -26,34 +26,29 @@ import { siteConfig } from '@/lib/config/site'
 import { buildPostSignUpPath } from '@/lib/onboarding-routing'
 import { cn } from '@/lib/utils'
 
-const athleteFundItems = [
+const programItems = [
 	{
-		title: 'Apply',
+		title: 'Athlete Fund',
 		href: '/fund/',
-		description: 'Apply for race entry funding and support',
+		description: 'Funded race entries for athletes of color',
 	},
-	{
-		title: 'Donate',
-		href: '/donate',
-		description: 'Support athletes in our community',
-	},
-	{
-		title: 'Races Supported',
-		href: '/races',
-		description: 'View our supported races and events',
-	},
-]
-
-const communityItems = [
 	{
 		title: 'Mentor Program',
 		href: '/mentor',
-		description: 'Connect with experienced athletes and mentors',
+		description: 'Mentorship for runners of color preparing for their first trail race',
+	},
+]
+
+const exploreItems = [
+	{
+		title: 'Supported Races',
+		href: '/races',
+		description: 'Our race partner network across the Pacific Northwest',
 	},
 	{
 		title: 'Blog',
 		href: '/blog',
-		description: 'Stories, guides, and updates from TLR',
+		description: 'Stories and field notes from the trail',
 	},
 ]
 
@@ -229,75 +224,86 @@ export function Header() {
 						</span>
 					</Link>
 
-					{/* Desktop Navigation */}
-					<div className="hidden flex-1 items-center md:flex">
-						<div className="flex items-center gap-1">
-							<NavDropdown
-								label="Athlete Fund"
-								items={athleteFundItems}
-								pathname={pathname}
-							/>
-							<NavDropdown
-								label="Community"
-								items={communityItems}
-								pathname={pathname}
-							/>
-						</div>
+				{/* Desktop Navigation */}
+				<div className="hidden flex-1 items-center md:flex">
+					<div className="flex items-center gap-1">
+						<NavDropdown
+							label="Programs"
+							items={programItems}
+							pathname={pathname}
+						/>
+						<NavDropdown
+							label="Explore"
+							items={exploreItems}
+							pathname={pathname}
+						/>
+						<Link
+							href="/donate"
+							className={cn(
+								'text-primary-foreground/80 hover:text-primary-foreground rounded-md px-3 py-2 text-sm font-medium transition-colors',
+								'hover:bg-primary-foreground/10',
+								pathname === '/donate' &&
+									'text-primary-foreground bg-primary-foreground/10',
+							)}
+						>
+							Donate
+						</Link>
+					</div>
 
-						{/* Right side: auth */}
-						<div className="ml-auto flex items-center gap-3">
-							{isLoaded ? (
-								isSignedIn ? (
-									<>
-										{isAdmin && (
-											<Link
-												href="/admin"
-												className={cn(
-													'text-primary-foreground/80 hover:text-primary-foreground rounded-md px-3 py-2 text-sm font-medium transition-colors',
-													'hover:bg-primary-foreground/10',
-													pathname?.startsWith('/admin') &&
-														'text-primary-foreground bg-primary-foreground/10',
-												)}
-											>
-												Admin
-											</Link>
-										)}
+					{/* Right side: auth */}
+					<div className="ml-auto flex items-center gap-3">
+						{isLoaded ? (
+							isSignedIn ? (
+								<>
+									{isAdmin && (
 										<Link
-											href="/dashboard"
+											href="/admin"
 											className={cn(
 												'text-primary-foreground/80 hover:text-primary-foreground rounded-md px-3 py-2 text-sm font-medium transition-colors',
 												'hover:bg-primary-foreground/10',
-												pathname?.startsWith('/dashboard') &&
+												pathname?.startsWith('/admin') &&
 													'text-primary-foreground bg-primary-foreground/10',
 											)}
 										>
-											Dashboard
+											Admin
 										</Link>
-										<UserButton afterSignOutUrl="/" />
-									</>
-								) : (
-									<>
-										<AuthButton
-											action="sign-in"
-											label="Sign In"
-											variant="ghost"
-											size="sm"
-											className="text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/10"
-										/>
-										<AuthButton
-											action="sign-up"
-											label="Create Account"
-											variant="outline"
-											size="sm"
-											className="border-primary-foreground/20 bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground hover:text-primary"
-										/>
-									</>
-								)
+									)}
+									<Link
+										href="/dashboard"
+										className={cn(
+											'text-primary-foreground/80 hover:text-primary-foreground rounded-md px-3 py-2 text-sm font-medium transition-colors',
+											'hover:bg-primary-foreground/10',
+											pathname?.startsWith('/dashboard') &&
+												'text-primary-foreground bg-primary-foreground/10',
+										)}
+									>
+										Dashboard
+									</Link>
+									<UserButton afterSignOutUrl="/" />
+								</>
 							) : (
-								<div className="bg-primary-foreground/10 h-8 w-24 animate-pulse rounded-full" />
-							)}
-						</div>
+								<>
+									<AuthButton
+										action="sign-in"
+										label="Sign In"
+										variant="ghost"
+										size="sm"
+										className="text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/10"
+									/>
+									<AuthButton
+										action="sign-up"
+										label="Apply"
+										variant="outline"
+										size="sm"
+										className="border-primary-foreground/20 bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+									/>
+								</>
+							)
+						) : (
+							<div className="bg-primary-foreground/10 h-8 w-24 animate-pulse rounded-full" />
+						)}
 					</div>
+				</div>
 
 					{/* Mobile Menu */}
 					<div className="ml-auto md:hidden">
@@ -323,12 +329,12 @@ export function Header() {
 								</SheetHeader>
 
 								<div className="mt-6 flex flex-col gap-1">
-									{/* Athlete Fund */}
+									{/* Programs */}
 									<div className="mb-1">
 										<p className="text-muted-foreground mb-2 px-3 text-xs font-semibold tracking-wider uppercase">
-											Athlete Fund
+											Programs
 										</p>
-										{athleteFundItems.map((item) => (
+										{programItems.map((item) => (
 											<Link
 												key={item.href}
 												href={item.href}
@@ -350,12 +356,12 @@ export function Header() {
 
 									<div className="bg-border my-2 h-px" />
 
-									{/* Community */}
+									{/* Explore */}
 									<div className="mb-1">
 										<p className="text-muted-foreground mb-2 px-3 text-xs font-semibold tracking-wider uppercase">
-											Community
+											Explore
 										</p>
-										{communityItems.map((item) => (
+										{exploreItems.map((item) => (
 											<Link
 												key={item.href}
 												href={item.href}
@@ -374,6 +380,21 @@ export function Header() {
 											</Link>
 										))}
 									</div>
+
+									<div className="bg-border my-2 h-px" />
+
+									{/* Donate */}
+									<Link
+										href="/donate"
+										onClick={() => setIsMobileOpen(false)}
+										className={cn(
+											'hover:bg-accent flex flex-col gap-0.5 rounded-md px-3 py-2.5 transition-colors',
+											pathname === '/donate' && 'bg-accent',
+										)}
+									>
+										<span className="text-sm font-medium">Donate</span>
+										<span className="text-muted-foreground text-xs">Support runner of color access</span>
+									</Link>
 
 									{/* Authenticated links */}
 									{isSignedIn && (

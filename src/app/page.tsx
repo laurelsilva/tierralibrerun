@@ -20,7 +20,7 @@ export default async function Home() {
 						{/* Content - LEFT side */}
 						<div className="order-2 lg:order-1 lg:col-span-6">
 							<span className="text-primary-foreground/60 animate-fade-in-up mb-2 inline-block text-sm font-medium tracking-widest">
-								THE TRAIL ACCESS PLATFORM
+								NONPROFIT TRAIL ACCESS INITIATIVE
 							</span>
 							<div
 								className="animate-fade-in-up space-y-10 md:space-y-12"
@@ -30,16 +30,13 @@ export default async function Home() {
 									className="animate-fade-in-up mb-6 text-5xl leading-[1.1] font-bold tracking-[-0.03em] md:text-6xl lg:text-7xl"
 									style={{ animationDelay: '0.2s', animationFillMode: 'both' }}
 								>
-									Run Wild,{' '}
-									<span className="text-primary-foreground/80">Run Free.</span>
+									Where BIPOC Athletes Get to the Start Line.
 								</h1>
 								<p
 									className="text-primary-foreground/90 animate-fade-in-up text-xl leading-relaxed md:text-2xl"
 									style={{ animationDelay: '0.3s', animationFillMode: 'both' }}
 								>
-									A nonprofit created and led by people of color. We fund race
-									entries, provide mentorship, and build community so athletes
-									can show up, prepare, and feel belonging.
+									Tierra Libre Run funds race entries and pairs runners of color with experienced mentors. Everything we build is organized around a single, concrete goal: your trail race.
 								</p>
 								<div
 									className="animate-fade-in-up flex flex-col gap-4 pt-2 sm:flex-row sm:gap-4"
@@ -47,12 +44,12 @@ export default async function Home() {
 								>
 									<Button size="lg" variant="outline" asChild>
 										<Link href="/fund">
-											Apply for Support
+											Apply for Race Entry
 											<ArrowRight className="ml-2 h-5 w-5" />
 										</Link>
 									</Button>
 									<Button size="lg" variant="outline" asChild>
-										<Link href="/donate">Support Our Athletes</Link>
+										<Link href="/donate">Support Our Work</Link>
 									</Button>
 								</div>
 							</div>
@@ -79,7 +76,7 @@ export default async function Home() {
 								<div className="animate-hero-tilt-reverse absolute bottom-0 left-0 h-[62%] w-[72%] rotate-12 overflow-hidden rounded-3xl shadow-2xl ring-1 ring-white/15 transition-transform duration-700 will-change-transform">
 									<Image
 										src="https://cdn.sanity.io/images/qgy6qhm1/production/27d494a084b28c73270946755e0811592b67bd22-4160x6240.jpg"
-										alt="Trail Running Community trail running community"
+										alt="Tierra Libre trail running community"
 										fill
 										quality={80}
 										sizes="(min-width: 1024px) 36vw, (min-width: 768px) 50vw, 100vw"
@@ -122,32 +119,26 @@ export default async function Home() {
 						<div className="space-y-12 lg:pl-12">
 							<div className="space-y-6">
 								<span className="text-primary mb-2 inline-block text-sm font-medium tracking-widest">
-									OUR MISSION
+									OUR APPROACH
 								</span>
 								<h2 className="text-4xl font-bold md:text-5xl lg:text-6xl">
-									Advance access and belonging in trail running—so athletes
-									lead, thrive, and stay.
+									The trail race is the goal. We build everything around it.
 								</h2>
 							</div>
 							<div className="space-y-7">
 								<p className="text-muted-foreground text-lg leading-[1.7] md:text-xl md:leading-[1.7]">
-									Trail Running Community is a{' '}
-									<strong className="text-foreground font-semibold">
-										created and led by people of color
-									</strong>{' '}
-									initiative rooted in a simple belief: the trails belong to
-									everyone—and so does the power to shape the sport.
+									Trail running is built around a specific moment: the race. A date on the calendar. A distance. A start line and a finish line.
 								</p>
 								<p className="text-muted-foreground text-lg leading-[1.7] md:text-xl md:leading-[1.7]">
-									Through funded race entries, mentorship, and community care,
-									we turn "first starts" into lasting participation—and
-									influence.
+									Tierra Libre Run is a nonprofit initiative{' '}
+									<strong className="text-foreground font-semibold">
+										created and led by people of color.
+									</strong>
+									{' '}We organize our work around that race moment: funded entry, matched mentor, community at the aid station. Everything with a clear start and a clear finish.
 								</p>
 								<blockquote className="border-primary bg-primary/10 rounded-r-2xl border-l-4 py-4 pl-6">
 									<p className="text-foreground text-lg italic md:text-xl">
-										"We're not just opening doors. We're building the support
-										and community that keeps athletes on the trails—and in
-										leadership."
+										"We are not a run club. We are not a collective. We are trail access infrastructure, built to be precise, durable, and led by the communities we serve."
 									</p>
 								</blockquote>
 							</div>
@@ -161,14 +152,13 @@ export default async function Home() {
 				<div className="container mx-auto px-6 md:px-8 lg:px-12">
 					<div className="mb-20 md:mb-28">
 						<span className="text-primary-foreground/60 mb-6 inline-block text-sm font-medium tracking-widest">
-							HOW WE WORK
+							OUR PROGRAMS
 						</span>
 						<h2 className="mb-8 text-4xl font-bold md:text-5xl lg:text-6xl">
-							Two Pillars of Support
+							Two Programs. One Goal.
 						</h2>
 						<p className="text-primary-foreground/90 max-w-3xl text-lg leading-relaxed md:text-xl">
-							We remove barriers through race funding and mentorship
-							connections, so you can show up, prepare, and feel belonging.
+							The Athlete Fund and Mentor Program are built to work together, removing the financial barrier and pairing every funded athlete with someone who has been there before.
 						</p>
 					</div>
 
@@ -191,16 +181,14 @@ export default async function Home() {
 										<div className="mb-6 inline-flex items-center gap-3 rounded-full bg-white/20 px-5 py-2 backdrop-blur-sm">
 											<Heart className="h-5 w-5 text-white" />
 											<span className="text-sm font-bold tracking-wider text-white uppercase">
-												BIPOC Athlete Fund
+												Athlete Fund
 											</span>
 										</div>
 										<h3 className="mb-4 text-2xl leading-tight font-bold text-white md:text-3xl lg:text-4xl">
-											Your Entry Is Covered
+											Your Race Entry. Covered.
 										</h3>
 										<p className="mb-6 max-w-2xl text-base leading-relaxed text-white/90 md:text-lg">
-											Cost shouldn't be the gatekeeper. We cover race
-											registration fees entirely so athletes can focus on the
-											finish line. Apply for funding and let us handle the rest.
+											Select a race from our partner network and apply. If accepted, we cover your registration fee entirely.
 										</p>
 										<Button
 											variant="outline"
@@ -209,7 +197,7 @@ export default async function Home() {
 											asChild
 										>
 											<Link href="/fund">
-												Apply for Funding
+												Learn About the Fund
 												<ArrowRight className="ml-2 h-5 w-5" />
 											</Link>
 										</Button>
@@ -219,12 +207,12 @@ export default async function Home() {
 						</div>
 					</div>
 
-					{/* Mentorship - full-width hero to match Athlete Fund */}
+					{/* Program 2 - Mentor Program */}
 					<div className="group relative overflow-hidden rounded-3xl">
 						<div className="relative h-[50vh] lg:h-[65vh]">
 							<Image
 								src="https://cdn.sanity.io/images/qgy6qhm1/production/8f204f7b8f37ee12ebb64459a82b1ce3f68ed25f-768x1024.jpg"
-								alt="Mentorship Platform"
+								alt="Mentorship Program"
 								fill
 								loading="lazy"
 								quality={85}
@@ -237,16 +225,14 @@ export default async function Home() {
 									<div className="mb-4 inline-flex items-center gap-3 rounded-full bg-white/20 px-4 py-2 backdrop-blur-sm">
 										<Users className="h-4 w-4 text-white" />
 										<span className="text-xs font-bold tracking-wider text-white uppercase">
-											Mentorship
+											Mentor Program
 										</span>
 									</div>
 									<h3 className="mb-3 text-xl leading-tight font-bold text-white md:text-2xl">
-										Guidance That's Real
+										Someone Who Has Been There.
 									</h3>
 									<p className="mb-4 max-w-2xl text-sm leading-relaxed text-white/90 md:text-base">
-										We match funded athletes with experienced mentors for
-										practical planning, regular check-ins, and culturally
-										grounded support.
+										Every funded athlete is paired with an experienced mentor of color who has been there before and is ready to help you get to the finish line.
 									</p>
 									<Button
 										variant="outline"
@@ -254,7 +240,7 @@ export default async function Home() {
 										className="border-white/30 bg-transparent text-white hover:bg-white hover:text-black"
 										asChild
 									>
-										<Link href="/mentor">Meet Mentors</Link>
+										<Link href="/mentor">About the Mentor Program</Link>
 									</Button>
 								</div>
 							</div>
@@ -268,14 +254,13 @@ export default async function Home() {
 				<div className="container mx-auto px-6 md:px-8 lg:px-12">
 					<div className="mb-16 text-center">
 						<span className="text-primary mb-4 inline-block text-sm font-medium tracking-widest uppercase">
-							Our Partners
+							Race Partners &amp; Supporters
 						</span>
 						<h2 className="mb-5 text-3xl font-bold md:text-4xl">
-							Organizations Moving the Sport Forward
+							The Network Behind the Work
 						</h2>
 						<p className="text-muted-foreground mx-auto max-w-2xl text-lg">
-							Race directors, brands, and community partners committed to
-							changing the landscape of trail running.
+							Race directors and brand partners who share our commitment to expanding access and making space for runners of color in trail running.
 						</p>
 					</div>
 
@@ -310,17 +295,16 @@ export default async function Home() {
 						<div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-20">
 							<div className="space-y-6">
 								<h3 className="text-3xl font-bold md:text-4xl">
-									Ready to move from intent to action?
+									Partner with us.
 								</h3>
 								<p className="text-primary-foreground/80 text-lg leading-relaxed md:text-xl">
-									Co-fund entries and share accountable impact. Let's work
-									together to build a more equitable outdoors.
+									Race directors: offer supported entries through the Athlete Fund. Brands: co-fund access and reach a community that is new to the sport and here to stay. We build the infrastructure. Together, we expand it.
 								</p>
 							</div>
 							<div className="flex justify-start lg:justify-end">
-								<a href="mailto:team@example.com?subject=Partnership%20Inquiry">
+								<a href={`mailto:${process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'team@tierralibre.run'}?subject=Partnership%20Inquiry`}>
 									<Button size="lg" variant="outline" className="text-lg">
-										Partner With Us
+										Get In Touch
 										<ArrowRight className="ml-2 h-5 w-5" />
 									</Button>
 								</a>
